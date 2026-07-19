@@ -41,8 +41,8 @@ public final class MainActivity extends Activity {
     private Switch switchEnabled;
     private EditText inputWebhook, inputSenderFilter, inputTextFilter, inputRetryCount, inputRetrySeconds;
     private EditText inputManualSender, inputManualMessage;
-    private TextView textStatus, textSelectedApps, dashboardStatus, dashboardAppsText;
-    private LinearLayout historyContainer, sectionDashboard, sectionWebhook, sectionSettings, sectionHistory, sectionManual;
+    private TextView textStatus, textSelectedApps, dashboardStatus, dashboardAppsText, dashboardLatestSender, dashboardLatestMessage, dashboardLatestResult;
+    private LinearLayout historyContainer, sectionDashboard, sectionWebhook, sectionSettings, sectionHistory, sectionManual, dashboardLatestCard;
     private boolean accessDialogVisible = false;
     private HistoryDb historyDb;
     private Set<String> selectedPackages = new HashSet<>();
@@ -71,6 +71,10 @@ public final class MainActivity extends Activity {
         sectionManual = findViewById(R.id.sectionManual);
         dashboardStatus = findViewById(R.id.dashboardStatus);
         dashboardAppsText = findViewById(R.id.dashboardAppsText);
+        dashboardLatestCard = findViewById(R.id.dashboardLatestCard);
+        dashboardLatestSender = findViewById(R.id.dashboardLatestSender);
+        dashboardLatestMessage = findViewById(R.id.dashboardLatestMessage);
+        dashboardLatestResult = findViewById(R.id.dashboardLatestResult);
 
         findViewById(R.id.buttonHome).setOnClickListener(v -> showSection(sectionDashboard));
         findViewById(R.id.cardWebhook).setOnClickListener(v -> showSection(sectionWebhook));
@@ -359,6 +363,7 @@ public final class MainActivity extends Activity {
 
     private void refreshHistory() {
         if(historyContainer==null)return; historyContainer.removeAllViews(); List<HistoryDb.HistoryItem> items=historyDb.latest(80);
+        updateLatestDashboard(items);
         if(items.isEmpty()){TextView e=new TextView(this);e.setText("هنوز پیامی ثبت نشده است.");e.setTextColor(Color.parseColor("#6B7280"));e.setPadding(8,18,8,18);historyContainer.addView(e);return;}
         for(HistoryDb.HistoryItem item:items){
             LinearLayout card=new LinearLayout(this);card.setOrientation(LinearLayout.VERTICAL);card.setPadding(24,20,24,20);
@@ -369,6 +374,29 @@ public final class MainActivity extends Activity {
             result.setText(st+" | تلاش‌ها: "+item.attemptCount+" | HTTP "+item.httpCode);result.setTextColor(color);result.setTextSize(13);result.setGravity(Gravity.START);
             card.addView(title);card.addView(msg);card.addView(result);card.setOnClickListener(v->showHistoryDetail(item.id));historyContainer.addView(card);
         }
+    }
+
+    private void updateLatestDashboard(List<HistoryDb.HistoryItem> items) {
+        if (dashboardLatestCard == null) return;
+        if (items == null || items.isEmpty()) {
+            dashboardLatestCard.setVisibility(View.GONE);
+            return;
+        }
+        HistoryDb.HistoryItem item = items.get(0);
+        dashboardLatestCard.setVisibility(View.VISIBLE);
+        dashboardLatestSender.setText(item.sender == null || item.sender.trim().isEmpty() ? "پیام جدید" : item.sender);
+        dashboardLatestMessage.setText(shorten(item.message, 180));
+        if ("sent".equals(item.status)) {
+            dashboardLatestResult.setText("موفق");
+            dashboardLatestResult.setTextColor(Color.parseColor("#16803C"));
+        } else if ("failed".equals(item.status)) {
+            dashboardLatestResult.setText("ناموفق");
+            dashboardLatestResult.setTextColor(Color.parseColor("#C62828"));
+        } else {
+            dashboardLatestResult.setText("در حال تلاش");
+            dashboardLatestResult.setTextColor(Color.parseColor("#B26A00"));
+        }
+        dashboardLatestCard.setOnClickListener(v -> showHistoryDetail(item.id));
     }
 
     private void showHistoryDetail(long id) {
