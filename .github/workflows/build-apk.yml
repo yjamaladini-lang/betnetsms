@@ -5,9 +5,13 @@ on:
   push:
     branches: [ main ]
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
       - name: Checkout source
@@ -18,21 +22,22 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-          cache: gradle
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Set up Gradle 8.9
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
 
-      - name: Make Gradle executable
-        run: chmod +x gradlew
+      - name: Build debug APK
+        run: gradle --no-daemon :app:assembleDebug --stacktrace
 
-      - name: Build installable debug APK
-        run: ./gradlew --no-daemon :app:assembleDebug --stacktrace
+      - name: Rename APK
+        run: cp app/build/outputs/apk/debug/app-debug.apk Betnet-SMS-Sender-debug.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Betnet-sms-otp-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: Betnet-SMS-Sender-APK
+          path: Betnet-SMS-Sender-debug.apk
           if-no-files-found: error
-          retention-days: 30
+          retention-days: 14

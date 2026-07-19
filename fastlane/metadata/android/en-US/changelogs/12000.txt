@@ -1,3 +1,0 @@
-- added zh-Hant locale
-- added monochrome icon
-- added 4 japanese sensitive keywords

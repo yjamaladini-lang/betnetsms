@@ -1,5 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="notif_primary">#151515</color>
-    <color name="notif_secondary">#3C3C3C</color>
+    <color name="background">#F5F6F8</color>
+    <color name="card">#FFFFFF</color>
+    <color name="text_primary">#171717</color>
+    <color name="text_secondary">#6B7280</color>
+    <color name="accent">#2563EB</color>
+    <color name="success">#16803C</color>
+    <color name="danger">#C62828</color>
 </resources>

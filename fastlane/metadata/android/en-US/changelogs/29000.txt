@@ -1,2 +1,0 @@
-- added a new russian sensitive keyword
-- added Portuguese and Polish to languages

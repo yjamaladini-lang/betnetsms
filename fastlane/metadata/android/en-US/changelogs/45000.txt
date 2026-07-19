@@ -1,1 +1,0 @@
-- Fixed long text not showing correctly in ignored list
