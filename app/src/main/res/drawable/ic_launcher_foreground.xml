@@ -1,10 +1,9 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp" android:height="108dp"
     android:viewportWidth="108" android:viewportHeight="108">
-    <!-- All artwork stays inside Android's adaptive-icon safe zone. -->
-    <path android:fillColor="#FFFFFF" android:pathData="M26,34h56c3.3,0 6,2.7 6,6v31c0,3.3 -2.7,6 -6,6h-56c-3.3,0 -6,-2.7 -6,-6v-31c0,-3.3 2.7,-6 6,-6z"/>
-    <path android:fillColor="#111111" android:pathData="M24,39l30,22 30,-22 -3.6,-4.9L54,53.5 27.6,34.1z"/>
-    <path android:fillColor="#111111" android:pathData="M24.2,72.5l19.2,-18.3 4.6,4.8 -18.5,17.6zM83.8,72.5L64.6,54.2 60,59l18.5,17.6z"/>
-    <path android:fillColor="#111111" android:pathData="M71,62a15,15 0,1 0,0.1 0z"/>
-    <path android:fillColor="#FFFFFF" android:pathData="M63.5,70.5l17,-8.5 -6.2,17.5 -3.1,-6.2z"/>
+    <path android:fillColor="#111111" android:pathData="M25,34h58c4.4,0 8,3.6 8,8v31c0,4.4 -3.6,8 -8,8h-58c-4.4,0 -8,-3.6 -8,-8v-31c0,-4.4 3.6,-8 8,-8z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M22,41l32,23 32,-23 -4.2,-5.7L54,55.2 26.2,35.3z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M23.5,74l20.7,-19.2 4.8,5.2 -19.4,18zM84.5,74L63.8,54.8 59,60l19.4,18z"/>
+    <path android:fillColor="#111111" android:pathData="M70,62a15,15 0,1 0,0.1 0z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M62,70l19,-9 -7,19 -3.2,-6.8z"/>
 </vector>

@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.ComponentName;
+import android.service.notification.NotificationListenerService;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -75,16 +77,24 @@ public final class MainActivity extends Activity {
         findViewById(R.id.cardSettings).setOnClickListener(v -> showSection(sectionSettings));
         findViewById(R.id.cardHistory).setOnClickListener(v -> { showSection(sectionHistory); refreshHistory(); });
         findViewById(R.id.cardManual).setOnClickListener(v -> showSection(sectionManual));
-        findViewById(R.id.cardApps).setOnClickListener(v -> showAppPicker());
 
         findViewById(R.id.buttonSaveWebhook).setOnClickListener(v -> saveWebhook());
         findViewById(R.id.buttonSave).setOnClickListener(v -> saveSettings());
         findViewById(R.id.buttonPermission).setOnClickListener(v -> openNotificationAccess());
+        findViewById(R.id.buttonStartup).setOnClickListener(v -> openStartupSettings());
         findViewById(R.id.buttonTest).setOnClickListener(v -> testWebhook());
         findViewById(R.id.buttonRefresh).setOnClickListener(v -> refreshHistory());
         findViewById(R.id.buttonApps).setOnClickListener(v -> showAppPicker());
         findViewById(R.id.buttonManualSend).setOnClickListener(v -> sendManualText());
-        switchEnabled.setOnCheckedChangeListener((buttonView, isChecked) -> updateDashboardStatus());
+        switchEnabled.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            AppPrefs.setEnabled(this, isChecked);
+            if (isChecked) {
+                try { NotificationListenerService.requestRebind(new ComponentName(this, SmsNotificationListener.class)); }
+                catch (Exception ignored) {}
+            }
+            updateDashboardStatus();
+            toast(isChecked ? "ارسال خودکار فعال شد." : "ارسال خودکار غیرفعال شد.");
+        });
 
         loadCommunicationApps();
         loadSettings();
@@ -240,6 +250,27 @@ public final class MainActivity extends Activity {
         catch (Exception e) { startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")); }
     }
 
+    private void openStartupSettings() {
+        try {
+            Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+            intent.setData(Uri.parse("package:" + getPackageName()));
+            startActivity(intent);
+            return;
+        } catch (Exception ignored) {}
+        try {
+            Intent intent = new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+            startActivity(intent);
+            return;
+        } catch (Exception ignored) {}
+        try {
+            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            intent.setData(Uri.parse("package:" + getPackageName()));
+            startActivity(intent);
+        } catch (Exception e) {
+            toast("تنظیمات اجرای پس‌زمینه در این گوشی پیدا نشد.");
+        }
+    }
+
     private void updateAccessStatus() {
         boolean enabled = isNotificationAccessEnabled();
         if (textStatus != null) textStatus.setText(enabled ? "دسترسی اعلان‌ها فعال است." : "دسترسی اعلان‌ها هنوز فعال نشده است.");
@@ -250,11 +281,19 @@ public final class MainActivity extends Activity {
         if (dashboardStatus == null) return;
         boolean hasAccess = isNotificationAccessEnabled();
         boolean hasWebhook = isValidUrl(AppPrefs.getWebhook(this));
-        boolean ready = hasAccess && hasWebhook;
+        boolean autoEnabled = AppPrefs.isEnabled(this);
+        boolean hasApps = !AppPrefs.getAllowedPackages(this).isEmpty();
+        boolean ready = hasAccess && hasWebhook && autoEnabled && hasApps;
 
         if (ready) {
             dashboardStatus.setText("●  برنامه برای اجرای عملیات مسلح است");
             dashboardStatus.setTextColor(Color.WHITE);
+        } else if (!autoEnabled) {
+            dashboardStatus.setText("●  ارسال خودکار غیرفعال است");
+            dashboardStatus.setTextColor(Color.parseColor("#FDE68A"));
+        } else if (!hasApps) {
+            dashboardStatus.setText("●  برنامه پیامک در تنظیمات انتخاب نشده است");
+            dashboardStatus.setTextColor(Color.parseColor("#FDE68A"));
         } else if (!hasAccess && !hasWebhook) {
             dashboardStatus.setText("●  دسترسی اعلان و وب‌هوک تنظیم نشده است");
             dashboardStatus.setTextColor(Color.parseColor("#FDE68A"));

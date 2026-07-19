@@ -24,7 +24,12 @@ public final class AppPrefs {
         return context.getSharedPreferences(FILE, Context.MODE_PRIVATE);
     }
 
-    public static boolean isEnabled(Context context) { return prefs(context).getBoolean(KEY_ENABLED, false); }
+    public static boolean isEnabled(Context context) { return prefs(context).getBoolean(KEY_ENABLED, true); }
+
+    public static void setEnabled(Context context, boolean enabled) {
+        prefs(context).edit().putBoolean(KEY_ENABLED, enabled).apply();
+    }
+
     public static String getWebhook(Context context) { return prefs(context).getString(KEY_WEBHOOK, ""); }
     public static String getSenderFilter(Context context) { return prefs(context).getString(KEY_SENDER_FILTER, ""); }
     public static String getTextFilter(Context context) { return prefs(context).getString(KEY_TEXT_FILTER, ""); }
