@@ -1,0 +1,4 @@
+- added "vahvistuskoodi" sensitive keyword 
+- added Arabic language
+- small improvements to UI
+- fixed pattern matching for some keywords
