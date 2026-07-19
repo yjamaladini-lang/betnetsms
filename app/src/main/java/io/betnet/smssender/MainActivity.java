@@ -84,6 +84,7 @@ public final class MainActivity extends Activity {
         findViewById(R.id.buttonRefresh).setOnClickListener(v -> refreshHistory());
         findViewById(R.id.buttonApps).setOnClickListener(v -> showAppPicker());
         findViewById(R.id.buttonManualSend).setOnClickListener(v -> sendManualText());
+        switchEnabled.setOnCheckedChangeListener((buttonView, isChecked) -> updateDashboardStatus());
 
         loadCommunicationApps();
         loadSettings();
@@ -247,9 +248,23 @@ public final class MainActivity extends Activity {
 
     private void updateDashboardStatus() {
         if (dashboardStatus == null) return;
-        boolean ready = isNotificationAccessEnabled() && AppPrefs.isEnabled(this) && isValidUrl(AppPrefs.getWebhook(this));
-        dashboardStatus.setText(ready ? "●  سرویس فعال است" : "●  سرویس نیاز به تنظیم دارد");
-        dashboardStatus.setTextColor(ready ? Color.WHITE : Color.parseColor("#FDE68A"));
+        boolean hasAccess = isNotificationAccessEnabled();
+        boolean hasWebhook = isValidUrl(AppPrefs.getWebhook(this));
+        boolean ready = hasAccess && hasWebhook;
+
+        if (ready) {
+            dashboardStatus.setText("●  برنامه برای اجرای عملیات مسلح است");
+            dashboardStatus.setTextColor(Color.WHITE);
+        } else if (!hasAccess && !hasWebhook) {
+            dashboardStatus.setText("●  دسترسی اعلان و وب‌هوک تنظیم نشده است");
+            dashboardStatus.setTextColor(Color.parseColor("#FDE68A"));
+        } else if (!hasAccess) {
+            dashboardStatus.setText("●  دسترسی اعلان‌ها باید فعال شود");
+            dashboardStatus.setTextColor(Color.parseColor("#FDE68A"));
+        } else {
+            dashboardStatus.setText("●  آدرس وب‌هوک باید تنظیم شود");
+            dashboardStatus.setTextColor(Color.parseColor("#FDE68A"));
+        }
     }
 
     private void enforceRequiredAccess() {
