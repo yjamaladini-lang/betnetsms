@@ -59,7 +59,7 @@ public final class WebhookSender {
             HttpURLConnection c = (HttpURLConnection) new URL(webhook).openConnection();
             c.setRequestMethod("POST"); c.setConnectTimeout(15000); c.setReadTimeout(20000); c.setDoOutput(true);
             c.setRequestProperty("Content-Type", "application/json; charset=utf-8"); c.setRequestProperty("Accept", "application/json, text/plain, */*");
-            c.setRequestProperty("User-Agent", "BetnetSmsSender/1.1"); c.setFixedLengthStreamingMode(body.length);
+            c.setRequestProperty("User-Agent", "BetnetSmsSender/1.2"); c.setFixedLengthStreamingMode(body.length);
             try (OutputStream o = c.getOutputStream()) { o.write(body); }
             code = c.getResponseCode(); InputStream s = code >= 200 && code < 400 ? c.getInputStream() : c.getErrorStream();
             response = readStream(s); success = code >= 200 && code < 300; c.disconnect();
