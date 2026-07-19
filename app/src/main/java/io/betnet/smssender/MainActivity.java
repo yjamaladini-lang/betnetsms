@@ -39,8 +39,9 @@ public final class MainActivity extends Activity {
     private Switch switchEnabled;
     private EditText inputWebhook, inputSenderFilter, inputTextFilter, inputRetryCount, inputRetrySeconds;
     private EditText inputManualSender, inputManualMessage;
-    private TextView textStatus, textSelectedApps;
-    private LinearLayout historyContainer, sectionWebhook, sectionSettings, sectionHistory, sectionManual;
+    private TextView textStatus, textSelectedApps, dashboardStatus, dashboardAppsText;
+    private LinearLayout historyContainer, sectionDashboard, sectionWebhook, sectionSettings, sectionHistory, sectionManual;
+    private boolean accessDialogVisible = false;
     private HistoryDb historyDb;
     private Set<String> selectedPackages = new HashSet<>();
     private final List<AppChoice> appChoices = new ArrayList<>();
@@ -61,15 +62,20 @@ public final class MainActivity extends Activity {
         textStatus = findViewById(R.id.textStatus);
         textSelectedApps = findViewById(R.id.textSelectedApps);
         historyContainer = findViewById(R.id.historyContainer);
+        sectionDashboard = findViewById(R.id.sectionDashboard);
         sectionWebhook = findViewById(R.id.sectionWebhook);
         sectionSettings = findViewById(R.id.sectionSettings);
         sectionHistory = findViewById(R.id.sectionHistory);
         sectionManual = findViewById(R.id.sectionManual);
+        dashboardStatus = findViewById(R.id.dashboardStatus);
+        dashboardAppsText = findViewById(R.id.dashboardAppsText);
 
-        findViewById(R.id.tabWebhook).setOnClickListener(v -> showSection(sectionWebhook));
-        findViewById(R.id.tabSettings).setOnClickListener(v -> showSection(sectionSettings));
-        findViewById(R.id.tabHistory).setOnClickListener(v -> { showSection(sectionHistory); refreshHistory(); });
-        findViewById(R.id.tabManual).setOnClickListener(v -> showSection(sectionManual));
+        findViewById(R.id.buttonHome).setOnClickListener(v -> showSection(sectionDashboard));
+        findViewById(R.id.cardWebhook).setOnClickListener(v -> showSection(sectionWebhook));
+        findViewById(R.id.cardSettings).setOnClickListener(v -> showSection(sectionSettings));
+        findViewById(R.id.cardHistory).setOnClickListener(v -> { showSection(sectionHistory); refreshHistory(); });
+        findViewById(R.id.cardManual).setOnClickListener(v -> showSection(sectionManual));
+        findViewById(R.id.cardApps).setOnClickListener(v -> showAppPicker());
 
         findViewById(R.id.buttonSaveWebhook).setOnClickListener(v -> saveWebhook());
         findViewById(R.id.buttonSave).setOnClickListener(v -> saveSettings());
@@ -82,8 +88,9 @@ public final class MainActivity extends Activity {
         loadCommunicationApps();
         loadSettings();
         requestNotificationPermission();
+        enforceRequiredAccess();
         refreshHistory();
-        showSection(sectionWebhook);
+        showSection(sectionDashboard);
         long detailId = getIntent().getLongExtra("history_id", -1L);
         if (detailId > 0) {
             showSection(sectionHistory);
@@ -92,9 +99,15 @@ public final class MainActivity extends Activity {
         }
     }
 
-    @Override protected void onResume() { super.onResume(); refreshHistory(); updateAccessStatus(); }
+    @Override protected void onResume() {
+        super.onResume();
+        refreshHistory();
+        updateAccessStatus();
+        enforceRequiredAccess();
+    }
 
     private void showSection(View target) {
+        sectionDashboard.setVisibility(target == sectionDashboard ? View.VISIBLE : View.GONE);
         sectionWebhook.setVisibility(target == sectionWebhook ? View.VISIBLE : View.GONE);
         sectionSettings.setVisibility(target == sectionSettings ? View.VISIBLE : View.GONE);
         sectionHistory.setVisibility(target == sectionHistory ? View.VISIBLE : View.GONE);
@@ -161,14 +174,14 @@ public final class MainActivity extends Activity {
         inputRetryCount.setText(String.valueOf(AppPrefs.getRetryCount(this)));
         inputRetrySeconds.setText(String.valueOf(AppPrefs.getRetrySeconds(this)));
         selectedPackages = new HashSet<>(AppPrefs.getAllowedPackages(this));
-        updateSelectedAppsText(); updateAccessStatus();
+        updateSelectedAppsText(); updateAccessStatus(); updateDashboardStatus();
     }
 
     private void saveWebhook() {
         String webhook = inputWebhook.getText().toString().trim();
         if (!isValidUrl(webhook)) { toast("آدرس وب‌هوک معتبر وارد کن."); return; }
         persistAll(webhook);
-        toast("وب‌هوک ذخیره شد.");
+        toast("وب‌هوک ذخیره شد."); updateDashboardStatus();
     }
 
     private void saveSettings() {
@@ -176,7 +189,7 @@ public final class MainActivity extends Activity {
         if (switchEnabled.isChecked() && !isValidUrl(webhook)) { toast("اول آدرس وب‌هوک معتبر وارد کن."); return; }
         if (switchEnabled.isChecked() && selectedPackages.isEmpty()) { toast("حداقل یک برنامه ارتباطی انتخاب کن."); return; }
         persistAll(webhook);
-        toast("تنظیمات ذخیره شد.");
+        toast("تنظیمات ذخیره شد."); updateDashboardStatus();
     }
 
     private void persistAll(String webhook) {
@@ -188,13 +201,13 @@ public final class MainActivity extends Activity {
     private void showAppPicker() {
         if (appChoices.isEmpty()) { toast("برنامه ارتباطی مناسبی پیدا نشد."); return; }
         Set<String> draft = new HashSet<>(selectedPackages);
-        LinearLayout list = new LinearLayout(this); list.setOrientation(LinearLayout.VERTICAL); list.setPadding(14, 8, 14, 8);
+        LinearLayout list = new LinearLayout(this); list.setOrientation(LinearLayout.VERTICAL); list.setPadding(14, 8, 14, 8); list.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         for (AppChoice app : appChoices) {
             LinearLayout row = new LinearLayout(this); row.setOrientation(LinearLayout.HORIZONTAL); row.setGravity(Gravity.CENTER_VERTICAL); row.setPadding(8, 10, 8, 10);
             CheckBox check = new CheckBox(this); check.setChecked(draft.contains(app.packageName));
             ImageView icon = new ImageView(this); icon.setImageDrawable(app.icon); LinearLayout.LayoutParams ip = new LinearLayout.LayoutParams(54, 54); ip.setMargins(10,0,12,0); icon.setLayoutParams(ip);
             LinearLayout texts = new LinearLayout(this); texts.setOrientation(LinearLayout.VERTICAL); texts.setLayoutParams(new LinearLayout.LayoutParams(0, -2, 1));
-            TextView name = new TextView(this); name.setText(app.label); name.setTextSize(16); name.setTextColor(Color.parseColor("#171717")); name.setTypeface(null, 1);
+            TextView name = new TextView(this); name.setText(app.label); name.setGravity(Gravity.START); name.setTextDirection(View.TEXT_DIRECTION_RTL); name.setTextSize(16); name.setTextColor(Color.parseColor("#171717")); name.setTypeface(null, 1);
             TextView pkg = new TextView(this); pkg.setText(app.packageName); pkg.setTextSize(11); pkg.setTextColor(Color.parseColor("#6B7280")); pkg.setTextDirection(View.TEXT_DIRECTION_LTR);
             texts.addView(name); texts.addView(pkg); row.addView(check); row.addView(icon); row.addView(texts);
             View.OnClickListener toggle = v -> { check.setChecked(!check.isChecked()); if(check.isChecked()) draft.add(app.packageName); else draft.remove(app.packageName); };
@@ -209,10 +222,16 @@ public final class MainActivity extends Activity {
     }
 
     private void updateSelectedAppsText() {
-        if (selectedPackages.isEmpty()) { textSelectedApps.setText("هیچ برنامه‌ای انتخاب نشده است."); return; }
+        if (selectedPackages.isEmpty()) {
+            textSelectedApps.setText("هیچ برنامه‌ای انتخاب نشده است.");
+            if (dashboardAppsText != null) dashboardAppsText.setText("هیچ برنامه‌ای انتخاب نشده است");
+            return;
+        }
         List<String> names = new ArrayList<>();
         for (AppChoice a : appChoices) if (selectedPackages.contains(a.packageName)) names.add(a.label);
-        textSelectedApps.setText("انتخاب‌شده: " + TextUtils.join("، ", names));
+        String joined = TextUtils.join("، ", names);
+        textSelectedApps.setText("انتخاب‌شده: " + joined);
+        if (dashboardAppsText != null) dashboardAppsText.setText(joined);
     }
 
     private void openNotificationAccess() {
@@ -220,7 +239,38 @@ public final class MainActivity extends Activity {
         catch (Exception e) { startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")); }
     }
 
-    private void updateAccessStatus() { if(textStatus!=null) textStatus.setText(isNotificationAccessEnabled()?"دسترسی اعلان‌ها فعال است.":"دسترسی اعلان‌ها هنوز فعال نشده است."); }
+    private void updateAccessStatus() {
+        boolean enabled = isNotificationAccessEnabled();
+        if (textStatus != null) textStatus.setText(enabled ? "دسترسی اعلان‌ها فعال است." : "دسترسی اعلان‌ها هنوز فعال نشده است.");
+        updateDashboardStatus();
+    }
+
+    private void updateDashboardStatus() {
+        if (dashboardStatus == null) return;
+        boolean ready = isNotificationAccessEnabled() && AppPrefs.isEnabled(this) && isValidUrl(AppPrefs.getWebhook(this));
+        dashboardStatus.setText(ready ? "●  سرویس فعال است" : "●  سرویس نیاز به تنظیم دارد");
+        dashboardStatus.setTextColor(ready ? Color.WHITE : Color.parseColor("#FDE68A"));
+    }
+
+    private void enforceRequiredAccess() {
+        if (isNotificationAccessEnabled() || accessDialogVisible || isFinishing()) return;
+        accessDialogVisible = true;
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("دسترسی اعلان‌ها ضروری است")
+                .setMessage("برای شناسایی پیامک‌ها از اعلان برنامه پیامک، باید دسترسی خواندن اعلان‌ها را فعال کنی. بدون این دسترسی برنامه قادر به کار نیست.")
+                .setCancelable(false)
+                .setPositiveButton("فعال‌کردن دسترسی", (d, w) -> {
+                    accessDialogVisible = false;
+                    openNotificationAccess();
+                })
+                .setNegativeButton("خروج", (d, w) -> {
+                    accessDialogVisible = false;
+                    finish();
+                })
+                .create();
+        dialog.setOnDismissListener(d -> accessDialogVisible = false);
+        dialog.show();
+    }
     private boolean isNotificationAccessEnabled() { String enabled=Settings.Secure.getString(getContentResolver(),"enabled_notification_listeners"); return enabled!=null&&enabled.contains(getPackageName()); }
 
     private void requestNotificationPermission() {
@@ -258,9 +308,9 @@ public final class MainActivity extends Activity {
         if(items.isEmpty()){TextView e=new TextView(this);e.setText("هنوز پیامی ثبت نشده است.");e.setTextColor(Color.parseColor("#6B7280"));e.setPadding(8,18,8,18);historyContainer.addView(e);return;}
         for(HistoryDb.HistoryItem item:items){
             LinearLayout card=new LinearLayout(this);card.setOrientation(LinearLayout.VERTICAL);card.setPadding(24,20,24,20);
-            LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(-1,-2);p.setMargins(0,0,0,14);card.setLayoutParams(p);card.setBackgroundColor(Color.WHITE);card.setClickable(true);
-            TextView title=new TextView(this);title.setText(item.sender+"  •  "+JalaliDate.format(item.createdAt));title.setTextColor(Color.parseColor("#171717"));title.setTextSize(16);title.setTypeface(null,1);
-            TextView msg=new TextView(this);msg.setText(shorten(item.message,300));msg.setTextColor(Color.parseColor("#374151"));msg.setTextSize(14);msg.setPadding(0,8,0,8);
+            LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(-1,-2);p.setMargins(0,0,0,14);card.setLayoutParams(p);card.setBackgroundResource(R.drawable.bg_card);card.setElevation(2f);card.setClickable(true);
+            TextView title=new TextView(this);title.setGravity(Gravity.START);title.setTextDirection(View.TEXT_DIRECTION_RTL);title.setText(item.sender+"  •  "+JalaliDate.format(item.createdAt));title.setTextColor(Color.parseColor("#171717"));title.setTextSize(16);title.setTypeface(null,1);
+            TextView msg=new TextView(this);msg.setGravity(Gravity.START);msg.setTextDirection(View.TEXT_DIRECTION_RTL);msg.setText(shorten(item.message,300));msg.setTextColor(Color.parseColor("#374151"));msg.setTextSize(14);msg.setPadding(0,8,0,8);
             TextView result=new TextView(this);String st;int color;if("sent".equals(item.status)){st="ارسال شد";color=Color.parseColor("#16803C");}else if("failed".equals(item.status)){st="ناموفق";color=Color.parseColor("#C62828");}else{st="در حال تلاش";color=Color.parseColor("#B26A00");}
             result.setText(st+" | تلاش‌ها: "+item.attemptCount+" | HTTP "+item.httpCode);result.setTextColor(color);result.setTextSize(13);result.setGravity(Gravity.START);
             card.addView(title);card.addView(msg);card.addView(result);card.setOnClickListener(v->showHistoryDetail(item.id));historyContainer.addView(card);
