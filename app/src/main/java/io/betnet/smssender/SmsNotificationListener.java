@@ -39,6 +39,7 @@ public final class SmsNotificationListener extends NotificationListenerService {
         long timestamp = System.currentTimeMillis();
         HistoryDb db = new HistoryDb(this);
         long historyId = db.insertPending(timestamp, sender, message, sbn.getPackageName());
+        NotificationHelper.showDetected(this, historyId, sender, message, sbn.getPackageName());
         WebhookSender.sendWithRetry(this, webhook, sender, message, sbn.getPackageName(), timestamp,
                 false, historyId, AppPrefs.getRetryCount(this), AppPrefs.getRetrySeconds(this), null);
     }

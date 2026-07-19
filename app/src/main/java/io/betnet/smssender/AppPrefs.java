@@ -42,6 +42,13 @@ public final class AppPrefs {
         return !packages.isEmpty() && packages.contains(packageName);
     }
 
+
+    public static void removeAllowedPackage(Context context, String packageName) {
+        Set<String> packages = new HashSet<>(getAllowedPackages(context));
+        packages.remove(packageName);
+        prefs(context).edit().putString(KEY_ALLOWED_PACKAGES, String.join("|", packages)).apply();
+    }
+
     public static void save(Context context, boolean enabled, String webhook, String senderFilter,
                             String textFilter, Set<String> allowedPackages, int retryCount, int retrySeconds) {
         String packageValue = allowedPackages == null ? "" : String.join("|", allowedPackages);

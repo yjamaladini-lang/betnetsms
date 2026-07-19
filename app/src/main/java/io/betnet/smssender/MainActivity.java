@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.provider.Telephony;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -83,6 +84,12 @@ public final class MainActivity extends Activity {
         requestNotificationPermission();
         refreshHistory();
         showSection(sectionWebhook);
+        long detailId = getIntent().getLongExtra("history_id", -1L);
+        if (detailId > 0) {
+            showSection(sectionHistory);
+            refreshHistory();
+            historyContainer.post(() -> showHistoryDetail(detailId));
+        }
     }
 
     @Override protected void onResume() { super.onResume(); refreshHistory(); updateAccessStatus(); }
@@ -95,28 +102,53 @@ public final class MainActivity extends Activity {
     }
 
     private void loadCommunicationApps() {
+        appChoices.clear();
         PackageManager pm = getPackageManager();
-        Set<String> smsPackages = new HashSet<>();
-        Intent smsIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:"));
-        for (ResolveInfo r : pm.queryIntentActivities(smsIntent, PackageManager.MATCH_DEFAULT_ONLY)) {
-            if (r.activityInfo != null) smsPackages.add(r.activityInfo.packageName);
+        Set<String> candidates = new HashSet<>();
+
+        try {
+            String defaultSms = Telephony.Sms.getDefaultSmsPackage(this);
+            if (defaultSms != null) candidates.add(defaultSms);
+        } catch (Exception ignored) {}
+
+        String[] schemes = {"smsto:", "sms:", "mms:"};
+        for (String scheme : schemes) {
+            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(scheme));
+            for (ResolveInfo r : pm.queryIntentActivities(intent, PackageManager.MATCH_ALL)) {
+                if (r.activityInfo != null) candidates.add(r.activityInfo.packageName);
+            }
         }
 
-        for (ApplicationInfo info : pm.getInstalledApplications(0)) {
+        String[] knownPackages = {
+                "com.samsung.android.messaging", "com.google.android.apps.messaging",
+                "com.android.mms", "com.android.messaging", "org.telegram.messenger",
+                "org.thunderdog.challegram", "com.whatsapp", "com.whatsapp.w4b",
+                "org.thoughtcrime.securesms", "com.facebook.orca", "com.instagram.android",
+                "ir.eitaa.messenger", "ir.bale.app", "com.lenoshki.rubika",
+                "mobi.mmdt.ottplus", "com.imo.android.imoim", "com.discord"
+        };
+        Collections.addAll(candidates, knownPackages);
+
+        for (ApplicationInfo info : pm.getInstalledApplications(PackageManager.MATCH_ALL)) {
             if (info.packageName.equals(getPackageName())) continue;
-            if (pm.getLaunchIntentForPackage(info.packageName) == null) continue;
             String label = pm.getApplicationLabel(info).toString();
-            if (!isCommunicationApp(info, label, smsPackages)) continue;
-            appChoices.add(new AppChoice(label, info.packageName, pm.getApplicationIcon(info)));
+            if (candidates.contains(info.packageName) || isCommunicationApp(info, label, candidates)) {
+                try {
+                    appChoices.add(new AppChoice(label, info.packageName, pm.getApplicationIcon(info)));
+                } catch (Exception ignored) {}
+            }
         }
+
         Collections.sort(appChoices, Comparator.comparing(a -> a.label.toLowerCase(Locale.ROOT)));
     }
 
-    private boolean isCommunicationApp(ApplicationInfo info, String label, Set<String> smsPackages) {
-        if (smsPackages.contains(info.packageName)) return true;
+    private boolean isCommunicationApp(ApplicationInfo info, String label, Set<String> candidates) {
+        if (candidates.contains(info.packageName)) return true;
         if (Build.VERSION.SDK_INT >= 26 && info.category == ApplicationInfo.CATEGORY_SOCIAL) return true;
         String value = (info.packageName + " " + label).toLowerCase(Locale.ROOT);
-        String[] keys = {"message", "messaging", "sms", "telegram", "whatsapp", "signal", "bale", "eitaa", "rubika", "soroush", "gap", "imo", "skype", "discord", "messenger", "chat"};
+        String[] keys = {"message", "messaging", "messages", "sms", "mms", "telegram", "whatsapp",
+                "signal", "bale", "eitaa", "rubika", "soroush", "gap", "imo", "skype",
+                "discord", "messenger", "chat", "پیام", "گفتگو"};
         for (String key : keys) if (value.contains(key)) return true;
         return false;
     }
