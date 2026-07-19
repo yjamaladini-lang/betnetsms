@@ -1,18 +1,19 @@
-BETNET SMS SENDER V1.6.1 UPDATE
+رفع نهایی لوگوی Betnet SMS Sender V1.6.2
 
-روش استفاده:
-1) فایل ZIP را داخل ریشه پوشه betnetsms استخراج کن.
-2) فایل APPLY_UPDATE_V161.bat را دو بار کلیک کن.
-3) بعد از پیام موفقیت، GitHub Desktop را باز کن.
-4) Summary:
-   Disable forced access dialog and replace launcher icon
-5) Commit to main
-6) Push origin
+علت خراب نمایش‌دادن لوگو:
+فایل‌های PNG/WEBP قدیمی داخل پوشه‌های mipmap روی بعضی گوشی‌های سامسونگ
+جای آیکون adaptive جدید را می‌گرفتند. علاوه بر آن، طرح قبلی از محدوده امن
+ماسک آیکون سامسونگ بیرون می‌زد.
 
-تغییرات:
-- پنجره اجباری دسترسی اعلان‌ها کاملاً غیرفعال می‌شود.
-- کاربر همچنان می‌تواند از تنظیمات دسترسی را فعال کند.
-- لوگوی جدید آبی/مشکی با سبک مدرن وکتوری نصب می‌شود.
-- Adaptive icon، Round icon، Monochrome icon و Legacy icon همگی جایگزین می‌شوند.
-- فایل SVG اصلی لوگو داخل پوشه logo قرار می‌گیرد.
-- نسخه به 1.6.1 تغییر می‌کند.
+روش نصب:
+1. این ZIP را دقیقاً داخل ریشه پوشه betnetsms استخراج کن.
+2. روی APPLY_ICON_FIX_V162.bat دو بار کلیک کن.
+3. در GitHub Desktop:
+   Summary: Fix centered launcher icon for Samsung
+4. Commit to main
+5. Push origin
+6. APK جدید را نصب کن.
+
+نکته:
+نسخه قبلی برنامه را از گوشی حذف کن تا کش آیکون لانچر پاک شود.
+اگر بعد از نصب همچنان لوگوی قبلی بود، گوشی را یک بار Restart کن.
