@@ -103,7 +103,6 @@ public final class MainActivity extends Activity {
         loadCommunicationApps();
         loadSettings();
         requestNotificationPermission();
-        enforceRequiredAccess();
         refreshHistory();
         showSection(sectionDashboard);
         long detailId = getIntent().getLongExtra("history_id", -1L);
@@ -118,7 +117,6 @@ public final class MainActivity extends Activity {
         super.onResume();
         refreshHistory();
         updateAccessStatus();
-        enforceRequiredAccess();
     }
 
     private void showSection(View target) {
