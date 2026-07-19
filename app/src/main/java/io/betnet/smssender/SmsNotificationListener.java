@@ -12,11 +12,11 @@ public final class SmsNotificationListener extends NotificationListenerService {
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         if (!AppPrefs.isEnabled(this)) return;
+        if (getPackageName().equals(sbn.getPackageName())) return;
+        if (!AppPrefs.isPackageAllowed(this, sbn.getPackageName())) return;
 
         String webhook = AppPrefs.getWebhook(this);
-        if (TextUtils.isEmpty(webhook) || (!webhook.startsWith("https://") && !webhook.startsWith("http://"))) {
-            return;
-        }
+        if (TextUtils.isEmpty(webhook) || (!webhook.startsWith("https://") && !webhook.startsWith("http://"))) return;
 
         Notification notification = sbn.getNotification();
         Bundle extras = notification.extras;
@@ -39,7 +39,8 @@ public final class SmsNotificationListener extends NotificationListenerService {
         long timestamp = System.currentTimeMillis();
         HistoryDb db = new HistoryDb(this);
         long historyId = db.insertPending(timestamp, sender, message, sbn.getPackageName());
-        WebhookSender.send(this, webhook, sender, message, sbn.getPackageName(), timestamp, false, historyId, null);
+        WebhookSender.sendWithRetry(this, webhook, sender, message, sbn.getPackageName(), timestamp,
+                false, historyId, AppPrefs.getRetryCount(this), AppPrefs.getRetrySeconds(this), null);
     }
 
     private static boolean matches(String value, String filter) {
@@ -53,14 +54,6 @@ public final class SmsNotificationListener extends NotificationListenerService {
         return false;
     }
 
-    private static String charSequence(CharSequence value) {
-        return value == null ? "" : value.toString().trim();
-    }
-
-    private static String firstNonEmpty(String... values) {
-        for (String value : values) {
-            if (value != null && !value.trim().isEmpty()) return value.trim();
-        }
-        return "";
-    }
+    private static String charSequence(CharSequence value) { return value == null ? "" : value.toString().trim(); }
+    private static String firstNonEmpty(String... values) { for (String value : values) if (value != null && !value.trim().isEmpty()) return value.trim(); return ""; }
 }

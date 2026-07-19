@@ -1,6 +1,9 @@
 package io.betnet.smssender;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.os.Build;
 
 import org.json.JSONObject;
 
@@ -15,74 +18,63 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public final class WebhookSender {
-    private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
+    private static final ExecutorService EXECUTOR = Executors.newCachedThreadPool();
+    private static final String CHANNEL_ID = "webhook_success";
 
-    public interface Callback {
-        void onComplete(boolean success, int code, String response);
-    }
-
+    public interface Callback { void onComplete(boolean success, int code, String response); }
     private WebhookSender() {}
 
-    public static void send(Context context, String webhook, String sender, String message,
-                            String packageName, long timestamp, boolean test, long historyId,
-                            Callback callback) {
-        Context appContext = context.getApplicationContext();
+    public static void sendWithRetry(Context context, String webhook, String sender, String message,
+                                     String packageName, long timestamp, boolean test, long historyId,
+                                     int maxAttempts, int delaySeconds, Callback callback) {
+        Context app = context.getApplicationContext();
         EXECUTOR.execute(() -> {
-            int code = 0;
-            String response;
-            boolean success = false;
-            try {
-                JSONObject json = new JSONObject();
-                json.put("sender", sender);
-                json.put("message", message);
-                json.put("timestamp", timestamp);
-                json.put("package_name", packageName);
-                json.put("source", "betnet-sms-sender");
-                json.put("test", test);
-
-                byte[] body = json.toString().getBytes(StandardCharsets.UTF_8);
-                HttpURLConnection connection = (HttpURLConnection) new URL(webhook).openConnection();
-                connection.setRequestMethod("POST");
-                connection.setConnectTimeout(15000);
-                connection.setReadTimeout(20000);
-                connection.setDoOutput(true);
-                connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
-                connection.setRequestProperty("Accept", "application/json, text/plain, */*");
-                connection.setRequestProperty("User-Agent", "BetnetSmsSender/1.0");
-                connection.setFixedLengthStreamingMode(body.length);
-
-                try (OutputStream output = connection.getOutputStream()) {
-                    output.write(body);
+            Result last = new Result(false, 0, "ارسال انجام نشد");
+            int attempts = Math.max(1, maxAttempts);
+            for (int i = 1; i <= attempts; i++) {
+                last = sendOnce(webhook, sender, message, packageName, timestamp, test, i);
+                new HistoryDb(app).addAttempt(historyId, i, last.success, last.code, last.response);
+                if (last.success) {
+                    showSuccessNotification(app, sender, i);
+                    if (callback != null) callback.onComplete(true, last.code, last.response);
+                    return;
                 }
-
-                code = connection.getResponseCode();
-                InputStream stream = code >= 200 && code < 400
-                        ? connection.getInputStream() : connection.getErrorStream();
-                response = readStream(stream);
-                success = code >= 200 && code < 300;
-                connection.disconnect();
-            } catch (Exception exception) {
-                response = exception.getClass().getSimpleName() + ": " + exception.getMessage();
+                if (i < attempts) {
+                    try { Thread.sleep(Math.max(1, delaySeconds) * 1000L); } catch (InterruptedException e) { Thread.currentThread().interrupt(); break; }
+                }
             }
-
-            if (historyId > 0) {
-                new HistoryDb(appContext).updateResult(historyId, success, code, response);
-            }
-            if (callback != null) {
-                callback.onComplete(success, code, response);
-            }
+            new HistoryDb(app).markFailed(historyId, attempts, last.code, last.response);
+            if (callback != null) callback.onComplete(false, last.code, last.response);
         });
     }
 
-    private static String readStream(InputStream stream) throws Exception {
-        if (stream == null) return "";
-        StringBuilder result = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
-            String line;
-            while ((line = reader.readLine()) != null && result.length() < 4000) {
-                result.append(line).append('\n');
-            }
-        }
-        return result.toString().trim();
+    private static Result sendOnce(String webhook,String sender,String message,String packageName,long timestamp,boolean test,int attempt) {
+        int code = 0; String response; boolean success = false;
+        try {
+            JSONObject json = new JSONObject();
+            json.put("sender", sender); json.put("message", message); json.put("timestamp", timestamp);
+            json.put("package_name", packageName); json.put("source", "betnet-sms-sender");
+            json.put("test", test); json.put("attempt", attempt);
+            byte[] body = json.toString().getBytes(StandardCharsets.UTF_8);
+            HttpURLConnection c = (HttpURLConnection) new URL(webhook).openConnection();
+            c.setRequestMethod("POST"); c.setConnectTimeout(15000); c.setReadTimeout(20000); c.setDoOutput(true);
+            c.setRequestProperty("Content-Type", "application/json; charset=utf-8"); c.setRequestProperty("Accept", "application/json, text/plain, */*");
+            c.setRequestProperty("User-Agent", "BetnetSmsSender/1.1"); c.setFixedLengthStreamingMode(body.length);
+            try (OutputStream o = c.getOutputStream()) { o.write(body); }
+            code = c.getResponseCode(); InputStream s = code >= 200 && code < 400 ? c.getInputStream() : c.getErrorStream();
+            response = readStream(s); success = code >= 200 && code < 300; c.disconnect();
+        } catch (Exception e) { response = e.getClass().getSimpleName() + ": " + e.getMessage(); }
+        return new Result(success, code, response);
     }
+
+    private static void showSuccessNotification(Context context, String sender, int attempt) {
+        NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= 26) nm.createNotificationChannel(new NotificationChannel(CHANNEL_ID, "ارسال موفق وب‌هوک", NotificationManager.IMPORTANCE_DEFAULT));
+        android.app.Notification.Builder b = Build.VERSION.SDK_INT >= 26 ? new android.app.Notification.Builder(context, CHANNEL_ID) : new android.app.Notification.Builder(context);
+        b.setSmallIcon(android.R.drawable.stat_sys_upload_done).setContentTitle("ارسال به وب‌هوک موفق بود").setContentText(sender + " • تلاش " + attempt).setAutoCancel(true);
+        nm.notify((int)(System.currentTimeMillis() & 0x7fffffff), b.build());
+    }
+
+    private static String readStream(InputStream stream) throws Exception { if (stream == null) return ""; StringBuilder r = new StringBuilder(); try (BufferedReader br = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) { String line; while ((line = br.readLine()) != null && r.length() < 4000) r.append(line).append('\n'); } return r.toString().trim(); }
+    private static final class Result { final boolean success; final int code; final String response; Result(boolean s,int c,String r){success=s;code=c;response=r;} }
 }
