@@ -887,6 +887,46 @@ public final class MainActivity extends Activity {
         return row;
     }
 
+    private Button compactActionButton(String text, String background, String foreground) {
+        Button button = new Button(this);
+        button.setText(text);
+        button.setAllCaps(false);
+        button.setTextSize(12);
+        button.setTypeface(null, 1);
+        button.setTextColor(Color.parseColor(foreground));
+        button.setBackground(makeRoundedBackground(background, background, 20f));
+        button.setPadding(12, 0, 12, 0);
+        button.setMinWidth(0);
+        button.setMinimumWidth(0);
+        button.setMinHeight(0);
+        button.setMinimumHeight(0);
+        return button;
+    }
+
+    private GradientDrawable makeRoundedBackground(
+            String fill,
+            String stroke,
+            float radius
+    ) {
+        GradientDrawable background = new GradientDrawable();
+        background.setColor(Color.parseColor(fill));
+        background.setCornerRadius(radius);
+        background.setStroke(1, Color.parseColor(stroke));
+        return background;
+    }
+
+    private String prettyJson(String raw) {
+        if (raw == null || raw.trim().isEmpty()) {
+            return "بدون پاسخ";
+        }
+
+        try {
+            return new JSONObject(raw.trim()).toString(2);
+        } catch (Exception ignored) {
+            return raw.trim();
+        }
+    }
+
     private TextView sectionTitle(String text) {
         TextView t = new TextView(this);
         t.setText(text);
