@@ -485,6 +485,7 @@ public final class MainActivity extends Activity {
         Button selectButton = findViewById(R.id.buttonSelectHistory);
         if (deleteButton != null) deleteButton.setVisibility(historySelectionMode ? View.VISIBLE : View.GONE);
         if (selectButton != null) {
+            selectButton.setVisibility(historySelectionMode ? View.VISIBLE : View.GONE);
             selectButton.setText(historySelectionMode ? "پایان انتخاب" : "انتخاب پیام‌ها");
         }
         if (deleteButton instanceof Button) {
@@ -672,10 +673,10 @@ public final class MainActivity extends Activity {
                         android.R.color.transparent
                 );
                 int width = (int) (
-                        getResources().getDisplayMetrics().widthPixels * 0.94f
+                        getResources().getDisplayMetrics().widthPixels * 0.96f
                 );
                 int height = (int) (
-                        getResources().getDisplayMetrics().heightPixels * 0.90f
+                        getResources().getDisplayMetrics().heightPixels * 0.94f
                 );
                 dialog.getWindow().setLayout(width, height);
                 dialog.getWindow().setGravity(Gravity.CENTER);

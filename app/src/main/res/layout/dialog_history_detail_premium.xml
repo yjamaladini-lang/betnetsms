@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="18dp"
+    android:padding="20dp"
     android:background="@drawable/bg_premium_dialog"
     android:layoutDirection="rtl"
     android:textDirection="rtl">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="58dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:layoutDirection="ltr">
@@ -23,7 +23,8 @@
             android:padding="10dp"
             android:src="@drawable/ic_close_premium"
             android:background="@drawable/bg_premium_action"
-            android:contentDescription="بستن"/>
+            android:contentDescription="بستن"
+            android:visibility="invisible"/>
 
         <TextView
             android:layout_width="0dp"
@@ -31,7 +32,7 @@
             android:layout_weight="1"
             android:text="جزئیات پیام و ارسال"
             android:textColor="@color/premium_text"
-            android:textSize="22sp"
+            android:textSize="26sp"
             android:fontFamily="sans-serif-medium"
             android:gravity="center"/>
 
@@ -58,13 +59,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="12dp"
+                android:padding="14dp"
                 android:background="@drawable/bg_premium_inner_card"
                 android:elevation="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="52dp"
+                    android:layout_height="58dp"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:layoutDirection="ltr">
@@ -75,7 +76,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textColor="@color/premium_text"
-                        android:textSize="12sp"
+                        android:textSize="13sp"
                         android:fontFamily="sans-serif-medium"
                         android:textDirection="ltr"
                         android:gravity="start"/>
@@ -85,7 +86,7 @@
                         android:layout_height="wrap_content"
                         android:text="فرستنده:"
                         android:textColor="#334155"
-                        android:textSize="12sp"
+                        android:textSize="13sp"
                         android:layout_marginEnd="9dp"/>
 
                     <FrameLayout
@@ -104,7 +105,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="52dp"
+                    android:layout_height="58dp"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:layoutDirection="ltr">
@@ -115,7 +116,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textColor="@color/premium_text"
-                        android:textSize="12sp"
+                        android:textSize="13sp"
                         android:fontFamily="sans-serif-medium"
                         android:textDirection="ltr"
                         android:gravity="start"/>
@@ -125,7 +126,7 @@
                         android:layout_height="wrap_content"
                         android:text="برنامه:"
                         android:textColor="#334155"
-                        android:textSize="12sp"
+                        android:textSize="13sp"
                         android:layout_marginEnd="9dp"/>
 
                     <FrameLayout
@@ -144,7 +145,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="52dp"
+                    android:layout_height="58dp"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:layoutDirection="ltr">
@@ -155,7 +156,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textColor="@color/premium_text"
-                        android:textSize="12sp"
+                        android:textSize="13sp"
                         android:fontFamily="sans-serif-medium"
                         android:textDirection="ltr"
                         android:gravity="start"/>
@@ -165,7 +166,7 @@
                         android:layout_height="wrap_content"
                         android:text="زمان شناسایی:"
                         android:textColor="#334155"
-                        android:textSize="12sp"
+                        android:textSize="13sp"
                         android:layout_marginEnd="9dp"/>
 
                     <FrameLayout
@@ -194,7 +195,7 @@
                     android:layout_height="wrap_content"
                     android:text="متن پیام:"
                     android:textColor="@color/premium_text"
-                    android:textSize="15sp"
+                    android:textSize="16sp"
                     android:fontFamily="sans-serif-medium"/>
                 <View
                     android:layout_width="4dp"
@@ -208,9 +209,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:padding="15dp"
+                android:padding="17dp"
                 android:textColor="@color/premium_text"
-                android:textSize="13sp"
+                android:textSize="14sp"
                 android:lineSpacingExtra="4dp"
                 android:gravity="end"
                 android:textDirection="rtl"
@@ -230,7 +231,7 @@
                     android:layout_height="wrap_content"
                     android:text="تاریخچه تلاش‌ها:"
                     android:textColor="@color/premium_text"
-                    android:textSize="15sp"
+                    android:textSize="16sp"
                     android:fontFamily="sans-serif-medium"/>
                 <View
                     android:layout_width="4dp"

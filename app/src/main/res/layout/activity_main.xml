@@ -116,23 +116,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical"
+                    android:gravity="top|center_vertical"
                     android:layoutDirection="ltr">
 
-                    <ImageButton
-                        android:id="@+id/buttonHistoryBack"
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:padding="10dp"
-                        android:src="@drawable/ic_back_premium"
-                        android:background="@drawable/bg_premium_action"
-                        android:contentDescription="بازگشت"/>
+                    <Button
+                        android:id="@+id/buttonRefresh"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:text="تازه‌سازی  ↻"
+                        android:textColor="@color/premium_text"
+                        android:textSize="12sp"
+                        android:fontFamily="sans-serif-medium"
+                        android:background="@drawable/bg_premium_action"/>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginStart="14dp"
+                        android:layout_marginStart="18dp"
                         android:orientation="vertical"
                         android:gravity="end">
 
@@ -141,7 +142,7 @@
                             android:layout_height="wrap_content"
                             android:text="تاریخچه پیام‌ها"
                             android:textColor="@color/premium_text"
-                            android:textSize="26sp"
+                            android:textSize="29sp"
                             android:fontFamily="sans-serif-medium"
                             android:gravity="end"
                             android:maxLines="1"/>
@@ -150,7 +151,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="برای مشاهده پاسخ وب‌هوک و ارسال مجدد، روی پیام بزن."
+                            android:text="برای مشاهده جزئیات، پاسخ وب‌هوک و ارسال مجدد روی پیام بزن."
                             android:textColor="@color/premium_muted"
                             android:textSize="11sp"
                             android:gravity="end"
@@ -161,20 +162,20 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="44dp"
-                    android:layout_marginTop="14dp"
+                    android:layout_marginTop="10dp"
                     android:orientation="horizontal"
                     android:layoutDirection="ltr"
                     android:gravity="start">
 
-                    <Button
-                        android:id="@+id/buttonRefresh"
-                        android:layout_width="wrap_content"
+                    <ImageButton
+                        android:id="@+id/buttonHistoryBack"
+                        android:layout_width="44dp"
                         android:layout_height="44dp"
-                        android:text="تازه‌سازی"
-                        android:textColor="@color/premium_text"
-                        android:textSize="11.5sp"
-                        android:fontFamily="sans-serif-medium"
-                        android:background="@drawable/bg_premium_action"/>
+                        android:padding="10dp"
+                        android:src="@drawable/ic_back_premium"
+                        android:background="@drawable/bg_premium_action"
+                        android:contentDescription="بازگشت"
+                        android:visibility="gone"/>
 
                     <Button
                         android:id="@+id/buttonSelectHistory"
@@ -185,7 +186,8 @@
                         android:textColor="@color/premium_text"
                         android:textSize="11.5sp"
                         android:fontFamily="sans-serif-medium"
-                        android:background="@drawable/bg_premium_action"/>
+                        android:background="@drawable/bg_premium_action"
+                        android:visibility="gone"/>
                 </LinearLayout>
 
                 <Button
