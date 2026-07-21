@@ -380,6 +380,7 @@ public final class MainActivity extends Activity {
 
     private void refreshHistory() {
         if (historyContainer == null) return;
+
         historyContainer.removeAllViews();
         List<HistoryDb.HistoryItem> items = historyDb.latest(80);
         updateLatestDashboard(items);
@@ -389,88 +390,140 @@ public final class MainActivity extends Activity {
             TextView empty = new TextView(this);
             empty.setText("هنوز پیامی ثبت نشده است.");
             empty.setTextColor(Color.parseColor("#6B7280"));
+            empty.setTextSize(12);
             empty.setGravity(Gravity.CENTER);
-            empty.setPadding(8, 36, 8, 36);
+            empty.setPadding(8, 30, 8, 30);
             historyContainer.addView(empty);
             return;
         }
 
         for (HistoryDb.HistoryItem item : items) {
+            final int state = historyVisualState(item);
+
             LinearLayout card = new LinearLayout(this);
             card.setOrientation(LinearLayout.VERTICAL);
-            card.setPadding(22, 18, 22, 18);
-            LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(-1, -2);
-            cardParams.setMargins(0, 0, 0, 14);
-            card.setLayoutParams(cardParams);
-            card.setElevation(2f);
+            card.setPadding(16, 12, 16, 12);
             card.setClickable(true);
             card.setFocusable(true);
+            card.setElevation(1f);
+            card.setBackground(makeHistoryCardBackground(
+                    state,
+                    selectedHistoryIds.contains(item.id)
+            ));
 
-            int state = historyVisualState(item);
-            card.setBackground(makeHistoryCardBackground(state, selectedHistoryIds.contains(item.id)));
+            LinearLayout.LayoutParams cardParams =
+                    new LinearLayout.LayoutParams(-1, -2);
+            cardParams.setMargins(0, 0, 0, 9);
+            card.setLayoutParams(cardParams);
 
-            LinearLayout header = new LinearLayout(this);
-            header.setOrientation(LinearLayout.HORIZONTAL);
-            header.setGravity(Gravity.CENTER_VERTICAL);
+            /* ردیف اول: انتخاب + فرستنده + زمان */
+            LinearLayout top = new LinearLayout(this);
+            top.setOrientation(LinearLayout.HORIZONTAL);
+            top.setGravity(Gravity.CENTER_VERTICAL);
 
             CheckBox check = new CheckBox(this);
+            check.setButtonTintList(android.content.res.ColorStateList.valueOf(
+                    Color.parseColor("#2563EB")
+            ));
             check.setVisibility(historySelectionMode ? View.VISIBLE : View.GONE);
             check.setChecked(selectedHistoryIds.contains(item.id));
+            check.setPadding(0, 0, 6, 0);
             check.setOnCheckedChangeListener((buttonView, checked) -> {
-                if (checked) selectedHistoryIds.add(item.id); else selectedHistoryIds.remove(item.id);
+                if (checked) selectedHistoryIds.add(item.id);
+                else selectedHistoryIds.remove(item.id);
+
                 updateHistoryToolbar();
                 card.setBackground(makeHistoryCardBackground(state, checked));
             });
-            header.addView(check, new LinearLayout.LayoutParams(-2, -2));
+            top.addView(check, new LinearLayout.LayoutParams(-2, -2));
 
             TextView sender = new TextView(this);
-            sender.setText(item.sender == null || item.sender.trim().isEmpty() ? "فرستنده نامشخص" : item.sender);
+            sender.setText(
+                    item.sender == null || item.sender.trim().isEmpty()
+                            ? "فرستنده نامشخص"
+                            : item.sender
+            );
             sender.setTextColor(Color.parseColor("#111827"));
-            sender.setTextSize(16);
+            sender.setTextSize(14);
             sender.setTypeface(null, 1);
+            sender.setSingleLine(true);
+            sender.setEllipsize(android.text.TextUtils.TruncateAt.END);
             sender.setGravity(Gravity.START);
             sender.setTextDirection(View.TEXT_DIRECTION_RTL);
-            header.addView(sender, new LinearLayout.LayoutParams(0, -2, 1f));
+            top.addView(sender, new LinearLayout.LayoutParams(0, -2, 1f));
 
             TextView time = new TextView(this);
             time.setText(JalaliDate.format(item.createdAt));
-            time.setTextColor(Color.parseColor("#374151"));
-            time.setTextSize(12);
+            time.setTextColor(Color.parseColor("#64748B"));
+            time.setTextSize(10);
+            time.setSingleLine(true);
             time.setGravity(Gravity.END);
-            header.addView(time);
+            top.addView(time);
 
-            TextView msg = new TextView(this);
-            msg.setGravity(Gravity.START);
-            msg.setTextDirection(View.TEXT_DIRECTION_RTL);
-            msg.setText(shorten(item.message, 420));
-            msg.setTextColor(Color.parseColor("#374151"));
-            msg.setTextSize(14);
-            msg.setLineSpacing(3f, 1.15f);
-            msg.setPadding(0, 12, 0, 12);
+            /* فقط خلاصه کوتاه پیام */
+            TextView message = new TextView(this);
+            message.setText(item.message == null ? "" : item.message.trim());
+            message.setTextColor(Color.parseColor("#334155"));
+            message.setTextSize(12);
+            message.setLineSpacing(2f, 1.08f);
+            message.setMaxLines(2);
+            message.setEllipsize(android.text.TextUtils.TruncateAt.END);
+            message.setGravity(Gravity.START);
+            message.setTextDirection(View.TEXT_DIRECTION_RTL);
+            message.setPadding(0, 7, 0, 8);
 
-            LinearLayout footer = new LinearLayout(this);
-            footer.setOrientation(LinearLayout.HORIZONTAL);
-            footer.setGravity(Gravity.CENTER_VERTICAL);
+            /* ردیف پایین: وضعیت + HTTP + دکمه جزئیات */
+            LinearLayout bottom = new LinearLayout(this);
+            bottom.setOrientation(LinearLayout.HORIZONTAL);
+            bottom.setGravity(Gravity.CENTER_VERTICAL);
 
             TextView result = new TextView(this);
-            result.setText(historyStateLabel(item));
+            result.setText(
+                    state == 1
+                            ? "بسته داده شد"
+                            : state == 2
+                            ? "رسید؛ اعمال نشد"
+                            : "ارسال نشد"
+            );
             result.setTextColor(historyStateColor(state));
-            result.setTextSize(12);
+            result.setTextSize(10);
             result.setTypeface(null, 1);
-            result.setPadding(16, 8, 16, 8);
+            result.setPadding(11, 5, 11, 5);
             result.setBackground(makeStatusPill(state));
-            footer.addView(result);
+            bottom.addView(result);
 
             TextView meta = new TextView(this);
-            meta.setText("HTTP " + item.httpCode + "  •  تلاش " + item.attemptCount);
-            meta.setTextColor(Color.parseColor("#6B7280"));
-            meta.setTextSize(11);
-            meta.setGravity(Gravity.END);
-            footer.addView(meta, new LinearLayout.LayoutParams(0, -2, 1f));
+            meta.setText("HTTP " + item.httpCode + "  •  " + item.attemptCount + " تلاش");
+            meta.setTextColor(Color.parseColor("#64748B"));
+            meta.setTextSize(9);
+            meta.setGravity(Gravity.CENTER_VERTICAL);
+            LinearLayout.LayoutParams metaLp =
+                    new LinearLayout.LayoutParams(0, -2, 1f);
+            metaLp.setMargins(8, 0, 8, 0);
+            bottom.addView(meta, metaLp);
 
-            card.addView(header);
-            card.addView(msg);
-            card.addView(footer);
+            Button detail = compactActionButton("جزئیات", "#FFFFFF", "#2563EB");
+            detail.setTextSize(10);
+            detail.setMinHeight(0);
+            detail.setMinimumHeight(0);
+            detail.setMinWidth(0);
+            detail.setMinimumWidth(0);
+            detail.setPadding(13, 0, 13, 0);
+            LinearLayout.LayoutParams detailLp =
+                    new LinearLayout.LayoutParams(-2, 42);
+            bottom.addView(detail, detailLp);
+
+            card.addView(top);
+            card.addView(message);
+            card.addView(bottom);
+
+            detail.setOnClickListener(v -> {
+                if (historySelectionMode) {
+                    check.setChecked(!check.isChecked());
+                } else {
+                    showHistoryDetail(item.id);
+                }
+            });
 
             card.setOnClickListener(v -> {
                 if (historySelectionMode) {
@@ -479,14 +532,17 @@ public final class MainActivity extends Activity {
                     showHistoryDetail(item.id);
                 }
             });
+
             card.setOnLongClickListener(v -> {
                 if (!historySelectionMode) {
                     historySelectionMode = true;
+                    selectedHistoryIds.clear();
                     selectedHistoryIds.add(item.id);
                     refreshHistory();
                 }
                 return true;
             });
+
             historyContainer.addView(card);
         }
     }
@@ -496,10 +552,10 @@ public final class MainActivity extends Activity {
         Button selectButton = findViewById(R.id.buttonSelectHistory);
         if (deleteButton != null) deleteButton.setVisibility(historySelectionMode ? View.VISIBLE : View.GONE);
         if (selectButton != null) {
-            selectButton.setText(historySelectionMode ? "لغو" : "انتخاب");
+            selectButton.setText(historySelectionMode ? "پایان انتخاب" : "انتخاب پیام‌ها");
         }
         if (deleteButton instanceof Button) {
-            ((Button) deleteButton).setText(selectedHistoryIds.isEmpty() ? "حذف انتخابی" : "حذف " + selectedHistoryIds.size() + " مورد");
+            ((Button) deleteButton).setText(selectedHistoryIds.isEmpty() ? "حذف" : "حذف " + selectedHistoryIds.size() + " پیام");
             deleteButton.setEnabled(!selectedHistoryIds.isEmpty());
         }
     }
