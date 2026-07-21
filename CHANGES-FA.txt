@@ -1,3 +1,7 @@
+رفع خطای Build شماره ۱۸:
+- متد infoDivider که در سه خط استفاده شده بود ولی تعریف نشده بود، اضافه شد.
+- خطاهای cannot find symbol مربوط به خطوط 682، 684 و 807 برطرف شد.
+
 رفع خطای Build:
 - متدهای compactActionButton، makeRoundedBackground و prettyJson که در بازطراحی قبلی حذف شده بودند بازگردانده شدند.
 - ساختار براکت‌های MainActivity بررسی شد.

@@ -927,6 +927,16 @@ public final class MainActivity extends Activity {
         }
     }
 
+    private View infoDivider() {
+        View divider = new View(this);
+        divider.setBackgroundColor(Color.parseColor("#E5E7EB"));
+        divider.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                1
+        ));
+        return divider;
+    }
+
     private TextView sectionTitle(String text) {
         TextView t = new TextView(this);
         t.setText(text);
