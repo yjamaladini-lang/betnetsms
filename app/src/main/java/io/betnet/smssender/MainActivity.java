@@ -4,6 +4,9 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.ComponentName;
 import android.service.notification.NotificationListenerService;
 import android.content.pm.ApplicationInfo;
@@ -597,54 +600,310 @@ public final class MainActivity extends Activity {
     private void showHistoryDetail(long id) {
         HistoryDb.HistoryItem item = historyDb.get(id);
         if (item == null) return;
+
         List<HistoryDb.AttemptItem> attempts = historyDb.attempts(id);
+        int visualState = historyVisualState(item);
 
-        LinearLayout root = new LinearLayout(this);
-        root.setOrientation(LinearLayout.VERTICAL);
-        root.setPadding(28, 18, 28, 8);
-        root.setTextDirection(View.TEXT_DIRECTION_RTL);
+        LinearLayout sheet = new LinearLayout(this);
+        sheet.setOrientation(LinearLayout.VERTICAL);
+        sheet.setPadding(24, 18, 24, 20);
+        sheet.setTextDirection(View.TEXT_DIRECTION_RTL);
+        sheet.setBackground(makeRoundedBackground("#FFFFFF", "#E5E7EB", 34f));
 
-        TextView summary = detailBox(
-                "فرستنده:  " + item.sender +
-                "\nبرنامه:  " + getAppLabel(item.packageName) +
-                "\nزمان شناسایی:  " + JalaliDate.format(item.createdAt),
-                "#F9FAFB");
-        root.addView(summary);
+        LinearLayout header = new LinearLayout(this);
+        header.setOrientation(LinearLayout.HORIZONTAL);
+        header.setGravity(Gravity.CENTER_VERTICAL);
+        header.setPadding(0, 0, 0, 14);
 
-        TextView messageTitle = sectionTitle("متن پیام:");
-        root.addView(messageTitle);
+        Button back = compactActionButton("→", "#F8FAFC", "#111827");
+        back.setContentDescription("بازگشت");
+        header.addView(back, new LinearLayout.LayoutParams(58, 58));
+
+        TextView title = new TextView(this);
+        title.setText("جزئیات پیام");
+        title.setTextColor(Color.parseColor("#0F172A"));
+        title.setTextSize(22);
+        title.setTypeface(null, 1);
+        title.setGravity(Gravity.CENTER);
+        header.addView(title, new LinearLayout.LayoutParams(0, -2, 1f));
+
+        TextView stateIcon = new TextView(this);
+        stateIcon.setText(visualState == 1 ? "✓" : visualState == 2 ? "!" : "×");
+        stateIcon.setGravity(Gravity.CENTER);
+        stateIcon.setTextSize(22);
+        stateIcon.setTypeface(null, 1);
+        stateIcon.setTextColor(historyStateColor(visualState));
+        stateIcon.setBackground(makeStatusPill(visualState));
+        header.addView(stateIcon, new LinearLayout.LayoutParams(58, 58));
+        sheet.addView(header);
+
+        LinearLayout statusCard = new LinearLayout(this);
+        statusCard.setOrientation(LinearLayout.VERTICAL);
+        statusCard.setPadding(18, 16, 18, 16);
+        statusCard.setBackground(makeRoundedBackground(
+                visualState == 1 ? "#F0FDF4" : visualState == 2 ? "#FFFBEB" : "#FEF2F2",
+                visualState == 1 ? "#86EFAC" : visualState == 2 ? "#FDE68A" : "#FCA5A5",
+                24f
+        ));
+
+        TextView statusTitle = new TextView(this);
+        statusTitle.setText(visualState == 1
+                ? "بسته با موفقیت اعمال شد"
+                : visualState == 2
+                ? "پیام به سایت رسید، اما بسته اعمال نشد"
+                : "ارتباط با سایت برقرار نشد");
+        statusTitle.setTextColor(historyStateColor(visualState));
+        statusTitle.setTextSize(16);
+        statusTitle.setTypeface(null, 1);
+        statusTitle.setGravity(Gravity.START);
+        statusCard.addView(statusTitle);
+
+        TextView statusDesc = new TextView(this);
+        statusDesc.setText(visualState == 1
+                ? "پاسخ وب‌هوک تأیید می‌کند سفارش پیدا شده و بسته تحویل داده شده است."
+                : visualState == 2
+                ? "وب‌هوک پاسخ داده، ولی سفارش متناظر پیدا نشده یا هنوز قابل تطبیق نبوده است."
+                : "ارسال ناموفق، خطای شبکه یا پاسخ HTTP نامعتبر ثبت شده است.");
+        statusDesc.setTextColor(Color.parseColor("#64748B"));
+        statusDesc.setTextSize(11);
+        statusDesc.setLineSpacing(3f, 1.15f);
+        statusDesc.setPadding(0, 6, 0, 0);
+        statusCard.addView(statusDesc);
+
+        LinearLayout.LayoutParams statusLp = new LinearLayout.LayoutParams(-1, -2);
+        statusLp.setMargins(0, 0, 0, 14);
+        sheet.addView(statusCard, statusLp);
+
+        sheet.addView(sectionTitle("اطلاعات پیام"));
+        LinearLayout infoCard = new LinearLayout(this);
+        infoCard.setOrientation(LinearLayout.VERTICAL);
+        infoCard.setPadding(16, 8, 16, 8);
+        infoCard.setBackground(makeRoundedBackground("#FAFAFA", "#E5E7EB", 24f));
+        infoCard.addView(infoRow("👤", "فرستنده", item.sender == null ? "—" : item.sender));
+        infoCard.addView(infoDivider());
+        infoCard.addView(infoRow("💬", "برنامه", getAppLabel(item.packageName)));
+        infoCard.addView(infoDivider());
+        infoCard.addView(infoRow("◷", "زمان شناسایی", JalaliDate.format(item.createdAt)));
+        sheet.addView(infoCard);
+
+        sheet.addView(sectionTitle("متن پیام"));
         TextView message = detailBox(item.message, "#FFFFFF");
-        root.addView(message);
+        message.setTextSize(14);
+        message.setPadding(18, 18, 18, 18);
+        sheet.addView(message);
 
-        TextView attemptsTitle = sectionTitle("تاریخچه تلاش‌ها:");
-        root.addView(attemptsTitle);
+        sheet.addView(sectionTitle("تاریخچه تلاش‌ها"));
         if (attempts.isEmpty()) {
-            root.addView(detailBox("هنوز تلاشی ثبت نشده است.", "#F9FAFB"));
+            sheet.addView(detailBox("هنوز تلاشی ثبت نشده است.", "#F8FAFC"));
         } else {
             for (HistoryDb.AttemptItem a : attempts) {
-                int state = a.httpCode >= 200 && a.httpCode < 300 ? 2 : 3;
+                int attemptState = a.httpCode >= 200 && a.httpCode < 300 ? 2 : 3;
                 try {
-                    JSONObject j = new JSONObject(a.response == null ? "" : a.response.trim());
-                    if (j.optBoolean("matched", false)) state = 1;
+                    JSONObject json = new JSONObject(a.response == null ? "" : a.response.trim());
+                    if (json.optBoolean("matched", false)) attemptState = 1;
                 } catch (Exception ignored) {}
-                String text = "تلاش " + a.attemptNo + "  •  " + JalaliDate.format(a.createdAt) +
-                        "\n" + (state == 1 ? "موفق و بسته داده شد" : state == 2 ? "ارسال شد ولی بسته داده نشد" : "ارسال ناموفق") +
-                        "  •  HTTP " + a.httpCode + "\n\nپاسخ:\n" + (a.response == null ? "" : a.response);
-                TextView attemptView = detailBox(text, state == 1 ? "#F0FDF4" : state == 2 ? "#FFFBEB" : "#FEF2F2");
-                root.addView(attemptView);
+
+                LinearLayout attemptCard = new LinearLayout(this);
+                attemptCard.setOrientation(LinearLayout.VERTICAL);
+                attemptCard.setPadding(16, 14, 16, 14);
+                attemptCard.setBackground(makeRoundedBackground(
+                        attemptState == 1 ? "#F0FDF4" : attemptState == 2 ? "#FFFBEB" : "#FEF2F2",
+                        attemptState == 1 ? "#BBF7D0" : attemptState == 2 ? "#FDE68A" : "#FECACA",
+                        22f
+                ));
+
+                LinearLayout attemptHead = new LinearLayout(this);
+                attemptHead.setOrientation(LinearLayout.HORIZONTAL);
+                attemptHead.setGravity(Gravity.CENTER_VERTICAL);
+
+                TextView attemptNo = new TextView(this);
+                attemptNo.setText("تلاش " + a.attemptNo);
+                attemptNo.setTextColor(Color.parseColor("#0F172A"));
+                attemptNo.setTextSize(13);
+                attemptNo.setTypeface(null, 1);
+                attemptHead.addView(attemptNo, new LinearLayout.LayoutParams(0, -2, 1f));
+
+                TextView http = new TextView(this);
+                http.setText("HTTP " + a.httpCode);
+                http.setTextColor(historyStateColor(attemptState));
+                http.setTextSize(11);
+                http.setTypeface(null, 1);
+                http.setPadding(12, 6, 12, 6);
+                http.setBackground(makeStatusPill(attemptState));
+                attemptHead.addView(http);
+                attemptCard.addView(attemptHead);
+
+                TextView attemptMeta = new TextView(this);
+                attemptMeta.setText(JalaliDate.format(a.createdAt) + "  •  " +
+                        (attemptState == 1 ? "بسته اعمال شد" :
+                                attemptState == 2 ? "به سایت رسید، بدون تطبیق" : "ارسال ناموفق"));
+                attemptMeta.setTextColor(Color.parseColor("#64748B"));
+                attemptMeta.setTextSize(10);
+                attemptMeta.setPadding(0, 8, 0, 8);
+                attemptCard.addView(attemptMeta);
+
+                TextView responseLabel = new TextView(this);
+                responseLabel.setText("پاسخ سرور");
+                responseLabel.setTextColor(Color.parseColor("#334155"));
+                responseLabel.setTextSize(11);
+                responseLabel.setTypeface(null, 1);
+                attemptCard.addView(responseLabel);
+
+                TextView response = new TextView(this);
+                response.setText(prettyJson(a.response));
+                response.setTextColor(Color.parseColor("#1E293B"));
+                response.setTextSize(11);
+                response.setTextDirection(View.TEXT_DIRECTION_LTR);
+                response.setGravity(Gravity.START);
+                response.setPadding(14, 12, 14, 12);
+                response.setTypeface(android.graphics.Typeface.MONOSPACE);
+                response.setBackground(makeRoundedBackground("#F8FAFC", "#E2E8F0", 16f));
+                response.setOnLongClickListener(v -> {
+                    copyText("پاسخ سرور", a.response == null ? "" : a.response);
+                    return true;
+                });
+                attemptCard.addView(response);
+
+                Button copy = compactActionButton("کپی پاسخ", "#FFFFFF", "#334155");
+                copy.setOnClickListener(v -> copyText("پاسخ سرور", a.response == null ? "" : a.response));
+                LinearLayout.LayoutParams copyLp = new LinearLayout.LayoutParams(-2, 48);
+                copyLp.gravity = Gravity.END;
+                copyLp.setMargins(0, 10, 0, 0);
+                attemptCard.addView(copy, copyLp);
+
+                LinearLayout.LayoutParams attemptLp = new LinearLayout.LayoutParams(-1, -2);
+                attemptLp.setMargins(0, 0, 0, 10);
+                sheet.addView(attemptCard, attemptLp);
             }
         }
 
+        LinearLayout actions = new LinearLayout(this);
+        actions.setOrientation(LinearLayout.HORIZONTAL);
+        actions.setGravity(Gravity.CENTER);
+        actions.setPadding(0, 12, 0, 0);
+
+        Button delete = compactActionButton("حذف", "#FEF2F2", "#B91C1C");
+        Button resend = compactActionButton("ارسال مجدد", "#16A34A", "#FFFFFF");
+        Button close = compactActionButton("بستن", "#F8FAFC", "#334155");
+
+        LinearLayout.LayoutParams actionLp = new LinearLayout.LayoutParams(0, 58, 1f);
+        actionLp.setMargins(5, 0, 5, 0);
+        actions.addView(delete, actionLp);
+        actions.addView(resend, actionLp);
+        actions.addView(close, actionLp);
+        sheet.addView(actions);
+
         ScrollView scroll = new ScrollView(this);
-        scroll.addView(root);
+        scroll.setFillViewport(true);
+        scroll.addView(sheet);
 
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("جزئیات پیام و ارسال")
                 .setView(scroll)
-                .setPositiveButton("بستن", null)
-                .setNeutralButton("ارسال مجدد", (d, w) -> manualResend(item))
                 .create();
+
+        back.setOnClickListener(v -> dialog.dismiss());
+        close.setOnClickListener(v -> dialog.dismiss());
+        resend.setOnClickListener(v -> {
+            dialog.dismiss();
+            manualResend(item);
+        });
+        delete.setOnClickListener(v -> new AlertDialog.Builder(this)
+                .setTitle("حذف پیام")
+                .setMessage("این پیام و تمام تلاش‌های آن حذف شود؟")
+                .setNegativeButton("انصراف", null)
+                .setPositiveButton("حذف", (d, w) -> {
+                    Set<Long> one = new HashSet<>();
+                    one.add(item.id);
+                    historyDb.delete(one);
+                    dialog.dismiss();
+                    refreshHistory();
+                    toast("پیام حذف شد.");
+                }).show());
+
+        dialog.setOnShowListener(d -> {
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.94f);
+                int height = (int) (getResources().getDisplayMetrics().heightPixels * 0.90f);
+                dialog.getWindow().setLayout(width, height);
+                dialog.getWindow().setGravity(Gravity.BOTTOM);
+            }
+        });
         dialog.show();
+    }
+
+    private View infoRow(String icon, String label, String value) {
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        row.setPadding(0, 10, 0, 10);
+
+        TextView iconView = new TextView(this);
+        iconView.setText(icon);
+        iconView.setTextSize(18);
+        iconView.setGravity(Gravity.CENTER);
+        row.addView(iconView, new LinearLayout.LayoutParams(48, 48));
+
+        TextView labelView = new TextView(this);
+        labelView.setText(label);
+        labelView.setTextColor(Color.parseColor("#64748B"));
+        labelView.setTextSize(11);
+        labelView.setGravity(Gravity.START);
+        row.addView(labelView, new LinearLayout.LayoutParams(0, -2, 1f));
+
+        TextView valueView = new TextView(this);
+        valueView.setText(value == null || value.trim().isEmpty() ? "—" : value);
+        valueView.setTextColor(Color.parseColor("#0F172A"));
+        valueView.setTextSize(12);
+        valueView.setTypeface(null, 1);
+        valueView.setGravity(Gravity.END);
+        valueView.setTextDirection(View.TEXT_DIRECTION_LTR);
+        row.addView(valueView);
+        return row;
+    }
+
+    private View infoDivider() {
+        View line = new View(this);
+        line.setBackgroundColor(Color.parseColor("#E5E7EB"));
+        line.setLayoutParams(new LinearLayout.LayoutParams(-1, 1));
+        return line;
+    }
+
+    private Button compactActionButton(String text, String background, String foreground) {
+        Button button = new Button(this);
+        button.setText(text);
+        button.setAllCaps(false);
+        button.setTextSize(12);
+        button.setTypeface(null, 1);
+        button.setTextColor(Color.parseColor(foreground));
+        button.setBackground(makeRoundedBackground(background, background, 20f));
+        button.setPadding(12, 0, 12, 0);
+        return button;
+    }
+
+    private GradientDrawable makeRoundedBackground(String fill, String stroke, float radius) {
+        GradientDrawable bg = new GradientDrawable();
+        bg.setColor(Color.parseColor(fill));
+        bg.setCornerRadius(radius);
+        bg.setStroke(1, Color.parseColor(stroke));
+        return bg;
+    }
+
+    private String prettyJson(String raw) {
+        if (raw == null || raw.trim().isEmpty()) return "بدون پاسخ";
+        try {
+            return new JSONObject(raw.trim()).toString(2);
+        } catch (Exception ignored) {
+            return raw.trim();
+        }
+    }
+
+    private void copyText(String label, String value) {
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        if (clipboard != null) {
+            clipboard.setPrimaryClip(ClipData.newPlainText(label, value == null ? "" : value));
+            toast("کپی شد.");
+        }
     }
 
     private TextView sectionTitle(String text) {
