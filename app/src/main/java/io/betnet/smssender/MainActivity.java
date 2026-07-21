@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,6 +38,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import org.json.JSONObject;
+
 public final class MainActivity extends Activity {
     private Switch switchEnabled;
     private EditText inputWebhook, inputSenderFilter, inputTextFilter, inputRetryCount, inputRetrySeconds;
@@ -44,6 +47,8 @@ public final class MainActivity extends Activity {
     private TextView textStatus, textSelectedApps, dashboardStatus, dashboardAppsText, dashboardLatestSender, dashboardLatestMessage, dashboardLatestResult;
     private LinearLayout historyContainer, sectionDashboard, sectionWebhook, sectionSettings, sectionHistory, sectionManual, dashboardLatestCard;
     private boolean accessDialogVisible = false;
+    private boolean historySelectionMode = false;
+    private final Set<Long> selectedHistoryIds = new HashSet<>();
     private HistoryDb historyDb;
     private Set<String> selectedPackages = new HashSet<>();
     private final List<AppChoice> appChoices = new ArrayList<>();
@@ -88,6 +93,17 @@ public final class MainActivity extends Activity {
         findViewById(R.id.buttonStartup).setOnClickListener(v -> openStartupSettings());
         findViewById(R.id.buttonTest).setOnClickListener(v -> testWebhook());
         findViewById(R.id.buttonRefresh).setOnClickListener(v -> refreshHistory());
+        findViewById(R.id.buttonHistoryBack).setOnClickListener(v -> {
+            historySelectionMode = false;
+            selectedHistoryIds.clear();
+            showSection(sectionDashboard);
+        });
+        findViewById(R.id.buttonSelectHistory).setOnClickListener(v -> {
+            historySelectionMode = !historySelectionMode;
+            if (!historySelectionMode) selectedHistoryIds.clear();
+            refreshHistory();
+        });
+        findViewById(R.id.buttonDeleteSelected).setOnClickListener(v -> deleteSelectedHistory());
         findViewById(R.id.buttonApps).setOnClickListener(v -> showAppPicker());
         findViewById(R.id.buttonManualSend).setOnClickListener(v -> sendManualText());
         switchEnabled.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -360,18 +376,199 @@ public final class MainActivity extends Activity {
     }
 
     private void refreshHistory() {
-        if(historyContainer==null)return; historyContainer.removeAllViews(); List<HistoryDb.HistoryItem> items=historyDb.latest(80);
+        if (historyContainer == null) return;
+        historyContainer.removeAllViews();
+        List<HistoryDb.HistoryItem> items = historyDb.latest(80);
         updateLatestDashboard(items);
-        if(items.isEmpty()){TextView e=new TextView(this);e.setText("هنوز پیامی ثبت نشده است.");e.setTextColor(Color.parseColor("#6B7280"));e.setPadding(8,18,8,18);historyContainer.addView(e);return;}
-        for(HistoryDb.HistoryItem item:items){
-            LinearLayout card=new LinearLayout(this);card.setOrientation(LinearLayout.VERTICAL);card.setPadding(24,20,24,20);
-            LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(-1,-2);p.setMargins(0,0,0,14);card.setLayoutParams(p);card.setBackgroundResource(R.drawable.bg_card);card.setElevation(2f);card.setClickable(true);
-            TextView title=new TextView(this);title.setGravity(Gravity.START);title.setTextDirection(View.TEXT_DIRECTION_RTL);title.setText(item.sender+"  •  "+JalaliDate.format(item.createdAt));title.setTextColor(Color.parseColor("#171717"));title.setTextSize(16);title.setTypeface(null,1);
-            TextView msg=new TextView(this);msg.setGravity(Gravity.START);msg.setTextDirection(View.TEXT_DIRECTION_RTL);msg.setText(shorten(item.message,300));msg.setTextColor(Color.parseColor("#374151"));msg.setTextSize(14);msg.setPadding(0,8,0,8);
-            TextView result=new TextView(this);String st;int color;if("sent".equals(item.status)){st="ارسال شد";color=Color.parseColor("#16803C");}else if("failed".equals(item.status)){st="ناموفق";color=Color.parseColor("#C62828");}else{st="در حال تلاش";color=Color.parseColor("#B26A00");}
-            result.setText(st+" | تلاش‌ها: "+item.attemptCount+" | HTTP "+item.httpCode);result.setTextColor(color);result.setTextSize(13);result.setGravity(Gravity.START);
-            card.addView(title);card.addView(msg);card.addView(result);card.setOnClickListener(v->showHistoryDetail(item.id));historyContainer.addView(card);
+        updateHistoryToolbar();
+
+        if (items.isEmpty()) {
+            TextView empty = new TextView(this);
+            empty.setText("هنوز پیامی ثبت نشده است.");
+            empty.setTextColor(Color.parseColor("#6B7280"));
+            empty.setGravity(Gravity.CENTER);
+            empty.setPadding(8, 36, 8, 36);
+            historyContainer.addView(empty);
+            return;
         }
+
+        for (HistoryDb.HistoryItem item : items) {
+            LinearLayout card = new LinearLayout(this);
+            card.setOrientation(LinearLayout.VERTICAL);
+            card.setPadding(22, 18, 22, 18);
+            LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(-1, -2);
+            cardParams.setMargins(0, 0, 0, 14);
+            card.setLayoutParams(cardParams);
+            card.setElevation(2f);
+            card.setClickable(true);
+            card.setFocusable(true);
+
+            int state = historyVisualState(item);
+            card.setBackground(makeHistoryCardBackground(state, selectedHistoryIds.contains(item.id)));
+
+            LinearLayout header = new LinearLayout(this);
+            header.setOrientation(LinearLayout.HORIZONTAL);
+            header.setGravity(Gravity.CENTER_VERTICAL);
+
+            CheckBox check = new CheckBox(this);
+            check.setVisibility(historySelectionMode ? View.VISIBLE : View.GONE);
+            check.setChecked(selectedHistoryIds.contains(item.id));
+            check.setOnCheckedChangeListener((buttonView, checked) -> {
+                if (checked) selectedHistoryIds.add(item.id); else selectedHistoryIds.remove(item.id);
+                updateHistoryToolbar();
+                card.setBackground(makeHistoryCardBackground(state, checked));
+            });
+            header.addView(check, new LinearLayout.LayoutParams(-2, -2));
+
+            TextView sender = new TextView(this);
+            sender.setText(item.sender == null || item.sender.trim().isEmpty() ? "فرستنده نامشخص" : item.sender);
+            sender.setTextColor(Color.parseColor("#111827"));
+            sender.setTextSize(16);
+            sender.setTypeface(null, 1);
+            sender.setGravity(Gravity.START);
+            sender.setTextDirection(View.TEXT_DIRECTION_RTL);
+            header.addView(sender, new LinearLayout.LayoutParams(0, -2, 1f));
+
+            TextView time = new TextView(this);
+            time.setText(JalaliDate.format(item.createdAt));
+            time.setTextColor(Color.parseColor("#374151"));
+            time.setTextSize(12);
+            time.setGravity(Gravity.END);
+            header.addView(time);
+
+            TextView msg = new TextView(this);
+            msg.setGravity(Gravity.START);
+            msg.setTextDirection(View.TEXT_DIRECTION_RTL);
+            msg.setText(shorten(item.message, 420));
+            msg.setTextColor(Color.parseColor("#374151"));
+            msg.setTextSize(14);
+            msg.setLineSpacing(3f, 1.15f);
+            msg.setPadding(0, 12, 0, 12);
+
+            LinearLayout footer = new LinearLayout(this);
+            footer.setOrientation(LinearLayout.HORIZONTAL);
+            footer.setGravity(Gravity.CENTER_VERTICAL);
+
+            TextView result = new TextView(this);
+            result.setText(historyStateLabel(item));
+            result.setTextColor(historyStateColor(state));
+            result.setTextSize(12);
+            result.setTypeface(null, 1);
+            result.setPadding(16, 8, 16, 8);
+            result.setBackground(makeStatusPill(state));
+            footer.addView(result);
+
+            TextView meta = new TextView(this);
+            meta.setText("HTTP " + item.httpCode + "  •  تلاش " + item.attemptCount);
+            meta.setTextColor(Color.parseColor("#6B7280"));
+            meta.setTextSize(11);
+            meta.setGravity(Gravity.END);
+            footer.addView(meta, new LinearLayout.LayoutParams(0, -2, 1f));
+
+            card.addView(header);
+            card.addView(msg);
+            card.addView(footer);
+
+            card.setOnClickListener(v -> {
+                if (historySelectionMode) {
+                    check.setChecked(!check.isChecked());
+                } else {
+                    showHistoryDetail(item.id);
+                }
+            });
+            card.setOnLongClickListener(v -> {
+                if (!historySelectionMode) {
+                    historySelectionMode = true;
+                    selectedHistoryIds.add(item.id);
+                    refreshHistory();
+                }
+                return true;
+            });
+            historyContainer.addView(card);
+        }
+    }
+
+    private void updateHistoryToolbar() {
+        View deleteButton = findViewById(R.id.buttonDeleteSelected);
+        Button selectButton = findViewById(R.id.buttonSelectHistory);
+        if (deleteButton != null) deleteButton.setVisibility(historySelectionMode ? View.VISIBLE : View.GONE);
+        if (selectButton != null) {
+            selectButton.setText(historySelectionMode ? "لغو" : "انتخاب");
+        }
+        if (deleteButton instanceof Button) {
+            ((Button) deleteButton).setText(selectedHistoryIds.isEmpty() ? "حذف انتخابی" : "حذف " + selectedHistoryIds.size() + " مورد");
+            deleteButton.setEnabled(!selectedHistoryIds.isEmpty());
+        }
+    }
+
+    private void deleteSelectedHistory() {
+        if (selectedHistoryIds.isEmpty()) {
+            toast("پیامی انتخاب نشده است.");
+            return;
+        }
+        new AlertDialog.Builder(this)
+                .setTitle("حذف تاریخچه")
+                .setMessage(selectedHistoryIds.size() + " پیام انتخاب‌شده حذف شود؟")
+                .setNegativeButton("انصراف", null)
+                .setPositiveButton("حذف", (d, w) -> {
+                    historyDb.delete(selectedHistoryIds);
+                    selectedHistoryIds.clear();
+                    historySelectionMode = false;
+                    refreshHistory();
+                    toast("تاریخچه انتخاب‌شده حذف شد.");
+                }).show();
+    }
+
+    private int historyVisualState(HistoryDb.HistoryItem item) {
+        if (item == null) return 3;
+        if (item.httpCode <= 0 || "failed".equals(item.status) || item.httpCode < 200 || item.httpCode >= 300) return 3;
+        try {
+            JSONObject json = new JSONObject(item.response == null ? "" : item.response.trim());
+            if (json.optBoolean("matched", false)) return 1;
+            if (json.optBoolean("success", false)) return 2;
+        } catch (Exception ignored) {}
+        return "sent".equals(item.status) ? 2 : 3;
+    }
+
+    private String historyStateLabel(HistoryDb.HistoryItem item) {
+        int state = historyVisualState(item);
+        if (state == 1) return "بسته با موفقیت داده شد";
+        if (state == 2) return "به سایت رسید؛ بسته داده نشد";
+        return "به سایت ارسال نشد";
+    }
+
+    private int historyStateColor(int state) {
+        if (state == 1) return Color.parseColor("#15803D");
+        if (state == 2) return Color.parseColor("#A16207");
+        return Color.parseColor("#B91C1C");
+    }
+
+    private GradientDrawable makeHistoryCardBackground(int state, boolean selected) {
+        GradientDrawable bg = new GradientDrawable();
+        bg.setCornerRadius(34f);
+        if (selected) {
+            bg.setColor(Color.parseColor("#EEF4FF"));
+            bg.setStroke(3, Color.parseColor("#3B82F6"));
+        } else if (state == 1) {
+            bg.setColor(Color.parseColor("#F0FDF4"));
+            bg.setStroke(2, Color.parseColor("#86EFAC"));
+        } else if (state == 2) {
+            bg.setColor(Color.parseColor("#FFFBEB"));
+            bg.setStroke(2, Color.parseColor("#FDE68A"));
+        } else {
+            bg.setColor(Color.parseColor("#FEF2F2"));
+            bg.setStroke(2, Color.parseColor("#FCA5A5"));
+        }
+        return bg;
+    }
+
+    private GradientDrawable makeStatusPill(int state) {
+        GradientDrawable bg = new GradientDrawable();
+        bg.setCornerRadius(999f);
+        if (state == 1) bg.setColor(Color.parseColor("#DCFCE7"));
+        else if (state == 2) bg.setColor(Color.parseColor("#FEF3C7"));
+        else bg.setColor(Color.parseColor("#FEE2E2"));
+        return bg;
     }
 
     private void updateLatestDashboard(List<HistoryDb.HistoryItem> items) {
@@ -398,13 +595,87 @@ public final class MainActivity extends Activity {
     }
 
     private void showHistoryDetail(long id) {
-        HistoryDb.HistoryItem item=historyDb.get(id); if(item==null)return; List<HistoryDb.AttemptItem> attempts=historyDb.attempts(id);
-        StringBuilder b=new StringBuilder();
-        b.append("فرستنده: ").append(item.sender).append("\nبرنامه: ").append(getAppLabel(item.packageName)).append("\nزمان شناسایی: ").append(JalaliDate.format(item.createdAt)).append("\n\nمتن پیام:\n").append(item.message).append("\n\nتاریخچه تلاش‌ها:\n");
-        if(attempts.isEmpty())b.append("هنوز تلاشی ثبت نشده.");
-        for(HistoryDb.AttemptItem a:attempts)b.append("\nتلاش ").append(a.attemptNo).append(" • ").append(JalaliDate.format(a.createdAt)).append("\n").append("sent".equals(a.status)?"موفق":"ناموفق").append(" • HTTP ").append(a.httpCode).append("\nپاسخ: ").append(a.response).append("\n");
-        new AlertDialog.Builder(this).setTitle("جزئیات پیام و ارسال").setMessage(b.toString()).setPositiveButton("بستن",null)
-                .setNeutralButton("ارسال مجدد",(d,w)->manualResend(item)).show();
+        HistoryDb.HistoryItem item = historyDb.get(id);
+        if (item == null) return;
+        List<HistoryDb.AttemptItem> attempts = historyDb.attempts(id);
+
+        LinearLayout root = new LinearLayout(this);
+        root.setOrientation(LinearLayout.VERTICAL);
+        root.setPadding(28, 18, 28, 8);
+        root.setTextDirection(View.TEXT_DIRECTION_RTL);
+
+        TextView summary = detailBox(
+                "فرستنده:  " + item.sender +
+                "\nبرنامه:  " + getAppLabel(item.packageName) +
+                "\nزمان شناسایی:  " + JalaliDate.format(item.createdAt),
+                "#F9FAFB");
+        root.addView(summary);
+
+        TextView messageTitle = sectionTitle("متن پیام:");
+        root.addView(messageTitle);
+        TextView message = detailBox(item.message, "#FFFFFF");
+        root.addView(message);
+
+        TextView attemptsTitle = sectionTitle("تاریخچه تلاش‌ها:");
+        root.addView(attemptsTitle);
+        if (attempts.isEmpty()) {
+            root.addView(detailBox("هنوز تلاشی ثبت نشده است.", "#F9FAFB"));
+        } else {
+            for (HistoryDb.AttemptItem a : attempts) {
+                int state = a.httpCode >= 200 && a.httpCode < 300 ? 2 : 3;
+                try {
+                    JSONObject j = new JSONObject(a.response == null ? "" : a.response.trim());
+                    if (j.optBoolean("matched", false)) state = 1;
+                } catch (Exception ignored) {}
+                String text = "تلاش " + a.attemptNo + "  •  " + JalaliDate.format(a.createdAt) +
+                        "\n" + (state == 1 ? "موفق و بسته داده شد" : state == 2 ? "ارسال شد ولی بسته داده نشد" : "ارسال ناموفق") +
+                        "  •  HTTP " + a.httpCode + "\n\nپاسخ:\n" + (a.response == null ? "" : a.response);
+                TextView attemptView = detailBox(text, state == 1 ? "#F0FDF4" : state == 2 ? "#FFFBEB" : "#FEF2F2");
+                root.addView(attemptView);
+            }
+        }
+
+        ScrollView scroll = new ScrollView(this);
+        scroll.addView(root);
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("جزئیات پیام و ارسال")
+                .setView(scroll)
+                .setPositiveButton("بستن", null)
+                .setNeutralButton("ارسال مجدد", (d, w) -> manualResend(item))
+                .create();
+        dialog.show();
+    }
+
+    private TextView sectionTitle(String text) {
+        TextView t = new TextView(this);
+        t.setText(text);
+        t.setTextColor(Color.parseColor("#111827"));
+        t.setTextSize(16);
+        t.setTypeface(null, 1);
+        t.setGravity(Gravity.START);
+        t.setPadding(0, 22, 0, 8);
+        return t;
+    }
+
+    private TextView detailBox(String text, String color) {
+        TextView t = new TextView(this);
+        t.setText(text == null ? "" : text);
+        t.setTextColor(Color.parseColor("#1F2937"));
+        t.setTextSize(13);
+        t.setGravity(Gravity.START);
+        t.setTextDirection(View.TEXT_DIRECTION_RTL);
+        t.setLineSpacing(4f, 1.18f);
+        t.setPadding(20, 18, 20, 18);
+        GradientDrawable bg = new GradientDrawable();
+        bg.setColor(Color.parseColor(color));
+        bg.setCornerRadius(26f);
+        bg.setStroke(1, Color.parseColor("#E5E7EB"));
+        t.setBackground(bg);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
+        lp.setMargins(0, 0, 0, 10);
+        t.setLayoutParams(lp);
+        return t;
     }
 
     private String getAppLabel(String packageName) {

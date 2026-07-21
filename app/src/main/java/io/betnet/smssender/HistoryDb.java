@@ -75,6 +75,24 @@ public final class HistoryDb extends SQLiteOpenHelper {
         return out;
     }
 
+
+    public synchronized void delete(java.util.Set<Long> ids) {
+        if (ids == null || ids.isEmpty()) return;
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+            for (Long id : ids) {
+                if (id == null) continue;
+                String[] args = new String[]{String.valueOf(id)};
+                db.delete("attempts", "history_id=?", args);
+                db.delete("history", "id=?", args);
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
     private HistoryItem fromCursor(Cursor c) {
         return new HistoryItem(c.getLong(c.getColumnIndexOrThrow("id")), c.getLong(c.getColumnIndexOrThrow("created_at")), c.getString(c.getColumnIndexOrThrow("sender")), c.getString(c.getColumnIndexOrThrow("message")), c.getString(c.getColumnIndexOrThrow("package_name")), c.getString(c.getColumnIndexOrThrow("status")), c.getInt(c.getColumnIndexOrThrow("http_code")), c.getString(c.getColumnIndexOrThrow("response")), c.getInt(c.getColumnIndexOrThrow("attempt_count")));
     }

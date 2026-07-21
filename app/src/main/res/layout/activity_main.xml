@@ -107,7 +107,13 @@
             </LinearLayout>
 
             <LinearLayout android:id="@+id/sectionHistory" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal"><TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="تاریخچه پیام‌ها" android:textColor="@color/text_primary" android:textSize="23sp" android:textStyle="bold"/><Button android:id="@+id/buttonRefresh" android:layout_width="wrap_content" android:layout_height="46dp" android:text="تازه‌سازی" android:textColor="@color/text_primary" android:background="@drawable/bg_button_light"/></LinearLayout>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                    <Button android:id="@+id/buttonHistoryBack" android:layout_width="48dp" android:layout_height="46dp" android:text="←" android:textSize="22sp" android:textColor="@color/text_primary" android:background="@drawable/bg_button_light"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="10dp" android:text="تاریخچه پیام‌ها" android:textColor="@color/text_primary" android:textSize="23sp" android:textStyle="bold"/>
+                    <Button android:id="@+id/buttonSelectHistory" android:layout_width="wrap_content" android:layout_height="46dp" android:text="انتخاب" android:textColor="@color/text_primary" android:background="@drawable/bg_button_light"/>
+                    <Button android:id="@+id/buttonRefresh" android:layout_width="wrap_content" android:layout_height="46dp" android:layout_marginStart="8dp" android:text="تازه‌سازی" android:textColor="@color/text_primary" android:background="@drawable/bg_button_light"/>
+                </LinearLayout>
+                <Button android:id="@+id/buttonDeleteSelected" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="10dp" android:text="حذف انتخابی" android:textColor="#B91C1C" android:background="@drawable/bg_button_light" android:visibility="gone"/>
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="5dp" android:text="برای مشاهده جزئیات، پاسخ وب‌هوک و ارسال مجدد روی پیام بزن." android:textColor="@color/text_secondary" android:textSize="12sp" android:gravity="start" />
                 <LinearLayout android:id="@+id/historyContainer" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:orientation="vertical" />
             </LinearLayout>
