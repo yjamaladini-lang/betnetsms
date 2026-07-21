@@ -9,4 +9,19 @@
     <color name="success">#16803C</color>
     <color name="danger">#C62828</color>
     <color name="warning">#B26A00</color>
+
+    <color name="premium_bg">#F4F6F9</color>
+    <color name="premium_surface">#FFFFFF</color>
+    <color name="premium_text">#0F172A</color>
+    <color name="premium_muted">#64748B</color>
+    <color name="premium_border">#E6EAF0</color>
+    <color name="premium_green">#169B54</color>
+    <color name="premium_green_soft">#EAF8F0</color>
+    <color name="premium_yellow">#A86808</color>
+    <color name="premium_yellow_soft">#FFF5D8</color>
+    <color name="premium_red">#C53838</color>
+    <color name="premium_red_soft">#FDECEC</color>
+    <color name="premium_blue">#2563EB</color>
+    <color name="premium_blue_soft">#EEF4FF</color>
+    <color name="premium_code">#F7F8FA</color>
 </resources>

@@ -389,10 +389,10 @@ public final class MainActivity extends Activity {
         if (items.isEmpty()) {
             TextView empty = new TextView(this);
             empty.setText("هنوز پیامی ثبت نشده است.");
-            empty.setTextColor(Color.parseColor("#6B7280"));
+            empty.setTextColor(getColor(R.color.premium_muted));
             empty.setTextSize(12);
             empty.setGravity(Gravity.CENTER);
-            empty.setPadding(dp(8), dp(34), dp(8), dp(34));
+            empty.setPadding(dp(8), dp(36), dp(8), dp(36));
             historyContainer.addView(empty);
             return;
         }
@@ -401,154 +401,62 @@ public final class MainActivity extends Activity {
 
         for (HistoryDb.HistoryItem item : items) {
             final int state = historyVisualState(item);
-            final boolean selected = selectedHistoryIds.contains(item.id);
-
-            LinearLayout card = new LinearLayout(this);
-            card.setOrientation(LinearLayout.VERTICAL);
-            card.setPadding(dp(16), dp(14), dp(16), dp(14));
-            card.setClickable(true);
-            card.setFocusable(true);
-            card.setElevation(dp(2));
-            card.setBackground(referenceHistoryCardBackground(selected));
-
-            LinearLayout.LayoutParams cardParams =
-                    new LinearLayout.LayoutParams(-1, -2);
-            cardParams.setMargins(0, 0, 0, dp(12));
-            card.setLayoutParams(cardParams);
-
-            /* ردیف فرستنده و زمان */
-            LinearLayout top = new LinearLayout(this);
-            top.setOrientation(LinearLayout.HORIZONTAL);
-            top.setGravity(Gravity.CENTER_VERTICAL);
-            top.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-
-            CheckBox check = new CheckBox(this);
-            check.setButtonTintList(android.content.res.ColorStateList.valueOf(
-                    Color.parseColor("#16A34A")
-            ));
-            check.setVisibility(historySelectionMode ? View.VISIBLE : View.GONE);
-            check.setChecked(selected);
-            check.setPadding(0, 0, dp(4), 0);
-            check.setOnCheckedChangeListener((buttonView, checked) -> {
-                if (checked) selectedHistoryIds.add(item.id);
-                else selectedHistoryIds.remove(item.id);
-                updateHistoryToolbar();
-                card.setBackground(referenceHistoryCardBackground(checked));
-            });
-            top.addView(check, new LinearLayout.LayoutParams(-2, -2));
-
-            ImageView userIcon = referenceIcon(
-                    android.R.drawable.ic_menu_myplaces,
-                    "#16A34A",
-                    "#F0FDF4"
+            final View card = getLayoutInflater().inflate(
+                    R.layout.item_history_premium,
+                    historyContainer,
+                    false
             );
-            top.addView(userIcon, new LinearLayout.LayoutParams(dp(40), dp(40)));
 
-            TextView sender = new TextView(this);
+            LinearLayout root = card.findViewById(R.id.historyCardRoot);
+            CheckBox check = card.findViewById(R.id.historyCheck);
+            TextView sender = card.findViewById(R.id.historySender);
+            TextView time = card.findViewById(R.id.historyTime);
+            TextView messageTitle = card.findViewById(R.id.historyMessageTitle);
+            TextView messageBody = card.findViewById(R.id.historyMessageBody);
+            TextView webhook = card.findViewById(R.id.historyWebhook);
+            LinearLayout statusChip = card.findViewById(R.id.historyStatusChip);
+            ImageView statusIcon = card.findViewById(R.id.historyStatusIcon);
+            TextView statusText = card.findViewById(R.id.historyStatusText);
+
+            boolean selected = selectedHistoryIds.contains(item.id);
+            root.setBackgroundResource(
+                    selected
+                            ? R.drawable.bg_premium_card_selected
+                            : R.drawable.bg_premium_card
+            );
+
             sender.setText(
                     item.sender == null || item.sender.trim().isEmpty()
                             ? "فرستنده نامشخص"
                             : item.sender.trim()
             );
-            sender.setTextColor(Color.parseColor("#111827"));
-            sender.setTextSize(15);
-            sender.setTypeface(null, 1);
-            sender.setSingleLine(true);
-            sender.setEllipsize(android.text.TextUtils.TruncateAt.END);
-            sender.setGravity(Gravity.START);
-            sender.setTextDirection(View.TEXT_DIRECTION_LTR);
-            LinearLayout.LayoutParams senderLp =
-                    new LinearLayout.LayoutParams(0, -2, 1f);
-            senderLp.setMargins(dp(10), 0, dp(10), 0);
-            top.addView(sender, senderLp);
-
-            View divider = new View(this);
-            divider.setBackgroundColor(Color.parseColor("#E5E7EB"));
-            LinearLayout.LayoutParams dividerLp =
-                    new LinearLayout.LayoutParams(dp(1), dp(30));
-            dividerLp.setMargins(dp(8), 0, dp(8), 0);
-            top.addView(divider, dividerLp);
-
-            TextView time = new TextView(this);
             time.setText(JalaliDate.format(item.createdAt));
-            time.setTextColor(Color.parseColor("#111827"));
-            time.setTextSize(12);
-            time.setTypeface(null, 1);
-            time.setSingleLine(true);
-            time.setGravity(Gravity.CENTER_VERTICAL);
-            time.setTextDirection(View.TEXT_DIRECTION_LTR);
-            top.addView(time);
+            webhook.setText(webhookLabel);
 
-            ImageView clockIcon = referenceIcon(
-                    android.R.drawable.ic_menu_recent_history,
-                    "#16A34A",
-                    "#FFFFFF"
-            );
-            LinearLayout.LayoutParams clockLp =
-                    new LinearLayout.LayoutParams(dp(30), dp(30));
-            clockLp.setMargins(dp(6), 0, 0, 0);
-            top.addView(clockIcon, clockLp);
+            String[] parts = splitHistoryMessage(item.message);
+            if (parts[0].isEmpty() || "متن پیام".equals(parts[0])) {
+                messageTitle.setVisibility(View.GONE);
+            } else {
+                messageTitle.setVisibility(View.VISIBLE);
+                messageTitle.setText(parts[0]);
+            }
+            messageBody.setText(parts[1].isEmpty() ? parts[0] : parts[1]);
 
-            card.addView(top);
+            applyPremiumStatus(statusChip, statusIcon, statusText, state, item);
 
-            String[] messageParts = splitHistoryMessage(item.message);
-            TextView messageTitle = new TextView(this);
-            messageTitle.setText(messageParts[0]);
-            messageTitle.setTextColor(Color.parseColor("#111827"));
-            messageTitle.setTextSize(15);
-            messageTitle.setTypeface(null, 1);
-            messageTitle.setGravity(Gravity.START);
-            messageTitle.setTextDirection(View.TEXT_DIRECTION_RTL);
-            messageTitle.setPadding(0, dp(12), 0, dp(3));
-            card.addView(messageTitle);
+            check.setVisibility(historySelectionMode ? View.VISIBLE : View.GONE);
+            check.setChecked(selected);
+            check.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) selectedHistoryIds.add(item.id);
+                else selectedHistoryIds.remove(item.id);
 
-            TextView messageBody = new TextView(this);
-            messageBody.setText(messageParts[1]);
-            messageBody.setTextColor(Color.parseColor("#1F2937"));
-            messageBody.setTextSize(13);
-            messageBody.setLineSpacing(dp(3), 1.12f);
-            messageBody.setMaxLines(4);
-            messageBody.setEllipsize(android.text.TextUtils.TruncateAt.END);
-            messageBody.setGravity(Gravity.START);
-            messageBody.setTextDirection(View.TEXT_DIRECTION_RTL);
-            card.addView(messageBody);
-
-            /* ردیف لینک و وضعیت */
-            LinearLayout footer = new LinearLayout(this);
-            footer.setOrientation(LinearLayout.HORIZONTAL);
-            footer.setGravity(Gravity.CENTER_VERTICAL);
-            footer.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-            footer.setPadding(0, dp(12), 0, 0);
-
-            TextView status = new TextView(this);
-            String statusText = state == 1
-                    ? "✓  ارسال شد  •  HTTP " + item.httpCode + "  •  " + item.attemptCount + " تلاش"
-                    : state == 2
-                    ? "!  رسید؛ بسته داده نشد  •  HTTP " + item.httpCode + "  •  " + item.attemptCount + " تلاش"
-                    : "×  به سایت نرفت  •  HTTP " + item.httpCode + "  •  " + item.attemptCount + " تلاش";
-            status.setText(statusText);
-            status.setTextColor(referenceStateTextColor(state));
-            status.setTextSize(10);
-            status.setTypeface(null, 1);
-            status.setGravity(Gravity.CENTER);
-            status.setPadding(dp(12), dp(7), dp(12), dp(7));
-            status.setBackground(referenceStatePill(state));
-            footer.addView(status);
-
-            TextView spacer = new TextView(this);
-            footer.addView(spacer, new LinearLayout.LayoutParams(0, 1, 1f));
-
-            TextView link = new TextView(this);
-            link.setText("🔗  " + webhookLabel);
-            link.setTextColor(Color.parseColor("#374151"));
-            link.setTextSize(10);
-            link.setGravity(Gravity.CENTER);
-            link.setTextDirection(View.TEXT_DIRECTION_LTR);
-            link.setPadding(dp(12), dp(7), dp(12), dp(7));
-            link.setBackground(makeRoundedBackground("#F8FAFC", "#F1F5F9", 999f));
-            footer.addView(link);
-
-            card.addView(footer);
+                root.setBackgroundResource(
+                        isChecked
+                                ? R.drawable.bg_premium_card_selected
+                                : R.drawable.bg_premium_card
+                );
+                updateHistoryToolbar();
+            });
 
             card.setOnClickListener(v -> {
                 if (historySelectionMode) {
@@ -683,186 +591,75 @@ public final class MainActivity extends Activity {
         if (item == null) return;
 
         List<HistoryDb.AttemptItem> attempts = historyDb.attempts(id);
+        View dialogView = getLayoutInflater().inflate(
+                R.layout.dialog_history_detail_premium,
+                null,
+                false
+        );
 
-        LinearLayout root = new LinearLayout(this);
-        root.setOrientation(LinearLayout.VERTICAL);
-        root.setPadding(dp(20), dp(18), dp(20), dp(18));
-        root.setTextDirection(View.TEXT_DIRECTION_RTL);
-        root.setBackground(makeRoundedBackground("#FFFFFF", "#E5E7EB", dp(26)));
+        TextView sender = dialogView.findViewById(R.id.detailSenderValue);
+        TextView app = dialogView.findViewById(R.id.detailAppValue);
+        TextView time = dialogView.findViewById(R.id.detailTimeValue);
+        TextView message = dialogView.findViewById(R.id.detailMessageValue);
+        LinearLayout attemptsContainer =
+                dialogView.findViewById(R.id.detailAttemptsContainer);
+        View closeTop = dialogView.findViewById(R.id.detailCloseTop);
+        Button close = dialogView.findViewById(R.id.detailCloseButton);
+        Button resend = dialogView.findViewById(R.id.detailResendButton);
 
-        TextView title = new TextView(this);
-        title.setText("جزئیات پیام و ارسال");
-        title.setTextColor(Color.parseColor("#111827"));
-        title.setTextSize(24);
-        title.setTypeface(null, 1);
-        title.setGravity(Gravity.CENTER);
-        title.setPadding(0, 0, 0, dp(15));
-        root.addView(title);
-
-        /* اطلاعات پیام */
-        LinearLayout infoCard = new LinearLayout(this);
-        infoCard.setOrientation(LinearLayout.VERTICAL);
-        infoCard.setPadding(dp(12), dp(5), dp(12), dp(5));
-        infoCard.setElevation(dp(1));
-        infoCard.setBackground(makeRoundedBackground("#FFFFFF", "#E5E7EB", dp(18)));
-        infoCard.addView(referenceDetailRow(
-                android.R.drawable.ic_menu_myplaces,
-                "فرستنده:",
-                item.sender == null ? "—" : item.sender
-        ));
-        infoCard.addView(infoDivider());
-        infoCard.addView(referenceDetailRow(
-                android.R.drawable.ic_dialog_email,
-                "برنامه:",
-                getAppLabel(item.packageName)
-        ));
-        infoCard.addView(infoDivider());
-        infoCard.addView(referenceDetailRow(
-                android.R.drawable.ic_menu_recent_history,
-                "زمان شناسایی:",
-                JalaliDate.format(item.createdAt)
-        ));
-        root.addView(infoCard);
-
-        root.addView(referenceSectionTitle("متن پیام:"));
-
-        TextView message = new TextView(this);
+        sender.setText(
+                item.sender == null || item.sender.trim().isEmpty()
+                        ? "—"
+                        : item.sender.trim()
+        );
+        app.setText(getAppLabel(item.packageName));
+        time.setText(JalaliDate.format(item.createdAt));
         message.setText(item.message == null ? "" : item.message);
-        message.setTextColor(Color.parseColor("#111827"));
-        message.setTextSize(13);
-        message.setLineSpacing(dp(4), 1.18f);
-        message.setGravity(Gravity.START);
-        message.setTextDirection(View.TEXT_DIRECTION_RTL);
-        message.setPadding(dp(16), dp(14), dp(16), dp(14));
-        message.setElevation(dp(1));
-        message.setBackground(makeRoundedBackground("#FFFFFF", "#E5E7EB", dp(18)));
-        root.addView(message);
-
-        root.addView(referenceSectionTitle("تاریخچه تلاش‌ها:"));
 
         if (attempts.isEmpty()) {
             TextView empty = new TextView(this);
-            empty.setText("تلاشی ثبت نشده است.");
-            empty.setTextColor(Color.parseColor("#6B7280"));
+            empty.setText("هنوز تلاشی ثبت نشده است.");
+            empty.setTextColor(getColor(R.color.premium_muted));
             empty.setTextSize(11);
             empty.setGravity(Gravity.CENTER);
-            empty.setPadding(dp(8), dp(18), dp(8), dp(18));
-            empty.setBackground(makeRoundedBackground("#FFFFFF", "#E5E7EB", dp(18)));
-            root.addView(empty);
+            empty.setPadding(dp(12), dp(22), dp(12), dp(22));
+            empty.setBackgroundResource(R.drawable.bg_premium_inner_card);
+            attemptsContainer.addView(empty);
         } else {
             for (HistoryDb.AttemptItem attempt : attempts) {
-                final int attemptState = attemptVisualState(attempt);
-
-                LinearLayout attemptCard = new LinearLayout(this);
-                attemptCard.setOrientation(LinearLayout.VERTICAL);
-                attemptCard.setPadding(dp(12), dp(10), dp(12), dp(12));
-                attemptCard.setElevation(dp(1));
-                attemptCard.setBackground(makeRoundedBackground("#FFFFFF", "#E5E7EB", dp(18)));
-
-                LinearLayout head = new LinearLayout(this);
-                head.setOrientation(LinearLayout.HORIZONTAL);
-                head.setGravity(Gravity.CENTER_VERTICAL);
-                head.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-
-                TextView attemptNumber = new TextView(this);
-                attemptNumber.setText("تلاش " + attempt.attemptNo);
-                attemptNumber.setTextColor(Color.parseColor("#111827"));
-                attemptNumber.setTextSize(11);
-                attemptNumber.setTypeface(null, 1);
-                head.addView(attemptNumber);
-
-                TextView time = new TextView(this);
-                time.setText(JalaliDate.format(attempt.createdAt));
-                time.setTextColor(Color.parseColor("#374151"));
-                time.setTextSize(10);
-                time.setTextDirection(View.TEXT_DIRECTION_LTR);
-                LinearLayout.LayoutParams timeLp =
-                        new LinearLayout.LayoutParams(0, -2, 1f);
-                timeLp.setMargins(dp(10), 0, dp(10), 0);
-                head.addView(time, timeLp);
-
-                TextView http = referenceSmallPill(
-                        "HTTP " + attempt.httpCode,
-                        attemptState
+                View attemptView = getLayoutInflater().inflate(
+                        R.layout.item_attempt_premium,
+                        attemptsContainer,
+                        false
                 );
-                head.addView(http);
 
-                TextView result = referenceSmallPill(
-                        attemptState == 1 ? "✓ موفق"
-                                : attemptState == 2 ? "! رسید"
-                                : "× ناموفق",
-                        attemptState
+                TextView number = attemptView.findViewById(R.id.attemptNumber);
+                TextView attemptTime = attemptView.findViewById(R.id.attemptTime);
+                TextView http = attemptView.findViewById(R.id.attemptHttp);
+                TextView result = attemptView.findViewById(R.id.attemptResult);
+                TextView response = attemptView.findViewById(R.id.attemptResponse);
+
+                int state = attemptVisualState(attempt);
+                number.setText("تلاش " + attempt.attemptNo);
+                attemptTime.setText(JalaliDate.format(attempt.createdAt));
+                http.setText("HTTP " + attempt.httpCode);
+                result.setText(
+                        state == 1
+                                ? "موفق"
+                                : state == 2 ? "رسید" : "ناموفق"
                 );
-                LinearLayout.LayoutParams resultLp =
-                        new LinearLayout.LayoutParams(-2, -2);
-                resultLp.setMargins(dp(7), 0, 0, 0);
-                head.addView(result, resultLp);
-
-                attemptCard.addView(head);
-
-                TextView responseLabel = new TextView(this);
-                responseLabel.setText("پاسخ:");
-                responseLabel.setTextColor(Color.parseColor("#111827"));
-                responseLabel.setTextSize(12);
-                responseLabel.setTypeface(null, 1);
-                responseLabel.setGravity(Gravity.START);
-                responseLabel.setPadding(0, dp(12), 0, dp(6));
-                attemptCard.addView(responseLabel);
-
-                TextView response = new TextView(this);
                 response.setText(prettyJson(attempt.response));
-                response.setTextColor(Color.parseColor("#111827"));
-                response.setTextSize(10);
-                response.setTypeface(android.graphics.Typeface.MONOSPACE);
-                response.setTextDirection(View.TEXT_DIRECTION_LTR);
-                response.setGravity(Gravity.START);
-                response.setPadding(dp(12), dp(10), dp(12), dp(10));
-                response.setBackground(makeRoundedBackground(
-                        "#F8FAFC",
-                        "#E5E7EB",
-                        dp(12)
-                ));
-                attemptCard.addView(response);
 
-                LinearLayout.LayoutParams attemptLp =
-                        new LinearLayout.LayoutParams(-1, -2);
-                attemptLp.setMargins(0, 0, 0, dp(10));
-                root.addView(attemptCard, attemptLp);
+                applyPremiumAttemptStyle(http, result, state);
+                attemptsContainer.addView(attemptView);
             }
         }
 
-        LinearLayout buttons = new LinearLayout(this);
-        buttons.setOrientation(LinearLayout.HORIZONTAL);
-        buttons.setGravity(Gravity.CENTER);
-        buttons.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-        buttons.setPadding(0, dp(16), 0, 0);
-
-        Button close = compactActionButton(
-                "×  بستن",
-                "#F8FAFC",
-                "#111827"
-        );
-        Button resend = compactActionButton(
-                "✈  ارسال مجدد",
-                "#16A34A",
-                "#FFFFFF"
-        );
-
-        LinearLayout.LayoutParams buttonLp =
-                new LinearLayout.LayoutParams(0, dp(56), 1f);
-        buttonLp.setMargins(dp(5), 0, dp(5), 0);
-        buttons.addView(close, buttonLp);
-        buttons.addView(resend, buttonLp);
-        root.addView(buttons);
-
-        ScrollView scroll = new ScrollView(this);
-        scroll.setFillViewport(true);
-        scroll.addView(root);
-
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setView(scroll)
+                .setView(dialogView)
                 .create();
 
+        closeTop.setOnClickListener(v -> dialog.dismiss());
         close.setOnClickListener(v -> dialog.dismiss());
         resend.setOnClickListener(v -> {
             dialog.dismiss();
@@ -875,12 +672,12 @@ public final class MainActivity extends Activity {
                         android.R.color.transparent
                 );
                 int width = (int) (
-                        getResources().getDisplayMetrics().widthPixels * 0.90f
+                        getResources().getDisplayMetrics().widthPixels * 0.94f
                 );
-                int maxHeight = (int) (
+                int height = (int) (
                         getResources().getDisplayMetrics().heightPixels * 0.90f
                 );
-                dialog.getWindow().setLayout(width, maxHeight);
+                dialog.getWindow().setLayout(width, height);
                 dialog.getWindow().setGravity(Gravity.CENTER);
             }
         });
@@ -888,246 +685,72 @@ public final class MainActivity extends Activity {
         dialog.show();
     }
 
-    private LinearLayout referenceSectionTitle(String text) {
-        LinearLayout wrap = new LinearLayout(this);
-        wrap.setOrientation(LinearLayout.HORIZONTAL);
-        wrap.setGravity(Gravity.CENTER_VERTICAL);
-        wrap.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-        wrap.setPadding(0, dp(16), 0, dp(8));
-
-        View accent = new View(this);
-        accent.setBackground(makeRoundedBackground(
-                "#16A34A",
-                "#16A34A",
-                dp(3)
-        ));
-        LinearLayout.LayoutParams accentLp =
-                new LinearLayout.LayoutParams(dp(4), dp(26));
-        accentLp.setMargins(0, 0, dp(8), 0);
-        wrap.addView(accent, accentLp);
-
-        TextView title = new TextView(this);
-        title.setText(text);
-        title.setTextColor(Color.parseColor("#111827"));
-        title.setTextSize(15);
-        title.setTypeface(null, 1);
-        title.setGravity(Gravity.START);
-        wrap.addView(title);
-
-        return wrap;
-    }
-
-    private View referenceDetailRow(int iconRes, String label, String value) {
-        LinearLayout row = new LinearLayout(this);
-        row.setOrientation(LinearLayout.HORIZONTAL);
-        row.setGravity(Gravity.CENTER_VERTICAL);
-        row.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-        row.setPadding(dp(4), dp(10), dp(4), dp(10));
-
-        ImageView icon = referenceIcon(iconRes, "#16A34A", "#F0FDF4");
-        row.addView(icon, new LinearLayout.LayoutParams(dp(34), dp(34)));
-
-        TextView labelView = new TextView(this);
-        labelView.setText(label);
-        labelView.setTextColor(Color.parseColor("#374151"));
-        labelView.setTextSize(12);
-        labelView.setGravity(Gravity.START);
-        LinearLayout.LayoutParams labelLp =
-                new LinearLayout.LayoutParams(0, -2, 1f);
-        labelLp.setMargins(dp(8), 0, dp(8), 0);
-        row.addView(labelView, labelLp);
-
-        TextView valueView = new TextView(this);
-        valueView.setText(
-                value == null || value.trim().isEmpty() ? "—" : value
-        );
-        valueView.setTextColor(Color.parseColor("#111827"));
-        valueView.setTextSize(12);
-        valueView.setTextDirection(View.TEXT_DIRECTION_LTR);
-        valueView.setGravity(Gravity.END);
-        row.addView(valueView);
-
-        return row;
-    }
-
-    private TextView referenceSmallPill(String text, int state) {
-        TextView pill = new TextView(this);
-        pill.setText(text);
-        pill.setTextColor(referenceStateTextColor(state));
-        pill.setTextSize(9);
-        pill.setTypeface(null, 1);
-        pill.setGravity(Gravity.CENTER);
-        pill.setPadding(dp(10), dp(5), dp(10), dp(5));
-        pill.setBackground(referenceStatePill(state));
-        return pill;
-    }
-
-    private int attemptVisualState(HistoryDb.AttemptItem attempt) {
-        if (attempt == null) return 3;
-        if (attempt.httpCode <= 0
-                || attempt.httpCode < 200
-                || attempt.httpCode >= 300) {
-            return 3;
-        }
-
-        try {
-            JSONObject json = new JSONObject(
-                    attempt.response == null ? "" : attempt.response.trim()
+    private void applyPremiumStatus(
+            LinearLayout chip,
+            ImageView icon,
+            TextView text,
+            int state,
+            HistoryDb.HistoryItem item
+    ) {
+        if (state == 1) {
+            chip.setBackgroundResource(R.drawable.bg_status_success);
+            icon.setImageResource(R.drawable.ic_check_premium);
+            text.setTextColor(getColor(R.color.premium_green));
+            text.setText(
+                    "بسته داده شد • HTTP "
+                            + item.httpCode
+                            + " • "
+                            + item.attemptCount
+                            + " تلاش"
             );
-            if (json.optBoolean("matched", false)) return 1;
-            if (json.optBoolean("success", false)) return 2;
-        } catch (Exception ignored) {
+        } else if (state == 2) {
+            chip.setBackgroundResource(R.drawable.bg_status_warning);
+            icon.setImageResource(R.drawable.ic_warning_premium);
+            text.setTextColor(getColor(R.color.premium_yellow));
+            text.setText(
+                    "بسته داده نشد • HTTP "
+                            + item.httpCode
+                            + " • "
+                            + item.attemptCount
+                            + " تلاش"
+            );
+        } else {
+            chip.setBackgroundResource(R.drawable.bg_status_error);
+            icon.setImageResource(R.drawable.ic_error_premium);
+            text.setTextColor(getColor(R.color.premium_red));
+            text.setText(
+                    "به سایت نرفت • HTTP "
+                            + item.httpCode
+                            + " • "
+                            + item.attemptCount
+                            + " تلاش"
+            );
         }
-
-        return 2;
     }
 
-    private ImageView referenceIcon(
-            int drawableRes,
-            String tint,
-            String background
+    private void applyPremiumAttemptStyle(
+            TextView http,
+            TextView result,
+            int state
     ) {
-        ImageView icon = new ImageView(this);
-        Drawable drawable = getDrawable(drawableRes);
-        if (drawable != null) {
-            drawable = drawable.mutate();
-            drawable.setTint(Color.parseColor(tint));
-            icon.setImageDrawable(drawable);
-        }
-        icon.setPadding(dp(8), dp(8), dp(8), dp(8));
-        icon.setBackground(makeRoundedBackground(
-                background,
-                background,
-                999f
-        ));
-        return icon;
-    }
+        int background;
+        int color;
 
-    private String[] splitHistoryMessage(String raw) {
-        String message = raw == null ? "" : raw.trim();
-        if (message.isEmpty()) {
-            return new String[]{"پیام بدون متن", ""};
+        if (state == 1) {
+            background = R.drawable.bg_status_success;
+            color = getColor(R.color.premium_green);
+        } else if (state == 2) {
+            background = R.drawable.bg_status_warning;
+            color = getColor(R.color.premium_yellow);
+        } else {
+            background = R.drawable.bg_status_error;
+            color = getColor(R.color.premium_red);
         }
 
-        String[] lines = message.split("\\r?\\n", 2);
-        if (lines.length == 2 && !lines[0].trim().isEmpty()) {
-            return new String[]{lines[0].trim(), lines[1].trim()};
-        }
-
-        return new String[]{"متن پیام", message};
-    }
-
-    private String historyWebhookLabel() {
-        String webhook = AppPrefs.getWebhook(this);
-        if (webhook == null || webhook.trim().isEmpty()) {
-            return "وب‌هوک";
-        }
-
-        try {
-            Uri uri = Uri.parse(webhook.trim());
-            String host = uri.getHost();
-            String path = uri.getPath();
-            String label = host == null ? webhook.trim() : host;
-            if (path != null && !path.trim().isEmpty() && !"/".equals(path)) {
-                label += path;
-            }
-            return label;
-        } catch (Exception ignored) {
-            return webhook.trim();
-        }
-    }
-
-    private GradientDrawable referenceHistoryCardBackground(boolean selected) {
-        GradientDrawable background = new GradientDrawable();
-        background.setCornerRadius(dp(24));
-        background.setColor(Color.parseColor(
-                selected ? "#EFF6FF" : "#FFFFFF"
-        ));
-        background.setStroke(
-                selected ? dp(2) : dp(1),
-                Color.parseColor(selected ? "#60A5FA" : "#E5E7EB")
-        );
-        return background;
-    }
-
-    private int referenceStateTextColor(int state) {
-        if (state == 1) return Color.parseColor("#15803D");
-        if (state == 2) return Color.parseColor("#A16207");
-        return Color.parseColor("#B91C1C");
-    }
-
-    private GradientDrawable referenceStatePill(int state) {
-        String fill = state == 1
-                ? "#EAF8EF"
-                : state == 2 ? "#FEF3C7" : "#FEE2E2";
-        String stroke = state == 1
-                ? "#DCFCE7"
-                : state == 2 ? "#FDE68A" : "#FECACA";
-        return makeRoundedBackground(fill, stroke, 999f);
-    }
-
-    private Button compactActionButton(
-            String text,
-            String background,
-            String foreground
-    ) {
-        Button button = new Button(this);
-        button.setText(text);
-        button.setAllCaps(false);
-        button.setTextSize(12);
-        button.setTypeface(null, 1);
-        button.setTextColor(Color.parseColor(foreground));
-        button.setBackground(makeRoundedBackground(
-                background,
-                background,
-                dp(16)
-        ));
-        button.setPadding(dp(12), 0, dp(12), 0);
-        button.setMinWidth(0);
-        button.setMinimumWidth(0);
-        button.setMinHeight(0);
-        button.setMinimumHeight(0);
-        return button;
-    }
-
-    private GradientDrawable makeRoundedBackground(
-            String fill,
-            String stroke,
-            float radius
-    ) {
-        GradientDrawable background = new GradientDrawable();
-        background.setColor(Color.parseColor(fill));
-        background.setCornerRadius(radius);
-        background.setStroke(dp(1), Color.parseColor(stroke));
-        return background;
-    }
-
-    private String prettyJson(String raw) {
-        if (raw == null || raw.trim().isEmpty()) {
-            return "بدون پاسخ";
-        }
-
-        try {
-            return new JSONObject(raw.trim()).toString(2);
-        } catch (Exception ignored) {
-            return raw.trim();
-        }
-    }
-
-    private View infoDivider() {
-        View divider = new View(this);
-        divider.setBackgroundColor(Color.parseColor("#E5E7EB"));
-        divider.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                dp(1)
-        ));
-        return divider;
-    }
-
-    private int dp(int value) {
-        return Math.round(
-                getResources().getDisplayMetrics().density * value
-        );
+        http.setBackgroundResource(background);
+        result.setBackgroundResource(background);
+        http.setTextColor(color);
+        result.setTextColor(color);
     }
 
     private TextView sectionTitle(String text) {

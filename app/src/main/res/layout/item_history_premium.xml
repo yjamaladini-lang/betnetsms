@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/historyCardRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/bg_premium_card"
+    android:elevation="4dp"
+    android:layoutDirection="rtl"
+    android:textDirection="rtl">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layoutDirection="ltr">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_clock_premium"
+            android:contentDescription="زمان"/>
+
+        <TextView
+            android:id="@+id/historyTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:textColor="@color/premium_text"
+            android:textSize="11.5sp"
+            android:fontFamily="sans-serif-medium"
+            android:singleLine="true"
+            android:textDirection="ltr"/>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:background="@color/premium_border"/>
+
+        <TextView
+            android:id="@+id/historySender"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/premium_text"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif-medium"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:gravity="end"
+            android:textDirection="ltr"/>
+
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/bg_icon_green">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_user_premium"
+                android:contentDescription="فرستنده"/>
+        </FrameLayout>
+
+        <CheckBox
+            android:id="@+id/historyCheck"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="8dp"
+            android:buttonTint="@color/premium_blue"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/historyMessageTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:textColor="@color/premium_text"
+        android:textSize="15sp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="end"
+        android:textDirection="rtl"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/historyMessageBody"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:textColor="#263244"
+        android:textSize="13sp"
+        android:lineSpacingExtra="3dp"
+        android:maxLines="3"
+        android:ellipsize="end"
+        android:gravity="end"
+        android:textDirection="rtl"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="13dp"
+        android:background="#F0F2F5"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layoutDirection="ltr">
+
+        <LinearLayout
+            android:id="@+id/historyLinkChip"
+            android:layout_width="118dp"
+            android:layout_height="34dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingStart="9dp"
+            android:paddingEnd="9dp"
+            android:background="@drawable/bg_premium_chip">
+
+            <ImageView
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:src="@drawable/ic_link_premium"
+                android:contentDescription="لینک"/>
+
+            <TextView
+                android:id="@+id/historyWebhook"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="5dp"
+                android:textColor="#475569"
+                android:textSize="9.5sp"
+                android:singleLine="true"
+                android:ellipsize="middle"
+                android:gravity="center"
+                android:textDirection="ltr"/>
+        </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"/>
+
+        <LinearLayout
+            android:id="@+id/historyStatusChip"
+            android:layout_width="0dp"
+            android:layout_height="34dp"
+            android:layout_weight="1.35"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:background="@drawable/bg_status_warning">
+
+            <ImageView
+                android:id="@+id/historyStatusIcon"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:contentDescription="وضعیت"/>
+
+            <TextView
+                android:id="@+id/historyStatusText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:textSize="9.5sp"
+                android:fontFamily="sans-serif-medium"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:gravity="center"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
