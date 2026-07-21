@@ -753,6 +753,100 @@ public final class MainActivity extends Activity {
         result.setTextColor(color);
     }
 
+    private int dp(int value) {
+        return Math.round(
+                getResources().getDisplayMetrics().density * value
+        );
+    }
+
+    private String historyWebhookLabel() {
+        String webhook = AppPrefs.getWebhook(this);
+
+        if (webhook == null || webhook.trim().isEmpty()) {
+            return "وب‌هوک";
+        }
+
+        try {
+            Uri uri = Uri.parse(webhook.trim());
+            String host = uri.getHost();
+            String path = uri.getPath();
+
+            String label = host == null || host.trim().isEmpty()
+                    ? webhook.trim()
+                    : host.trim();
+
+            if (path != null
+                    && !path.trim().isEmpty()
+                    && !"/".equals(path.trim())) {
+                label += path.trim();
+            }
+
+            return label;
+        } catch (Exception ignored) {
+            return webhook.trim();
+        }
+    }
+
+    private String[] splitHistoryMessage(String raw) {
+        String message = raw == null ? "" : raw.trim();
+
+        if (message.isEmpty()) {
+            return new String[]{"", "پیام بدون متن"};
+        }
+
+        String[] lines = message.split("\\r?\\n", 2);
+
+        if (lines.length == 2 && !lines[0].trim().isEmpty()) {
+            return new String[]{
+                    lines[0].trim(),
+                    lines[1].trim()
+            };
+        }
+
+        return new String[]{"", message};
+    }
+
+    private int attemptVisualState(HistoryDb.AttemptItem attempt) {
+        if (attempt == null) {
+            return 3;
+        }
+
+        if (attempt.httpCode < 200 || attempt.httpCode >= 300) {
+            return 3;
+        }
+
+        try {
+            JSONObject json = new JSONObject(
+                    attempt.response == null
+                            ? ""
+                            : attempt.response.trim()
+            );
+
+            if (json.optBoolean("matched", false)) {
+                return 1;
+            }
+
+            if (json.optBoolean("success", false)) {
+                return 2;
+            }
+        } catch (Exception ignored) {
+        }
+
+        return 2;
+    }
+
+    private String prettyJson(String raw) {
+        if (raw == null || raw.trim().isEmpty()) {
+            return "بدون پاسخ";
+        }
+
+        try {
+            return new JSONObject(raw.trim()).toString(2);
+        } catch (Exception ignored) {
+            return raw.trim();
+        }
+    }
+
     private TextView sectionTitle(String text) {
         TextView t = new TextView(this);
         t.setText(text);
