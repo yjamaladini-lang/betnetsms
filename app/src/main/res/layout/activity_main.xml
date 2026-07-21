@@ -1,223 +1,345 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:orientation="vertical" android:background="@color/background"
-    android:layoutDirection="rtl" android:textDirection="rtl" android:fitsSystemWindows="true">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg_ui_screen"
+    android:layoutDirection="rtl"
+    android:textDirection="rtl">
 
-    <LinearLayout android:layout_width="match_parent" android:layout_height="64dp"
-        android:paddingStart="18dp" android:paddingEnd="18dp" android:gravity="center_vertical"
-        android:background="@color/card" android:elevation="1dp">
-        <ImageView android:id="@+id/appLogo" android:layout_width="42dp" android:layout_height="42dp"
-            android:src="@mipmap/ic_launcher" android:contentDescription="لوگو" />
-        <TextView android:id="@+id/headerTitle" android:layout_width="0dp" android:layout_height="wrap_content"
-            android:layout_weight="1" android:paddingStart="12dp" android:text="Betnet SMS Sender"
-            android:textColor="@color/text_primary" android:textStyle="bold" android:textSize="18sp" android:gravity="start" />
-        <TextView android:id="@+id/headerSubtitle" android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="V 1.6.4" android:textColor="@color/text_secondary" android:textSize="12sp" android:layout_marginEnd="10dp" />
-        <TextView android:id="@+id/buttonHome" android:layout_width="40dp" android:layout_height="40dp"
-            android:gravity="center" android:text="⌂" android:textColor="@color/text_primary" android:textSize="24sp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="66dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:background="@color/ui_surface"
+        android:elevation="2dp"
+        android:layoutDirection="ltr">
+
+        <ImageButton
+            android:id="@+id/buttonHome"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:src="@drawable/ic_launcher_foreground"
+            android:padding="8dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="خانه"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Betnet SMS Sender"
+            android:textColor="@color/ui_text"
+            android:textSize="17sp"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="start"
+            android:layout_marginStart="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:gravity="center"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="v1.7.0"
+            android:textColor="@color/ui_muted"
+            android:textSize="10sp"
+            android:background="@drawable/bg_ui_chip"/>
     </LinearLayout>
 
-    <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:clipToPadding="false">
 
-            <LinearLayout android:id="@+id/sectionDashboard" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
-                <LinearLayout android:id="@+id/dashboardLatestCard" android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:orientation="vertical" android:background="@drawable/bg_card" android:elevation="2dp" android:visibility="gone">
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
-                        <TextView android:layout_width="48dp" android:layout_height="48dp" android:gravity="center" android:text="✉" android:textSize="28sp" android:textColor="@color/text_primary" />
-                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:paddingStart="10dp">
-                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="پیام شناسایی شد" android:textSize="12sp" android:textColor="@color/text_secondary" />
-                            <TextView android:id="@+id/dashboardLatestSender" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="—" android:textSize="19sp" android:textStyle="bold" android:textColor="@color/text_primary" />
-                        </LinearLayout>
-                        <TextView android:id="@+id/dashboardLatestResult" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="در حال تلاش" android:textSize="12sp" android:textStyle="bold" android:textColor="@color/warning" />
-                    </LinearLayout>
-                    <TextView android:id="@+id/dashboardLatestMessage" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="" android:textSize="13sp" android:textColor="@color/text_secondary" android:maxLines="3" android:ellipsize="end" android:gravity="start" />
-                </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:paddingBottom="28dp">
 
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp"
-                    android:orientation="horizontal" android:gravity="center_vertical" android:background="@drawable/bg_card">
-                    <Switch android:id="@+id/switchEnabled" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:paddingStart="12dp">
-                        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="ارسال خودکار" android:textSize="17sp" android:textStyle="bold" android:textColor="@color/text_primary" />
-                        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:text="ارسال خودکار پیام‌های دریافتی فعال است" android:textSize="12sp" android:textColor="@color/text_secondary" />
-                    </LinearLayout>
-                    <TextView android:layout_width="12dp" android:layout_height="12dp" android:text="●" android:textColor="@color/success" />
-                </LinearLayout>
-
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:orientation="vertical" android:background="@drawable/bg_menu_group" android:elevation="1dp">
-                    <LinearLayout android:id="@+id/cardWebhook" android:layout_width="match_parent" android:layout_height="76dp" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="10dp" android:paddingEnd="10dp" android:clickable="true" android:focusable="true">
-                        <TextView android:layout_width="44dp" android:layout_height="44dp" android:gravity="center" android:text="◎" android:textSize="27sp" android:textColor="@color/text_primary" />
-                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:paddingStart="10dp"><TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="وب‌هوک‌ها" android:textSize="17sp" android:textStyle="bold" android:textColor="@color/text_primary"/><TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:text="مدیریت آدرس‌ها و تست وب‌هوک" android:textSize="12sp" android:textColor="@color/text_secondary"/></LinearLayout>
-                        <TextView android:layout_width="24dp" android:layout_height="wrap_content" android:text="‹" android:textSize="27sp" android:textColor="@color/text_secondary" />
-                    </LinearLayout>
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginStart="54dp" android:background="@drawable/bg_divider" />
-                    <LinearLayout android:id="@+id/cardHistory" android:layout_width="match_parent" android:layout_height="76dp" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="10dp" android:paddingEnd="10dp" android:clickable="true" android:focusable="true">
-                        <TextView android:layout_width="44dp" android:layout_height="44dp" android:gravity="center" android:text="▤" android:textSize="25sp" android:textColor="@color/text_primary" />
-                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:paddingStart="10dp"><TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="تاریخچه پیام‌ها" android:textSize="17sp" android:textStyle="bold" android:textColor="@color/text_primary"/><TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:text="مشاهده پیام‌ها و پیگیری ارسال‌ها" android:textSize="12sp" android:textColor="@color/text_secondary"/></LinearLayout>
-                        <TextView android:layout_width="24dp" android:layout_height="wrap_content" android:text="‹" android:textSize="27sp" android:textColor="@color/text_secondary" />
-                    </LinearLayout>
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginStart="54dp" android:background="@drawable/bg_divider" />
-                    <LinearLayout android:id="@+id/cardManual" android:layout_width="match_parent" android:layout_height="76dp" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="10dp" android:paddingEnd="10dp" android:clickable="true" android:focusable="true">
-                        <TextView android:layout_width="44dp" android:layout_height="44dp" android:gravity="center" android:text="➤" android:textSize="25sp" android:textColor="@color/text_primary" />
-                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:paddingStart="10dp"><TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="ارسال دستی" android:textSize="17sp" android:textStyle="bold" android:textColor="@color/text_primary"/><TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:text="ارسال مستقیم متن به وب‌هوک" android:textSize="12sp" android:textColor="@color/text_secondary"/></LinearLayout>
-                        <TextView android:layout_width="24dp" android:layout_height="wrap_content" android:text="‹" android:textSize="27sp" android:textColor="@color/text_secondary" />
-                    </LinearLayout>
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginStart="54dp" android:background="@drawable/bg_divider" />
-                    <LinearLayout android:id="@+id/cardSettings" android:layout_width="match_parent" android:layout_height="76dp" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="10dp" android:paddingEnd="10dp" android:clickable="true" android:focusable="true">
-                        <TextView android:layout_width="44dp" android:layout_height="44dp" android:gravity="center" android:text="⚙" android:textSize="26sp" android:textColor="@color/text_primary" />
-                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:paddingStart="10dp"><TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="تنظیمات پیشرفته" android:textSize="17sp" android:textStyle="bold" android:textColor="@color/text_primary"/><TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:text="برنامه‌های ارتباطی، فیلترها و تلاش‌ها" android:textSize="12sp" android:textColor="@color/text_secondary"/></LinearLayout>
-                        <TextView android:layout_width="24dp" android:layout_height="wrap_content" android:text="‹" android:textSize="27sp" android:textColor="@color/text_secondary" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <TextView android:id="@+id/dashboardStatus" android:layout_width="match_parent" android:layout_height="58dp" android:layout_marginTop="18dp" android:gravity="center" android:background="@drawable/bg_status" android:text="●  برنامه برای اجرای عملیات مسلح است" android:textColor="#FFFFFF" android:textStyle="bold" android:textSize="15sp" />
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="18dp" android:gravity="center" android:text="ساخته شده با ♥ برای BETNET" android:textColor="@color/text_secondary" android:textSize="11sp" />
-            </LinearLayout>
-
-            <LinearLayout android:id="@+id/sectionWebhook" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="وب‌هوک‌ها" android:textSize="23sp" android:textStyle="bold" android:textColor="@color/text_primary" />
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="14dp" android:orientation="vertical" android:background="@drawable/bg_card">
-                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="آدرس وب‌هوک" android:textStyle="bold" android:textSize="16sp" android:textColor="@color/text_primary" />
-                    <EditText android:id="@+id/inputWebhook" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:hint="https://example.com/webhook.php?token=..." android:inputType="textUri" android:textDirection="ltr" android:gravity="start" android:background="@drawable/bg_input" android:padding="13dp" />
-                    <Button android:id="@+id/buttonSaveWebhook" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="14dp" android:text="ذخیره وب‌هوک" android:textColor="#FFFFFF" android:background="@drawable/bg_button_black" />
-                    <Button android:id="@+id/buttonTest" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="10dp" android:text="تست وب‌هوک" android:textColor="@color/text_primary" android:background="@drawable/bg_button_light" />
-                    <TextView android:id="@+id/textStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:textColor="@color/text_secondary" android:textSize="13sp" android:gravity="start" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout android:id="@+id/sectionSettings" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="تنظیمات پیشرفته" android:textSize="23sp" android:textStyle="bold" android:textColor="@color/text_primary" />
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="14dp" android:orientation="vertical" android:background="@drawable/bg_card">
-                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="دسترسی‌ها" android:textStyle="bold" android:textColor="@color/text_primary" android:textSize="14sp" />
-                    <Button android:id="@+id/buttonPermission" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="10dp" android:text="دسترسی خواندن اعلان‌ها" android:textColor="@color/text_primary" android:background="@drawable/bg_button_light" />
-                    <Button android:id="@+id/buttonStartup" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="8dp" android:text="اجرای خودکار و باتری بدون محدودیت" android:textColor="@color/text_primary" android:background="@drawable/bg_button_light" />
-                    <Button android:id="@+id/buttonApps" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="8dp" android:text="انتخاب برنامه‌های ارتباطی" android:textColor="@color/text_primary" android:background="@drawable/bg_button_light" />
-                    <TextView android:id="@+id/textSelectedApps" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:textColor="@color/text_secondary" android:textSize="12sp" android:gravity="start" />
-                    <TextView android:id="@+id/dashboardAppsText" android:layout_width="1dp" android:layout_height="1dp" android:visibility="gone" />
-                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="فیلتر و ارسال" android:textStyle="bold" android:textColor="@color/text_primary" android:textSize="14sp" />
-                    <EditText android:id="@+id/inputSenderFilter" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:hint="فیلتر فرستنده؛ مثال: Bank, 3000" android:inputType="text" android:gravity="start" android:background="@drawable/bg_input" android:padding="13dp" />
-                    <EditText android:id="@+id/inputTextFilter" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:hint="فیلتر متن؛ مثال: واریز, انتقال" android:inputType="text" android:gravity="start" android:background="@drawable/bg_input" android:padding="13dp" />
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:orientation="horizontal">
-                        <EditText android:id="@+id/inputRetryCount" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:hint="تعداد تلاش" android:inputType="number" android:background="@drawable/bg_input" android:padding="13dp" />
-                        <EditText android:id="@+id/inputRetrySeconds" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="10dp" android:hint="فاصله ثانیه" android:inputType="number" android:background="@drawable/bg_input" android:padding="13dp" />
-                    </LinearLayout>
-                    <Button android:id="@+id/buttonSave" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="14dp" android:text="ذخیره تنظیمات" android:textColor="#FFFFFF" android:background="@drawable/bg_button_black" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout android:id="@+id/sectionHistory"
+            <LinearLayout
+                android:id="@+id/sectionDashboard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="top|center_vertical"
-                    android:layoutDirection="ltr">
+                    android:orientation="vertical"
+                    android:padding="18dp"
+                    android:background="@drawable/bg_ui_card"
+                    android:elevation="2dp">
 
-                    <Button
-                        android:id="@+id/buttonRefresh"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="پیام شناسایی‌شده"
+                                android:textColor="@color/ui_muted"
+                                android:textSize="11sp"/>
+
+                            <TextView
+                                android:id="@+id/dashboardLatestSender"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:text="—"
+                                android:textColor="@color/ui_text"
+                                android:textSize="22sp"
+                                android:fontFamily="sans-serif-medium"/>
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/dashboardLatestResult"
+                            android:layout_width="wrap_content"
+                            android:layout_height="34dp"
+                            android:gravity="center"
+                            android:paddingStart="13dp"
+                            android:paddingEnd="13dp"
+                            android:text="آماده"
+                            android:textColor="@color/ui_green"
+                            android:textSize="10.5sp"
+                            android:fontFamily="sans-serif-medium"
+                            android:background="@drawable/bg_ui_success"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/dashboardLatestMessage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:text="هنوز پیامی دریافت نشده است."
+                        android:textColor="#334155"
+                        android:textSize="12.5sp"
+                        android:lineSpacingExtra="3dp"
+                        android:maxLines="3"
+                        android:ellipsize="end"/>
+
+                    <LinearLayout
+                        android:id="@+id/dashboardLatestCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="86dp"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="15dp"
+                    android:background="@drawable/bg_ui_card"
+                    android:elevation="1dp">
+
+                    <Switch
+                        android:id="@+id/switchEnabled"
                         android:layout_width="wrap_content"
-                        android:layout_height="48dp"
-                        android:text="تازه‌سازی  ↻"
-                        android:textColor="@color/premium_text"
-                        android:textSize="12sp"
-                        android:fontFamily="sans-serif-medium"
-                        android:background="@drawable/bg_premium_action"/>
+                        android:layout_height="wrap_content"
+                        android:checked="true"/>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginStart="18dp"
                         android:orientation="vertical"
-                        android:gravity="end">
+                        android:layout_marginStart="13dp">
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="تاریخچه پیام‌ها"
-                            android:textColor="@color/premium_text"
-                            android:textSize="29sp"
-                            android:fontFamily="sans-serif-medium"
-                            android:gravity="end"
-                            android:maxLines="1"/>
+                            android:text="ارسال خودکار"
+                            android:textColor="@color/ui_text"
+                            android:textSize="14sp"
+                            android:fontFamily="sans-serif-medium"/>
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="برای مشاهده جزئیات، پاسخ وب‌هوک و ارسال مجدد روی پیام بزن."
-                            android:textColor="@color/premium_muted"
-                            android:textSize="11sp"
-                            android:gravity="end"
-                            android:maxLines="2"/>
+                            android:text="ارسال خودکار پیام‌های دریافتی فعال است"
+                            android:textColor="@color/ui_muted"
+                            android:textSize="10.5sp"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/dashboardStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="فعال"
+                        android:textColor="@color/ui_green"
+                        android:textSize="11sp"
+                        android:fontFamily="sans-serif-medium"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_ui_card"
+                    android:elevation="1dp">
+
+                    <LinearLayout
+                        android:id="@+id/cardWebhook"
+                        android:layout_width="match_parent"
+                        android:layout_height="76dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:clickable="true"
+                        android:focusable="true">
+                        <TextView android:layout_width="36dp" android:layout_height="36dp" android:gravity="center" android:text="◎" android:textSize="20sp" android:textColor="@color/ui_text"/>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="10dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="وب‌هوک‌ها" android:textColor="@color/ui_text" android:textSize="14sp" android:fontFamily="sans-serif-medium"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:text="مدیریت آدرس‌ها و تست وب‌هوک" android:textColor="@color/ui_muted" android:textSize="10sp"/>
+                        </LinearLayout>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="‹" android:textColor="@color/ui_muted" android:textSize="24sp"/>
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" android:background="@color/ui_border"/>
+
+                    <LinearLayout
+                        android:id="@+id/cardHistory"
+                        android:layout_width="match_parent"
+                        android:layout_height="76dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:clickable="true"
+                        android:focusable="true">
+                        <TextView android:layout_width="36dp" android:layout_height="36dp" android:gravity="center" android:text="◷" android:textSize="20sp" android:textColor="@color/ui_text"/>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="10dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="تاریخچه پیام‌ها" android:textColor="@color/ui_text" android:textSize="14sp" android:fontFamily="sans-serif-medium"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:text="مشاهده پیام‌ها و پیگیری ارسال‌ها" android:textColor="@color/ui_muted" android:textSize="10sp"/>
+                        </LinearLayout>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="‹" android:textColor="@color/ui_muted" android:textSize="24sp"/>
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" android:background="@color/ui_border"/>
+
+                    <LinearLayout
+                        android:id="@+id/cardManual"
+                        android:layout_width="match_parent"
+                        android:layout_height="76dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:clickable="true"
+                        android:focusable="true">
+                        <TextView android:layout_width="36dp" android:layout_height="36dp" android:gravity="center" android:text="➤" android:textSize="19sp" android:textColor="@color/ui_text"/>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="10dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ارسال دستی" android:textColor="@color/ui_text" android:textSize="14sp" android:fontFamily="sans-serif-medium"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:text="ارسال مستقیم متن به وب‌هوک" android:textColor="@color/ui_muted" android:textSize="10sp"/>
+                        </LinearLayout>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="‹" android:textColor="@color/ui_muted" android:textSize="24sp"/>
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" android:background="@color/ui_border"/>
+
+                    <LinearLayout
+                        android:id="@+id/cardSettings"
+                        android:layout_width="match_parent"
+                        android:layout_height="76dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:clickable="true"
+                        android:focusable="true">
+                        <TextView android:layout_width="36dp" android:layout_height="36dp" android:gravity="center" android:text="⚙" android:textSize="19sp" android:textColor="@color/ui_text"/>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="10dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="تنظیمات پیشرفته" android:textColor="@color/ui_text" android:textSize="14sp" android:fontFamily="sans-serif-medium"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:text="برنامه‌های ارتباطی، فیلترها و تنظیم تلاش‌ها" android:textColor="@color/ui_muted" android:textSize="10sp"/>
+                        </LinearLayout>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="‹" android:textColor="@color/ui_muted" android:textSize="24sp"/>
                     </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/textStatus"
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal"
-                    android:layoutDirection="ltr"
-                    android:gravity="start">
-
-                    <ImageButton
-                        android:id="@+id/buttonHistoryBack"
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:padding="10dp"
-                        android:src="@drawable/ic_back_premium"
-                        android:background="@drawable/bg_premium_action"
-                        android:contentDescription="بازگشت"
-                        android:visibility="gone"/>
-
-                    <Button
-                        android:id="@+id/buttonSelectHistory"
-                        android:layout_width="wrap_content"
-                        android:layout_height="44dp"
-                        android:layout_marginStart="8dp"
-                        android:text="انتخاب پیام‌ها"
-                        android:textColor="@color/premium_text"
-                        android:textSize="11.5sp"
-                        android:fontFamily="sans-serif-medium"
-                        android:background="@drawable/bg_premium_action"
-                        android:visibility="gone"/>
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/buttonDeleteSelected"
-                    android:layout_width="match_parent"
-                    android:layout_height="46dp"
-                    android:layout_marginTop="10dp"
-                    android:text="حذف انتخابی"
-                    android:textColor="@color/premium_red"
-                    android:textSize="11.5sp"
+                    android:layout_height="58dp"
+                    android:layout_marginTop="14dp"
+                    android:gravity="center"
+                    android:text="برنامه برای اجرای عملیات مسلح است"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11sp"
                     android:fontFamily="sans-serif-medium"
-                    android:background="@drawable/bg_premium_delete"
-                    android:visibility="gone"/>
+                    android:background="@drawable/bg_ui_dark"/>
+            </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/historyContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:orientation="vertical"/>
+            <LinearLayout android:id="@+id/sectionWebhook" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="وب‌هوک‌ها" android:textColor="@color/ui_text" android:textSize="24sp" android:fontFamily="sans-serif-medium" android:gravity="end"/>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="14dp" android:orientation="vertical" android:padding="16dp" android:background="@drawable/bg_ui_card">
+                    <EditText android:id="@+id/inputWebhook" android:layout_width="match_parent" android:layout_height="56dp" android:hint="https://domain.com/webhook.php" android:inputType="textUri" android:gravity="start|center_vertical" android:padding="14dp" android:background="@drawable/bg_input"/>
+                    <Button android:id="@+id/buttonTest" android:layout_width="match_parent" android:layout_height="50dp" android:layout_marginTop="10dp" android:text="تست وب‌هوک" android:textColor="@color/ui_text" android:background="@drawable/bg_ui_button"/>
+                    <Button android:id="@+id/buttonSaveWebhook" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="10dp" android:text="ذخیره وب‌هوک" android:textColor="#FFFFFF" android:background="@drawable/bg_ui_primary"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/sectionSettings" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="تنظیمات پیشرفته" android:textColor="@color/ui_text" android:textSize="24sp" android:fontFamily="sans-serif-medium" android:gravity="end"/>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="14dp" android:orientation="vertical" android:padding="16dp" android:background="@drawable/bg_ui_card">
+                    <Button android:id="@+id/buttonPermission" android:layout_width="match_parent" android:layout_height="52dp" android:text="دسترسی خواندن اعلان‌ها" android:textColor="@color/ui_text" android:background="@drawable/bg_ui_button"/>
+                    <Button android:id="@+id/buttonStartup" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="8dp" android:text="اجرای خودکار و باتری بدون محدودیت" android:textColor="@color/ui_text" android:background="@drawable/bg_ui_button"/>
+                    <Button android:id="@+id/buttonApps" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="8dp" android:text="انتخاب برنامه ارتباطی" android:textColor="@color/ui_text" android:background="@drawable/bg_ui_button"/>
+                    <TextView android:id="@+id/textSelectedApps" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:textColor="@color/ui_muted" android:textSize="11sp"/>
+                    <TextView android:id="@+id/dashboardAppsText" android:layout_width="1dp" android:layout_height="1dp" android:visibility="gone"/>
+                    <EditText android:id="@+id/inputSenderFilter" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="14dp" android:hint="فیلتر فرستنده" android:padding="13dp" android:background="@drawable/bg_input"/>
+                    <EditText android:id="@+id/inputTextFilter" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="8dp" android:hint="کلمات کلیدی" android:padding="13dp" android:background="@drawable/bg_input"/>
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="horizontal">
+                        <EditText android:id="@+id/inputRetryCount" android:layout_width="0dp" android:layout_height="52dp" android:layout_weight="1" android:hint="تعداد تلاش" android:inputType="number" android:padding="13dp" android:background="@drawable/bg_input"/>
+                        <EditText android:id="@+id/inputRetrySeconds" android:layout_width="0dp" android:layout_height="52dp" android:layout_weight="1" android:layout_marginStart="8dp" android:hint="فاصله ثانیه" android:inputType="number" android:padding="13dp" android:background="@drawable/bg_input"/>
+                    </LinearLayout>
+                    <Button android:id="@+id/buttonSave" android:layout_width="match_parent" android:layout_height="54dp" android:layout_marginTop="12dp" android:text="ذخیره تنظیمات" android:textColor="#FFFFFF" android:background="@drawable/bg_ui_dark"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/sectionHistory" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+                    <ImageButton android:id="@+id/buttonHistoryBack" android:layout_width="44dp" android:layout_height="44dp" android:src="@drawable/ic_back_premium" android:padding="10dp" android:background="@drawable/bg_ui_button"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="تاریخچه پیام‌ها" android:textColor="@color/ui_text" android:textSize="24sp" android:fontFamily="sans-serif-medium" android:gravity="end"/>
+                </LinearLayout>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="44dp" android:layout_marginTop="12dp" android:orientation="horizontal">
+                    <Button android:id="@+id/buttonRefresh" android:layout_width="wrap_content" android:layout_height="44dp" android:text="تازه‌سازی" android:textColor="@color/ui_text" android:background="@drawable/bg_ui_button"/>
+                    <Button android:id="@+id/buttonSelectHistory" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_marginStart="8dp" android:text="انتخاب پیام‌ها" android:textColor="@color/ui_text" android:background="@drawable/bg_ui_button"/>
+                </LinearLayout>
+                <Button android:id="@+id/buttonDeleteSelected" android:layout_width="match_parent" android:layout_height="46dp" android:layout_marginTop="8dp" android:text="حذف انتخابی" android:textColor="#B91C1C" android:background="@drawable/bg_ui_button" android:visibility="gone"/>
+                <LinearLayout android:id="@+id/historyContainer" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="14dp" android:orientation="vertical"/>
             </LinearLayout>
 
             <LinearLayout android:id="@+id/sectionManual" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="ارسال دستی" android:textSize="23sp" android:textStyle="bold" android:textColor="@color/text_primary" />
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="14dp" android:orientation="vertical" android:background="@drawable/bg_card">
-                    <EditText android:id="@+id/inputManualSender" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="فرستنده یا عنوان" android:inputType="text" android:gravity="start" android:background="@drawable/bg_input" android:padding="13dp" />
-                    <EditText android:id="@+id/inputManualMessage" android:layout_width="match_parent" android:layout_height="160dp" android:layout_marginTop="10dp" android:gravity="top|start" android:hint="متنی که باید به وب‌هوک ارسال شود" android:inputType="textMultiLine" android:background="@drawable/bg_input" android:padding="13dp" />
-                    <Button android:id="@+id/buttonManualSend" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="12dp" android:text="ارسال به وب‌هوک" android:textColor="#FFFFFF" android:background="@drawable/bg_button_black" />
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="ارسال دستی" android:textColor="@color/ui_text" android:textSize="24sp" android:fontFamily="sans-serif-medium" android:gravity="end"/>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="14dp" android:orientation="vertical" android:padding="16dp" android:background="@drawable/bg_ui_card">
+                    <EditText android:id="@+id/inputManualSender" android:layout_width="match_parent" android:layout_height="52dp" android:hint="فرستنده یا عنوان" android:padding="13dp" android:background="@drawable/bg_input"/>
+                    <EditText android:id="@+id/inputManualMessage" android:layout_width="match_parent" android:layout_height="150dp" android:layout_marginTop="8dp" android:gravity="top|start" android:hint="متن پیام" android:padding="13dp" android:background="@drawable/bg_input"/>
+                    <Button android:id="@+id/buttonManualSend" android:layout_width="match_parent" android:layout_height="54dp" android:layout_marginTop="12dp" android:text="ارسال به وب‌هوک" android:textColor="#FFFFFF" android:background="@drawable/bg_ui_primary"/>
                 </LinearLayout>
             </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -3,9 +3,9 @@
     android:id="@+id/historyCardRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="14dp"
+    android:layout_marginBottom="12dp"
     android:orientation="vertical"
-    android:padding="17dp"
+    android:padding="16dp"
     android:background="@drawable/bg_premium_card"
     android:elevation="4dp"
     android:layoutDirection="rtl"
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
             android:textColor="@color/premium_text"
-            android:textSize="13sp"
+            android:textSize="11.5sp"
             android:fontFamily="sans-serif-medium"
             android:singleLine="true"
             android:textDirection="ltr"/>
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textColor="@color/premium_text"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:fontFamily="sans-serif-medium"
             android:singleLine="true"
             android:ellipsize="end"
@@ -84,7 +84,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:textColor="@color/premium_text"
-        android:textSize="16sp"
+        android:textSize="15sp"
         android:fontFamily="sans-serif-medium"
         android:gravity="end"
         android:textDirection="rtl"
@@ -96,9 +96,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
         android:textColor="#263244"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:lineSpacingExtra="3dp"
-        android:maxLines="4"
+        android:maxLines="3"
         android:ellipsize="end"
         android:gravity="end"
         android:textDirection="rtl"/>
@@ -106,7 +106,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="13dp"
         android:background="#F0F2F5"/>
 
     <LinearLayout

@@ -24,4 +24,15 @@
     <color name="premium_blue">#2563EB</color>
     <color name="premium_blue_soft">#EEF4FF</color>
     <color name="premium_code">#F7F8FA</color>
+
+    <color name="ui_bg">#F5F7F8</color>
+    <color name="ui_surface">#FFFFFF</color>
+    <color name="ui_text">#111827</color>
+    <color name="ui_muted">#7B8493</color>
+    <color name="ui_border">#E7EAEE</color>
+    <color name="ui_green">#149A57</color>
+    <color name="ui_green_soft">#EAF8F0</color>
+    <color name="ui_navy">#101827</color>
+    <color name="ui_warning">#B77908</color>
+    <color name="ui_warning_soft">#FFF4D6</color>
 </resources>
