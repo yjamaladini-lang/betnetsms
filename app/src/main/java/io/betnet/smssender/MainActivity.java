@@ -231,39 +231,121 @@ public final class MainActivity extends Activity {
     }
 
     private void showAppPicker() {
-        if (appChoices.isEmpty()) { toast("برنامه ارتباطی مناسبی پیدا نشد."); return; }
+        if (appChoices.isEmpty()) {
+            toast("برنامه ارتباطی مناسبی پیدا نشد.");
+            return;
+        }
+
         Set<String> draft = new HashSet<>(selectedPackages);
-        LinearLayout list = new LinearLayout(this); list.setOrientation(LinearLayout.VERTICAL); list.setPadding(14, 8, 14, 8); list.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+
+        LinearLayout list = new LinearLayout(this);
+        list.setOrientation(LinearLayout.VERTICAL);
+        list.setPadding(14, 8, 14, 8);
+        list.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+
         for (AppChoice app : appChoices) {
-            LinearLayout row = new LinearLayout(this); row.setOrientation(LinearLayout.HORIZONTAL); row.setGravity(Gravity.CENTER_VERTICAL); row.setPadding(8, 10, 8, 10);
-            CheckBox check = new CheckBox(this); check.setChecked(draft.contains(app.packageName));
-            ImageView icon = new ImageView(this); icon.setImageDrawable(app.icon); LinearLayout.LayoutParams ip = new LinearLayout.LayoutParams(54, 54); ip.setMargins(10,0,12,0); icon.setLayoutParams(ip);
-            LinearLayout texts = new LinearLayout(this); texts.setOrientation(LinearLayout.VERTICAL); texts.setLayoutParams(new LinearLayout.LayoutParams(0, -2, 1));
-            TextView name = new TextView(this); name.setText(app.label); name.setGravity(Gravity.START); name.setTextDirection(View.TEXT_DIRECTION_RTL); name.setTextSize(16); name.setTextColor(Color.parseColor("#171717")); name.setTypeface(null, 1);
-            TextView pkg = new TextView(this); pkg.setText(app.packageName); pkg.setTextSize(11); pkg.setTextColor(Color.parseColor("#6B7280")); pkg.setTextDirection(View.TEXT_DIRECTION_LTR);
-            texts.addView(name); texts.addView(pkg); row.addView(check); row.addView(icon); row.addView(texts);
-            View.OnClickListener toggle = v -> { check.setChecked(!check.isChecked()); if(check.isChecked()) draft.add(app.packageName); else draft.remove(app.packageName); };
+            LinearLayout row = new LinearLayout(this);
+            row.setOrientation(LinearLayout.HORIZONTAL);
+            row.setGravity(Gravity.CENTER_VERTICAL);
+            row.setPadding(8, 10, 8, 10);
+            row.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+
+            LinearLayout texts = new LinearLayout(this);
+            texts.setOrientation(LinearLayout.VERTICAL);
+            texts.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+            texts.setGravity(Gravity.LEFT);
+            texts.setLayoutParams(new LinearLayout.LayoutParams(0, -2, 1f));
+
+            TextView name = new TextView(this);
+            name.setText(app.label);
+            name.setGravity(Gravity.LEFT);
+            name.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
+            name.setTextDirection(View.TEXT_DIRECTION_LTR);
+            name.setTextSize(15);
+            name.setTextColor(Color.parseColor("#111827"));
+            name.setTypeface(null, 1);
+
+            TextView pkg = new TextView(this);
+            pkg.setText(app.packageName);
+            pkg.setGravity(Gravity.LEFT);
+            pkg.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
+            pkg.setTextDirection(View.TEXT_DIRECTION_LTR);
+            pkg.setTextSize(10);
+            pkg.setTextColor(Color.parseColor("#7B8493"));
+
+            texts.addView(name);
+            texts.addView(pkg);
+
+            ImageView icon = new ImageView(this);
+            icon.setImageDrawable(app.icon);
+            LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(48, 48);
+            iconParams.setMargins(10, 0, 10, 0);
+            icon.setLayoutParams(iconParams);
+
+            CheckBox check = new CheckBox(this);
+            check.setChecked(draft.contains(app.packageName));
+
+            row.addView(texts);
+            row.addView(icon);
+            row.addView(check);
+
+            View.OnClickListener toggle = view -> check.setChecked(!check.isChecked());
             row.setOnClickListener(toggle);
-            check.setOnCheckedChangeListener((b, isChecked) -> { if(isChecked) draft.add(app.packageName); else draft.remove(app.packageName); });
+
+            check.setOnCheckedChangeListener((button, isChecked) -> {
+                if (isChecked) {
+                    draft.add(app.packageName);
+                } else {
+                    draft.remove(app.packageName);
+                }
+            });
+
             list.addView(row);
         }
-        ScrollView scroll = new ScrollView(this); scroll.addView(list);
-        new AlertDialog.Builder(this).setTitle("برنامه‌های ارتباطی مجاز")
-                .setView(scroll).setPositiveButton("تأیید", (d,w) -> { selectedPackages = draft; updateSelectedAppsText(); })
-                .setNegativeButton("لغو", null).show();
+
+        ScrollView scroll = new ScrollView(this);
+        scroll.addView(list);
+
+        new AlertDialog.Builder(this)
+                .setTitle("برنامه‌های ارتباطی مجاز")
+                .setView(scroll)
+                .setPositiveButton("تأیید", (dialog, which) -> {
+                    selectedPackages = draft;
+                    updateSelectedAppsText();
+                })
+                .setNegativeButton("لغو", null)
+                .show();
     }
 
     private void updateSelectedAppsText() {
         if (selectedPackages.isEmpty()) {
+            textSelectedApps.setGravity(Gravity.RIGHT);
+            textSelectedApps.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
+            textSelectedApps.setTextDirection(View.TEXT_DIRECTION_RTL);
             textSelectedApps.setText("هیچ برنامه‌ای انتخاب نشده است.");
-            if (dashboardAppsText != null) dashboardAppsText.setText("هیچ برنامه‌ای انتخاب نشده است");
+
+            if (dashboardAppsText != null) {
+                dashboardAppsText.setText("هیچ برنامه‌ای انتخاب نشده است");
+            }
             return;
         }
+
         List<String> names = new ArrayList<>();
-        for (AppChoice a : appChoices) if (selectedPackages.contains(a.packageName)) names.add(a.label);
-        String joined = TextUtils.join("، ", names);
-        textSelectedApps.setText("انتخاب‌شده: " + joined);
-        if (dashboardAppsText != null) dashboardAppsText.setText(joined);
+        for (AppChoice app : appChoices) {
+            if (selectedPackages.contains(app.packageName)) {
+                names.add(app.label);
+            }
+        }
+
+        String joined = TextUtils.join(", ", names);
+        textSelectedApps.setGravity(Gravity.LEFT);
+        textSelectedApps.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
+        textSelectedApps.setTextDirection(View.TEXT_DIRECTION_LTR);
+        textSelectedApps.setText(joined);
+
+        if (dashboardAppsText != null) {
+            dashboardAppsText.setText(joined);
+        }
     }
 
     private void openNotificationAccess() {
@@ -582,15 +664,19 @@ public final class MainActivity extends Activity {
         dashboardLatestCard.setVisibility(View.VISIBLE);
         dashboardLatestSender.setText(item.sender == null || item.sender.trim().isEmpty() ? "پیام جدید" : item.sender);
         dashboardLatestMessage.setText(shorten(item.message, 180));
-        if ("sent".equals(item.status)) {
-            dashboardLatestResult.setText("موفق");
+        int visualState = historyVisualState(item);
+        if (visualState == 1) {
+            dashboardLatestResult.setText("بسته داده شد");
             dashboardLatestResult.setTextColor(Color.parseColor("#16803C"));
-        } else if ("failed".equals(item.status)) {
-            dashboardLatestResult.setText("ناموفق");
-            dashboardLatestResult.setTextColor(Color.parseColor("#C62828"));
+            dashboardLatestResult.setBackgroundResource(R.drawable.bg_status_success);
+        } else if (visualState == 2) {
+            dashboardLatestResult.setText("رسید؛ اعمال نشد");
+            dashboardLatestResult.setTextColor(Color.parseColor("#A16207"));
+            dashboardLatestResult.setBackgroundResource(R.drawable.bg_status_warning);
         } else {
-            dashboardLatestResult.setText("در حال تلاش");
-            dashboardLatestResult.setTextColor(Color.parseColor("#B26A00"));
+            dashboardLatestResult.setText("ارسال ناموفق");
+            dashboardLatestResult.setTextColor(Color.parseColor("#B91C1C"));
+            dashboardLatestResult.setBackgroundResource(R.drawable.bg_status_error);
         }
         dashboardLatestCard.setOnClickListener(v -> showHistoryDetail(item.id));
     }
