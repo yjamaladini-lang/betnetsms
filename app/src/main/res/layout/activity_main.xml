@@ -197,7 +197,7 @@
 
         <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="نسخه برنامه" android:textColor="@color/ui_text" android:textSize="12sp" android:fontFamily="sans-serif-medium" android:gravity="right" android:textAlignment="gravity" android:textDirection="rtl" />
 
-        <TextView android:id="@+id/textAppVersion" android:layout_width="wrap_content" android:layout_height="30dp" android:minWidth="72dp" android:paddingStart="12dp" android:paddingEnd="12dp" android:gravity="center" android:text="نسخه 1.8.1" android:textColor="@color/ui_muted" android:textSize="10sp" android:textDirection="ltr" android:background="@drawable/bg_ui_chip" />
+        <TextView android:id="@+id/textAppVersion" android:layout_width="wrap_content" android:layout_height="30dp" android:minWidth="72dp" android:paddingStart="12dp" android:paddingEnd="12dp" android:gravity="center" android:text="نسخه 1.8.2" android:textColor="@color/ui_muted" android:textSize="10sp" android:textDirection="ltr" android:background="@drawable/bg_ui_chip" />
     </LinearLayout>
 </LinearLayout><Button android:id="@+id/buttonSave" android:layout_width="match_parent" android:layout_height="50dp" android:layout_marginTop="10dp" android:text="ذخیره تنظیمات" android:textSize="11sp" android:textColor="#FFFFFF" android:background="@drawable/bg_ui_dark" android:textDirection="rtl" />
                 </LinearLayout>

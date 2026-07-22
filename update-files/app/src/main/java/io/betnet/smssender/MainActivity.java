@@ -96,7 +96,7 @@ public final class MainActivity extends AppCompatActivity {
         textAppVersion = findViewById(R.id.textAppVersion);
         buttonTopBack = findViewById(R.id.buttonTopBack);
         switchDarkMode.setChecked(AppPrefs.isDarkMode(this));
-        textAppVersion.setText("نسخه " + BuildConfig.VERSION_NAME);
+        textAppVersion.setText("نسخه " + appVersionName());
 
         findViewById(R.id.buttonHome).setOnClickListener(v -> showSection(sectionDashboard));
         buttonTopBack.setOnClickListener(v -> {
@@ -160,6 +160,31 @@ public final class MainActivity extends AppCompatActivity {
         super.onResume();
         refreshHistory();
         updateAccessStatus();
+    }
+
+    private String appVersionName() {
+        try {
+            String versionName;
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                versionName = getPackageManager()
+                        .getPackageInfo(
+                                getPackageName(),
+                                PackageManager.PackageInfoFlags.of(0)
+                        )
+                        .versionName;
+            } else {
+                versionName = getPackageManager()
+                        .getPackageInfo(getPackageName(), 0)
+                        .versionName;
+            }
+
+            return versionName == null || versionName.trim().isEmpty()
+                    ? "1.8.2"
+                    : versionName;
+        } catch (Exception ignored) {
+            return "1.8.2";
+        }
     }
 
     private void showSection(View target) {
