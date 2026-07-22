@@ -424,6 +424,8 @@ public final class MainActivity extends Activity {
                             ? R.drawable.bg_premium_card_selected
                             : R.drawable.bg_premium_card
             );
+            // Some Android versions clear XML padding after replacing background.
+            root.setPadding(dp(13), dp(13), dp(13), dp(13));
 
             sender.setText(
                     item.sender == null || item.sender.trim().isEmpty()
@@ -455,6 +457,8 @@ public final class MainActivity extends Activity {
                                 ? R.drawable.bg_premium_card_selected
                                 : R.drawable.bg_premium_card
                 );
+                // Keep identical spacing in selected and unselected states.
+                root.setPadding(dp(13), dp(13), dp(13), dp(13));
                 updateHistoryToolbar();
             });
 

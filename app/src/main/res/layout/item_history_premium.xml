@@ -1,154 +1,39 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/historyCardRoot"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="9dp"
-    android:orientation="vertical"
-    android:padding="13dp"
-    android:background="@drawable/bg_premium_card"
-    android:elevation="2dp"
-    android:layoutDirection="rtl"
-    android:textDirection="rtl">
+<?xml version='1.0' encoding='utf-8'?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/historyCardRoot" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="9dp" android:orientation="vertical" android:padding="13dp" android:background="@drawable/bg_premium_card" android:elevation="2dp" android:layoutDirection="rtl" android:textDirection="rtl">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
 
-        <CheckBox
-            android:id="@+id/historyCheck"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:buttonTint="@color/premium_blue"
-            android:visibility="gone"/>
+        <CheckBox android:id="@+id/historyCheck" android:layout_width="34dp" android:layout_height="34dp" android:buttonTint="@color/premium_blue" android:visibility="gone" />
 
-        <FrameLayout
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:background="@drawable/bg_icon_green">
-            <ImageView
-                android:layout_width="19dp"
-                android:layout_height="19dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_user_premium"/>
+        <FrameLayout android:layout_width="34dp" android:layout_height="34dp" android:background="@drawable/bg_icon_green">
+            <ImageView android:layout_width="19dp" android:layout_height="19dp" android:layout_gravity="center" android:src="@drawable/ic_user_premium" />
         </FrameLayout>
 
-        <TextView
-            android:id="@+id/historySender"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:textColor="@color/premium_text"
-            android:textSize="13sp"
-            android:fontFamily="sans-serif-medium"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:textDirection="ltr"/>
+        <TextView android:id="@+id/historySender" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="8dp" android:layout_marginEnd="8dp" android:textColor="@color/premium_text" android:textSize="13sp" android:fontFamily="sans-serif-medium" android:maxLines="1" android:ellipsize="end" android:textDirection="rtl" android:gravity="end" />
 
-        <TextView
-            android:id="@+id/historyTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/premium_muted"
-            android:textSize="9.5sp"
-            android:maxLines="1"
-            android:textDirection="ltr"/>
+        <TextView android:id="@+id/historyTime" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/premium_muted" android:textSize="9.5sp" android:maxLines="1" android:textDirection="ltr" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/historyMessageTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="9dp"
-        android:textColor="@color/premium_text"
-        android:textSize="13sp"
-        android:fontFamily="sans-serif-medium"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:visibility="gone"/>
+    <TextView android:id="@+id/historyMessageTitle" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="9dp" android:textColor="@color/premium_text" android:textSize="13sp" android:fontFamily="sans-serif-medium" android:maxLines="1" android:ellipsize="end" android:visibility="gone" android:gravity="end" android:textDirection="rtl" />
 
-    <TextView
-        android:id="@+id/historyMessageBody"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:textColor="#334155"
-        android:textSize="11sp"
-        android:lineSpacingExtra="2dp"
-        android:maxLines="2"
-        android:ellipsize="end"/>
+    <TextView android:id="@+id/historyMessageBody" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:textColor="#334155" android:textSize="11sp" android:lineSpacingExtra="2dp" android:maxLines="2" android:ellipsize="end" android:gravity="end" android:textDirection="rtl" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="34dp"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="34dp" android:layout_marginTop="10dp" android:orientation="horizontal" android:gravity="center_vertical">
 
-        <LinearLayout
-            android:id="@+id/historyStatusChip"
-            android:layout_width="0dp"
-            android:layout_height="32dp"
-            android:layout_weight="1.45"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:background="@drawable/bg_status_warning">
+        <LinearLayout android:id="@+id/historyStatusChip" android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1.45" android:orientation="horizontal" android:gravity="center" android:paddingStart="8dp" android:paddingEnd="8dp" android:background="@drawable/bg_status_warning">
 
-            <ImageView
-                android:id="@+id/historyStatusIcon"
-                android:layout_width="15dp"
-                android:layout_height="15dp"/>
+            <ImageView android:id="@+id/historyStatusIcon" android:layout_width="15dp" android:layout_height="15dp" />
 
-            <TextView
-                android:id="@+id/historyStatusText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="4dp"
-                android:textSize="8.8sp"
-                android:fontFamily="sans-serif-medium"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:gravity="center"/>
+            <TextView android:id="@+id/historyStatusText" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="4dp" android:textSize="8.8sp" android:fontFamily="sans-serif-medium" android:maxLines="1" android:ellipsize="end" android:gravity="center" android:textDirection="rtl" />
         </LinearLayout>
 
-        <Space
-            android:layout_width="7dp"
-            android:layout_height="1dp"/>
+        <Space android:layout_width="7dp" android:layout_height="1dp" />
 
-        <LinearLayout
-            android:id="@+id/historyLinkChip"
-            android:layout_width="0dp"
-            android:layout_height="32dp"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:background="@drawable/bg_premium_chip">
+        <LinearLayout android:id="@+id/historyLinkChip" android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:orientation="horizontal" android:gravity="center" android:paddingStart="8dp" android:paddingEnd="8dp" android:background="@drawable/bg_premium_chip">
 
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:src="@drawable/ic_link_premium"/>
+            <ImageView android:layout_width="15dp" android:layout_height="15dp" android:src="@drawable/ic_link_premium" />
 
-            <TextView
-                android:id="@+id/historyWebhook"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="4dp"
-                android:textColor="#64748B"
-                android:textSize="8.5sp"
-                android:maxLines="1"
-                android:ellipsize="middle"
-                android:textDirection="ltr"/>
+            <TextView android:id="@+id/historyWebhook" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="4dp" android:textColor="#64748B" android:textSize="8.5sp" android:maxLines="1" android:ellipsize="middle" android:textDirection="ltr" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
