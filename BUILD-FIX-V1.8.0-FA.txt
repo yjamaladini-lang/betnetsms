@@ -1,0 +1,13 @@
+نسخه 1.8.0 — رفع تداخل Kotlin
+
+علت خطا:
+kotlin-stdlib نسخه 1.8.22 هم‌زمان با
+kotlin-stdlib-jdk7 و kotlin-stdlib-jdk8 نسخه 1.6.21
+وارد Runtime Classpath شده بود.
+
+اصلاحات:
+- Kotlin BOM روی نسخه 1.8.22 تنظیم شد.
+- تمام ماژول‌های Kotlin روی 1.8.22 Force شدند.
+- نسخه‌های قدیمی jdk7 و jdk8 از AppCompat حذف شدند.
+- kotlin-stdlib:1.8.22 صریحاً اضافه شد.
+- AndroidX و Jetifier فعال باقی ماندند.

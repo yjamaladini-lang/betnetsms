@@ -10,8 +10,8 @@ android {
         applicationId = "io.betnet.smssender"
         minSdk = 26
         targetSdk = 35
-        versionCode = 179
-        versionName = "1.7.9"
+        versionCode = 180
+        versionName = "1.8.0"
     }
 
     buildTypes {
@@ -28,6 +28,31 @@ android {
 }
 
 
+
+configurations.configureEach {
+    resolutionStrategy {
+        force(
+            "org.jetbrains.kotlin:kotlin-stdlib:1.8.22",
+            "org.jetbrains.kotlin:kotlin-stdlib-common:1.8.22",
+            "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22",
+            "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22"
+        )
+    }
+}
+
 dependencies {
-    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.22"))
+
+    implementation("androidx.appcompat:appcompat:1.7.0") {
+        exclude(
+            group = "org.jetbrains.kotlin",
+            module = "kotlin-stdlib-jdk7"
+        )
+        exclude(
+            group = "org.jetbrains.kotlin",
+            module = "kotlin-stdlib-jdk8"
+        )
+    }
+
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.8.22")
 }
