@@ -1,308 +1,80 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/detailDialogRoot"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="15dp"
-    android:background="@drawable/bg_premium_dialog"
-    android:layoutDirection="rtl"
-    android:textDirection="rtl">
+<?xml version='1.0' encoding='utf-8'?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/detailDialogRoot" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="15dp" android:background="@drawable/bg_premium_dialog" android:layoutDirection="rtl" android:textDirection="rtl">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layoutDirection="ltr">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="54dp" android:orientation="horizontal" android:gravity="center_vertical" android:layoutDirection="ltr">
 
-        <ImageButton
-            android:id="@+id/detailCloseTop"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:padding="11dp"
-            android:src="@drawable/ic_close_premium"
-            android:background="@drawable/bg_premium_action"
-            android:contentDescription="بستن"/>
+        <ImageButton android:id="@+id/detailCloseTop" android:layout_width="48dp" android:layout_height="48dp" android:padding="11dp" android:src="@drawable/ic_close_premium" android:background="@drawable/bg_premium_action" android:contentDescription="بستن" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="12dp"
-            android:text="جزئیات پیام و ارسال"
-            android:textColor="@color/premium_text"
-            android:textSize="21sp"
-            android:fontFamily="sans-serif-medium"
-            android:gravity="right"
-            android:textAlignment="gravity"
-            android:textDirection="rtl"
-            android:maxLines="1"/>
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="12dp" android:text="جزئیات پیام" android:textColor="@color/premium_text" android:textSize="21sp" android:fontFamily="sans-serif-medium" android:gravity="right" android:textAlignment="gravity" android:textDirection="rtl" android:maxLines="1" />
     </LinearLayout>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true"
-        android:clipToPadding="false"
-        android:paddingTop="10dp"
-        android:paddingBottom="8dp">
+    <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true" android:clipToPadding="false" android:paddingTop="10dp" android:paddingBottom="8dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="12dp"
-                android:background="@drawable/bg_premium_inner_card"
-                android:elevation="1dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="12dp" android:background="@drawable/bg_premium_inner_card" android:elevation="1dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layoutDirection="ltr">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="50dp" android:orientation="horizontal" android:gravity="center_vertical" android:layoutDirection="ltr">
 
-                    <TextView
-                        android:id="@+id/detailSenderValue"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textColor="@color/premium_text"
-                        android:textSize="12sp"
-                        android:fontFamily="sans-serif-medium"
-                        android:textDirection="ltr"
-                        android:gravity="left"
-                        android:textAlignment="gravity"
-                        android:maxLines="1"
-                        android:ellipsize="end"/>
+                    <TextView android:id="@+id/detailSenderValue" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:textColor="@color/premium_text" android:textSize="12sp" android:fontFamily="sans-serif-medium" android:textDirection="ltr" android:gravity="left" android:textAlignment="gravity" android:maxLines="1" android:ellipsize="end" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="فرستنده:"
-                        android:textColor="@color/premium_muted"
-                        android:textSize="12sp"
-                        android:layout_marginEnd="9dp"
-                        android:gravity="right"
-                        android:textDirection="rtl"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="فرستنده:" android:textColor="@color/premium_muted" android:textSize="12sp" android:layout_marginEnd="9dp" android:gravity="right" android:textDirection="rtl" />
 
-                    <FrameLayout
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:background="@drawable/bg_icon_green">
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_user_premium"/>
+                    <FrameLayout android:layout_width="36dp" android:layout_height="36dp" android:background="@drawable/bg_icon_green">
+                        <ImageView android:layout_width="20dp" android:layout_height="20dp" android:layout_gravity="center" android:src="@drawable/ic_user_premium" />
                     </FrameLayout>
                 </LinearLayout>
 
-                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/premium_border"/>
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/premium_border" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layoutDirection="ltr">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="50dp" android:orientation="horizontal" android:gravity="center_vertical" android:layoutDirection="ltr">
 
-                    <TextView
-                        android:id="@+id/detailAppValue"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textColor="@color/premium_text"
-                        android:textSize="12sp"
-                        android:fontFamily="sans-serif-medium"
-                        android:textDirection="ltr"
-                        android:gravity="left"
-                        android:textAlignment="gravity"
-                        android:maxLines="1"
-                        android:ellipsize="end"/>
+                    <TextView android:id="@+id/detailAppValue" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:textColor="@color/premium_text" android:textSize="12sp" android:fontFamily="sans-serif-medium" android:textDirection="ltr" android:gravity="left" android:textAlignment="gravity" android:maxLines="1" android:ellipsize="end" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="برنامه:"
-                        android:textColor="@color/premium_muted"
-                        android:textSize="12sp"
-                        android:layout_marginEnd="9dp"
-                        android:gravity="right"
-                        android:textDirection="rtl"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="برنامه:" android:textColor="@color/premium_muted" android:textSize="12sp" android:layout_marginEnd="9dp" android:gravity="right" android:textDirection="rtl" />
 
-                    <FrameLayout
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:background="@drawable/bg_icon_green">
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_message_premium"/>
+                    <FrameLayout android:layout_width="36dp" android:layout_height="36dp" android:background="@drawable/bg_icon_green">
+                        <ImageView android:layout_width="20dp" android:layout_height="20dp" android:layout_gravity="center" android:src="@drawable/ic_message_premium" />
                     </FrameLayout>
                 </LinearLayout>
 
-                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/premium_border"/>
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/premium_border" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layoutDirection="ltr">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="50dp" android:orientation="horizontal" android:gravity="center_vertical" android:layoutDirection="ltr">
 
-                    <TextView
-                        android:id="@+id/detailTimeValue"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textColor="@color/premium_text"
-                        android:textSize="12sp"
-                        android:fontFamily="sans-serif-medium"
-                        android:textDirection="ltr"
-                        android:gravity="left"
-                        android:textAlignment="gravity"
-                        android:maxLines="1"/>
+                    <TextView android:id="@+id/detailTimeValue" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:textColor="@color/premium_text" android:textSize="12sp" android:fontFamily="sans-serif-medium" android:textDirection="ltr" android:gravity="left" android:textAlignment="gravity" android:maxLines="1" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="زمان شناسایی:"
-                        android:textColor="@color/premium_muted"
-                        android:textSize="12sp"
-                        android:layout_marginEnd="9dp"
-                        android:gravity="right"
-                        android:textDirection="rtl"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="زمان شناسایی:" android:textColor="@color/premium_muted" android:textSize="12sp" android:layout_marginEnd="9dp" android:gravity="right" android:textDirection="rtl" />
 
-                    <FrameLayout
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:background="@drawable/bg_icon_green">
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_clock_premium"/>
+                    <FrameLayout android:layout_width="36dp" android:layout_height="36dp" android:background="@drawable/bg_icon_green">
+                        <ImageView android:layout_width="20dp" android:layout_height="20dp" android:layout_gravity="center" android:src="@drawable/ic_clock_premium" />
                     </FrameLayout>
                 </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal"
-                android:gravity="right|center_vertical"
-                android:layoutDirection="rtl">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="15dp" android:orientation="horizontal" android:gravity="right|center_vertical" android:layoutDirection="rtl">
 
-                <View
-                    android:layout_width="4dp"
-                    android:layout_height="28dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/bg_section_accent"/>
+                <View android:layout_width="4dp" android:layout_height="28dp" android:layout_marginEnd="8dp" android:background="@drawable/bg_section_accent" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="متن پیام:"
-                    android:textColor="@color/premium_text"
-                    android:textSize="15sp"
-                    android:fontFamily="sans-serif-medium"
-                    android:gravity="right"
-                    android:textDirection="rtl"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="متن پیام:" android:textColor="@color/premium_text" android:textSize="15sp" android:fontFamily="sans-serif-medium" android:gravity="right" android:textDirection="rtl" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/detailMessageValue"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:padding="15dp"
-                android:textColor="@color/premium_text"
-                android:textSize="13sp"
-                android:lineSpacingExtra="4dp"
-                android:gravity="right"
-                android:textAlignment="gravity"
-                android:textDirection="rtl"
-                android:background="@drawable/bg_premium_inner_card"
-                android:elevation="1dp"/>
+            <TextView android:id="@+id/detailMessageValue" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:padding="15dp" android:textColor="@color/premium_text" android:textSize="13sp" android:lineSpacingExtra="4dp" android:gravity="right" android:textAlignment="gravity" android:textDirection="rtl" android:background="@drawable/bg_premium_inner_card" android:elevation="1dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal"
-                android:gravity="right|center_vertical"
-                android:layoutDirection="rtl">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="15dp" android:orientation="horizontal" android:gravity="right|center_vertical" android:layoutDirection="rtl">
 
-                <View
-                    android:layout_width="4dp"
-                    android:layout_height="28dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/bg_section_accent"/>
+                <View android:layout_width="4dp" android:layout_height="28dp" android:layout_marginEnd="8dp" android:background="@drawable/bg_section_accent" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="تاریخچه تلاش‌ها:"
-                    android:textColor="@color/premium_text"
-                    android:textSize="15sp"
-                    android:fontFamily="sans-serif-medium"
-                    android:gravity="right"
-                    android:textDirection="rtl"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="تاریخچه تلاش‌ها:" android:textColor="@color/premium_text" android:textSize="15sp" android:fontFamily="sans-serif-medium" android:gravity="right" android:textDirection="rtl" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/detailAttemptsContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="vertical"/>
+            <LinearLayout android:id="@+id/detailAttemptsContainer" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="vertical" />
         </LinearLayout>
     </ScrollView>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="58dp"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:layoutDirection="rtl">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="58dp" android:layout_marginTop="10dp" android:orientation="horizontal" android:layoutDirection="rtl">
 
-        <Button
-            android:id="@+id/detailResendButton"
-            android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:layout_weight="1.15"
-            android:text="ارسال مجدد"
-            android:textColor="#FFFFFF"
-            android:textSize="13sp"
-            android:fontFamily="sans-serif-medium"
-            android:drawableStart="@drawable/ic_send_premium"
-            android:drawablePadding="8dp"
-            android:background="@drawable/bg_premium_primary"
-            android:textDirection="rtl"/>
+        <Button android:id="@+id/detailResendButton" android:layout_width="match_parent" android:layout_height="58dp" android:text="ارسال مجدد" android:textColor="#FFFFFF" android:textSize="13sp" android:fontFamily="sans-serif-medium" android:background="@drawable/bg_premium_primary" android:textDirection="rtl" android:gravity="center" />
 
-        <Button
-            android:id="@+id/detailCloseButton"
-            android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:layout_weight="1"
-            android:layout_marginStart="10dp"
-            android:text="بستن"
-            android:textColor="@color/premium_text"
-            android:textSize="13sp"
-            android:fontFamily="sans-serif-medium"
-            android:drawableStart="@drawable/ic_close_premium"
-            android:drawablePadding="8dp"
-            android:background="@drawable/bg_premium_secondary"
-            android:textDirection="rtl"/>
-    </LinearLayout>
+        </LinearLayout>
 </LinearLayout>

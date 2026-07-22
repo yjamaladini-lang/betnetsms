@@ -1,4 +1,4 @@
-name: Build Betnet APK
+name: Build Notifier Hormoz APK
 
 on:
   workflow_dispatch:
@@ -32,12 +32,12 @@ jobs:
         run: gradle --no-daemon :app:assembleDebug --stacktrace
 
       - name: Rename APK
-        run: cp app/build/outputs/apk/debug/app-debug.apk Betnet-SMS-Sender-debug.apk
+        run: cp app/build/outputs/apk/debug/app-debug.apk Notifier-Hormoz-debug.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Betnet-SMS-Sender-APK
-          path: Betnet-SMS-Sender-debug.apk
+          name: Notifier-Hormoz-APK
+          path: Notifier-Hormoz-debug.apk
           if-no-files-found: error
           retention-days: 14

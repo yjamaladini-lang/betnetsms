@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "BetnetSmsSender"
+rootProject.name = "NotifierHormoz"
 include(":app")

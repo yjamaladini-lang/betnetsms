@@ -47,12 +47,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 public final class MainActivity extends AppCompatActivity {
-    private Switch switchEnabled;
-    private ImageButton buttonTheme;
+    private Switch switchEnabled, switchDarkMode;
     private View buttonTopBack;
     private EditText inputWebhook, inputSenderFilter, inputTextFilter, inputRetryCount, inputRetrySeconds;
     private EditText inputManualSender, inputManualMessage;
-    private TextView textStatus, textSelectedApps, dashboardStatus, dashboardAppsText, dashboardLatestSender, dashboardLatestMessage, dashboardLatestResult;
+    private TextView textStatus, textSelectedApps, textAppVersion, dashboardStatus, dashboardAppsText, dashboardLatestSender, dashboardLatestMessage, dashboardLatestResult;
     private LinearLayout historyContainer, sectionDashboard, sectionWebhook, sectionSettings, sectionHistory, sectionManual, dashboardLatestCard;
     private boolean accessDialogVisible = false;
     private boolean historySelectionMode = false;
@@ -93,9 +92,11 @@ public final class MainActivity extends AppCompatActivity {
         dashboardLatestSender = findViewById(R.id.dashboardLatestSender);
         dashboardLatestMessage = findViewById(R.id.dashboardLatestMessage);
         dashboardLatestResult = findViewById(R.id.dashboardLatestResult);
-        buttonTheme = findViewById(R.id.buttonTheme);
+        switchDarkMode = findViewById(R.id.switchDarkMode);
+        textAppVersion = findViewById(R.id.textAppVersion);
         buttonTopBack = findViewById(R.id.buttonTopBack);
-        updateThemeButtonIcon();
+        switchDarkMode.setChecked(AppPrefs.isDarkMode(this));
+        textAppVersion.setText("نسخه " + BuildConfig.VERSION_NAME);
 
         findViewById(R.id.buttonHome).setOnClickListener(v -> showSection(sectionDashboard));
         buttonTopBack.setOnClickListener(v -> {
@@ -103,8 +104,12 @@ public final class MainActivity extends AppCompatActivity {
             selectedHistoryIds.clear();
             showSection(sectionDashboard);
         });
-        buttonTheme.setOnClickListener(v -> {
-            boolean dark = !AppPrefs.isDarkMode(this);
+        findViewById(R.id.cardWebhook).setOnClickListener(v -> showSection(sectionWebhook));
+        findViewById(R.id.cardSettings).setOnClickListener(v -> showSection(sectionSettings));
+        findViewById(R.id.cardHistory).setOnClickListener(v -> { showSection(sectionHistory); refreshHistory(); });
+        findViewById(R.id.cardManual).setOnClickListener(v -> showSection(sectionManual));
+        switchDarkMode.setOnCheckedChangeListener((buttonView, dark) -> {
+            if (AppPrefs.isDarkMode(this) == dark) return;
             AppPrefs.setDarkMode(this, dark);
             AppCompatDelegate.setDefaultNightMode(
                     dark
@@ -113,10 +118,6 @@ public final class MainActivity extends AppCompatActivity {
             );
             recreate();
         });
-        findViewById(R.id.cardWebhook).setOnClickListener(v -> showSection(sectionWebhook));
-        findViewById(R.id.cardSettings).setOnClickListener(v -> showSection(sectionSettings));
-        findViewById(R.id.cardHistory).setOnClickListener(v -> { showSection(sectionHistory); refreshHistory(); });
-        findViewById(R.id.cardManual).setOnClickListener(v -> showSection(sectionManual));
 
         findViewById(R.id.buttonSaveWebhook).setOnClickListener(v -> saveWebhook());
         findViewById(R.id.buttonSave).setOnClickListener(v -> saveSettings());
@@ -124,11 +125,6 @@ public final class MainActivity extends AppCompatActivity {
         findViewById(R.id.buttonStartup).setOnClickListener(v -> openStartupSettings());
         findViewById(R.id.buttonTest).setOnClickListener(v -> testWebhook());
         findViewById(R.id.buttonRefresh).setOnClickListener(v -> refreshHistory());
-        findViewById(R.id.buttonHistoryBack).setOnClickListener(v -> {
-            historySelectionMode = false;
-            selectedHistoryIds.clear();
-            showSection(sectionDashboard);
-        });
         findViewById(R.id.buttonSelectHistory).setOnClickListener(v -> {
             historySelectionMode = !historySelectionMode;
             if (!historySelectionMode) selectedHistoryIds.clear();
@@ -177,19 +173,6 @@ public final class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void updateThemeButtonIcon() {
-        if (buttonTheme == null) return;
-        buttonTheme.setImageResource(
-                AppPrefs.isDarkMode(this)
-                        ? R.drawable.ic_sun_theme
-                        : R.drawable.ic_moon_theme
-        );
-        buttonTheme.setContentDescription(
-                AppPrefs.isDarkMode(this)
-                        ? "فعال‌کردن حالت روز"
-                        : "فعال‌کردن حالت شب"
-        );
-    }
 
     private void loadCommunicationApps() {
         appChoices.clear();
@@ -482,10 +465,10 @@ public final class MainActivity extends AppCompatActivity {
 
     private void testWebhook() {
         String webhook=inputWebhook.getText().toString().trim(); if(!isValidUrl(webhook)){toast("اول آدرس وب‌هوک معتبر وارد کن.");return;}
-        persistAll(webhook); long ts=System.currentTimeMillis(); String msg="پیام آزمایشی Betnet SMS Sender - مبلغ: 12500000 ریال";
-        long id=historyDb.insertPending(ts,"BETNET-TEST",msg,getPackageName());
+        persistAll(webhook); long ts=System.currentTimeMillis(); String msg="پیام آزمایشی نوتیفر هرمز - مبلغ: 12500000 ریال";
+        long id=historyDb.insertPending(ts,"NOTIFIER-HORMOZ",msg,getPackageName());
         toast("در حال ارسال پیام آزمایشی...");
-        WebhookSender.sendWithRetry(this,webhook,"BETNET-TEST",msg,getPackageName(),ts,true,id,
+        WebhookSender.sendWithRetry(this,webhook,"NOTIFIER-HORMOZ",msg,getPackageName(),ts,true,id,
                 parsePositive(inputRetryCount,5),parsePositive(inputRetrySeconds,5),(success,code,response)->runOnUiThread(()->{
                     toast((success ? "تست موفق" : "تست ناموفق") + " - HTTP " + code);
                     updateAccessStatus();
@@ -746,7 +729,6 @@ public final class MainActivity extends AppCompatActivity {
         LinearLayout attemptsContainer =
                 dialogView.findViewById(R.id.detailAttemptsContainer);
         View closeTop = dialogView.findViewById(R.id.detailCloseTop);
-        Button close = dialogView.findViewById(R.id.detailCloseButton);
         Button resend = dialogView.findViewById(R.id.detailResendButton);
 
         sender.setText(
@@ -811,7 +793,6 @@ public final class MainActivity extends AppCompatActivity {
                 .create();
 
         closeTop.setOnClickListener(v -> dialog.dismiss());
-        close.setOnClickListener(v -> dialog.dismiss());
         resend.setOnClickListener(v -> {
             dialog.dismiss();
             manualResend(item);
