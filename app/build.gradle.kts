@@ -10,8 +10,8 @@ android {
         applicationId = "io.betnet.smssender"
         minSdk = 26
         targetSdk = 35
-        versionCode = 177
-        versionName = "1.7.7"
+        versionCode = 178
+        versionName = "1.7.8"
     }
 
     buildTypes {
@@ -25,4 +25,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+}
+
+
+dependencies {
+    implementation("androidx.appcompat:appcompat:1.7.0")
 }
