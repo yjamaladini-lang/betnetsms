@@ -1,98 +1,560 @@
 <?xml version='1.0' encoding='utf-8'?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@drawable/bg_ui_screen" android:layoutDirection="rtl" android:textDirection="rtl">
 
-    <LinearLayout android:layout_width="match_parent" android:layout_height="@dimen/header_height" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="14dp" android:paddingEnd="14dp" android:background="@color/ui_surface" android:elevation="1dp" android:layoutDirection="ltr">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:background="@color/ui_surface"
+        android:elevation="1dp"
+        android:layoutDirection="ltr">
 
-        <ImageButton android:id="@+id/buttonHome" android:layout_width="38dp" android:layout_height="38dp" android:src="@drawable/ic_launcher_foreground" android:padding="7dp" android:scaleType="centerInside" android:background="@android:color/transparent" android:contentDescription="خانه" />
+        <ImageButton
+            android:id="@+id/buttonHome"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:src="@drawable/ic_launcher_foreground"
+            android:padding="7dp"
+            android:scaleType="centerInside"
+            android:background="@android:color/transparent"
+            android:contentDescription="خانه"/>
 
-        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="8dp" android:text="Betnet SMS Sender" android:textColor="@color/ui_text" android:textSize="15sp" android:fontFamily="sans-serif-medium" android:gravity="start" android:maxLines="1" android:ellipsize="end" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:text="Betnet SMS Sender"
+            android:textColor="@color/ui_text"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:maxLines="1"
+            android:ellipsize="end"/>
 
-        <TextView android:layout_width="wrap_content" android:layout_height="26dp" android:minWidth="54dp" android:gravity="center" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="v1.7.2" android:textColor="@color/ui_muted" android:textSize="9.5sp" android:background="@drawable/bg_ui_chip" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:minWidth="64dp"
+            android:gravity="center"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="v1.7.3"
+            android:textColor="@color/ui_muted"
+            android:textSize="10sp"
+            android:background="@drawable/bg_ui_chip"/>
     </LinearLayout>
 
     <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true" android:clipToPadding="false">
 
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="@dimen/screen_padding" android:paddingBottom="22dp">
 
-            <LinearLayout android:id="@+id/sectionDashboard" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/sectionDashboard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <LinearLayout android:id="@+id/dashboardLatestCard" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="128dp" android:orientation="vertical" android:padding="@dimen/card_padding" android:background="@drawable/bg_ui_card" android:elevation="1dp">
+                <LinearLayout
+                    android:id="@+id/dashboardLatestCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="210dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp"
+                    android:background="@drawable/bg_ui_card"
+                    android:elevation="1dp"
+                    android:layoutDirection="ltr">
 
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+                    <FrameLayout
+                        android:layout_width="108dp"
+                        android:layout_height="132dp"
+                        android:background="@drawable/bg_home_message_icon">
 
-                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                        <ImageView
+                            android:layout_width="78dp"
+                            android:layout_height="78dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_chat_home"
+                            android:contentDescription="پیام"/>
+                    </FrameLayout>
 
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="آخرین پیام" android:textColor="@color/ui_muted" android:textSize="10.5sp" android:gravity="end" android:textDirection="rtl" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:orientation="vertical"
+                        android:gravity="end"
+                        android:layoutDirection="rtl">
 
-                            <TextView android:id="@+id/dashboardLatestSender" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:text="—" android:textColor="@color/ui_text" android:textSize="19sp" android:fontFamily="sans-serif-medium" android:maxLines="1" android:ellipsize="end" android:gravity="end" android:textDirection="rtl" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layoutDirection="rtl">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="آخرین پیام"
+                                android:textColor="@color/ui_text"
+                                android:textSize="12sp"
+                                android:fontFamily="sans-serif-medium"/>
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_marginStart="6dp"
+                                android:src="@drawable/ic_clock_home"/>
                         </LinearLayout>
 
-                        <TextView android:id="@+id/dashboardLatestResult" android:layout_width="wrap_content" android:layout_height="32dp" android:gravity="end" android:paddingStart="11dp" android:paddingEnd="11dp" android:text="آماده" android:textColor="@color/ui_green" android:textSize="10sp" android:fontFamily="sans-serif-medium" android:background="@drawable/bg_ui_success" android:textDirection="rtl" />
-                    </LinearLayout>
+                        <TextView
+                            android:id="@+id/dashboardLatestResult"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:layout_marginTop="8dp"
+                            android:gravity="center"
+                            android:paddingStart="14dp"
+                            android:paddingEnd="14dp"
+                            android:text="آماده"
+                            android:textColor="@color/ui_green"
+                            android:textSize="10.5sp"
+                            android:fontFamily="sans-serif-medium"
+                            android:background="@drawable/bg_ui_success"/>
 
-                    <TextView android:id="@+id/dashboardLatestMessage" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="هنوز پیامی دریافت نشده است." android:textColor="#334155" android:textSize="11.5sp" android:lineSpacingExtra="2dp" android:maxLines="3" android:ellipsize="end" android:gravity="end" android:textDirection="rtl" />
+                        <TextView
+                            android:id="@+id/dashboardLatestSender"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="—"
+                            android:textColor="@color/ui_text"
+                            android:textSize="24sp"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="end"
+                            android:textDirection="ltr"
+                            android:maxLines="1"
+                            android:ellipsize="end"/>
+
+                        <TextView
+                            android:id="@+id/dashboardLatestMessage"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="هنوز پیامی دریافت نشده است."
+                            android:textColor="#273449"
+                            android:textSize="12sp"
+                            android:lineSpacingExtra="4dp"
+                            android:maxLines="4"
+                            android:ellipsize="end"
+                            android:gravity="end"
+                            android:textDirection="rtl"/>
+                    </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout android:layout_width="match_parent" android:layout_height="72dp" android:layout_marginTop="@dimen/section_gap" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="14dp" android:paddingEnd="14dp" android:background="@drawable/bg_ui_card">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="92dp"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:background="@drawable/bg_home_switch_card"
+                    android:layoutDirection="ltr">
 
-                    <Switch android:id="@+id/switchEnabled" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true" />
+                    <Switch
+                        android:id="@+id/switchEnabled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"/>
 
-                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="12dp">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:orientation="vertical"
+                        android:gravity="end">
 
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ارسال خودکار" android:textColor="@color/ui_text" android:textSize="13.5sp" android:fontFamily="sans-serif-medium" android:gravity="end" android:textDirection="rtl" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="ارسال خودکار"
+                            android:textColor="@color/ui_text"
+                            android:textSize="17sp"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="end"
+                            android:textDirection="rtl"/>
 
-                        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="ارسال خودکار پیام‌های دریافتی" android:textColor="@color/ui_muted" android:textSize="9.5sp" android:maxLines="1" android:ellipsize="end" android:gravity="end" android:textDirection="rtl" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="ارسال خودکار پیام‌های دریافتی"
+                            android:textColor="@color/ui_muted"
+                            android:textSize="11sp"
+                            android:gravity="end"
+                            android:textDirection="rtl"
+                            android:maxLines="1"
+                            android:ellipsize="end"/>
                     </LinearLayout>
 
-                    <TextView android:id="@+id/dashboardStatus" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="فعال" android:textColor="@color/ui_green" android:textSize="10.5sp" android:fontFamily="sans-serif-medium" android:textDirection="rtl" android:gravity="end" />
+                    <FrameLayout
+                        android:layout_width="54dp"
+                        android:layout_height="54dp"
+                        android:layout_marginStart="14dp"
+                        android:background="@drawable/bg_home_icon_circle">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_send_home"/>
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/dashboardStatus"
+                        android:layout_width="1dp"
+                        android:layout_height="1dp"
+                        android:visibility="gone"/>
                 </LinearLayout>
 
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/section_gap" android:orientation="vertical" android:background="@drawable/bg_ui_card">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_home_menu_card">
 
-                    <LinearLayout android:id="@+id/cardWebhook" android:layout_width="match_parent" android:layout_height="@dimen/menu_row_height" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="14dp" android:paddingEnd="14dp" android:clickable="true" android:focusable="true">
-                        <TextView android:layout_width="42dp" android:layout_height="42dp" android:gravity="center" android:text="◎" android:textSize="24sp" android:textColor="@color/ui_text" />
-                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="9dp">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="وب‌هوک‌ها" android:textColor="@color/ui_text" android:textSize="13.5sp" android:fontFamily="sans-serif-medium" android:gravity="end" android:textDirection="rtl" />
-                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="مدیریت آدرس و تست وب‌هوک" android:textColor="@color/ui_muted" android:textSize="9.5sp" android:maxLines="1" android:ellipsize="end" android:gravity="end" android:textDirection="rtl" />
+                    <LinearLayout
+                        android:id="@+id/cardWebhook"
+                        android:layout_width="match_parent"
+                        android:layout_height="92dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:layoutDirection="ltr">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_chevron_left_home"/>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical"
+                            android:gravity="end">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="وب‌هوک‌ها"
+                                android:textColor="@color/ui_text"
+                                android:textSize="16sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:gravity="end"
+                                android:textDirection="rtl"/>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="مدیریت آدرس و تست وب‌هوک"
+                                android:textColor="@color/ui_muted"
+                                android:textSize="10.5sp"
+                                android:gravity="end"
+                                android:textDirection="rtl"/>
                         </LinearLayout>
-                        <TextView android:layout_width="24dp" android:layout_height="wrap_content" android:gravity="center" android:text="‹" android:textColor="@color/ui_muted" android:textSize="22sp" />
+
+                        <FrameLayout
+                            android:layout_width="54dp"
+                            android:layout_height="54dp"
+                            android:layout_marginStart="14dp"
+                            android:background="@drawable/bg_home_icon_circle">
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_target_home"/>
+                        </FrameLayout>
                     </LinearLayout>
 
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginStart="14dp" android:layout_marginEnd="14dp" android:background="@color/ui_border" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginEnd="18dp"
+                        android:background="@color/ui_border"/>
 
-                    <LinearLayout android:id="@+id/cardHistory" android:layout_width="match_parent" android:layout_height="@dimen/menu_row_height" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="14dp" android:paddingEnd="14dp" android:clickable="true" android:focusable="true">
-                        <TextView android:layout_width="42dp" android:layout_height="42dp" android:gravity="center" android:text="◷" android:textSize="24sp" android:textColor="@color/ui_text" />
-                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="9dp">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="تاریخچه پیام‌ها" android:textColor="@color/ui_text" android:textSize="13.5sp" android:fontFamily="sans-serif-medium" android:gravity="end" android:textDirection="rtl" />
-                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="مشاهده و پیگیری ارسال‌ها" android:textColor="@color/ui_muted" android:textSize="9.5sp" android:maxLines="1" android:ellipsize="end" android:gravity="end" android:textDirection="rtl" />
+                    <LinearLayout
+                        android:id="@+id/cardHistory"
+                        android:layout_width="match_parent"
+                        android:layout_height="92dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:layoutDirection="ltr">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_chevron_left_home"/>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical"
+                            android:gravity="end">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="تاریخچه پیام‌ها"
+                                android:textColor="@color/ui_text"
+                                android:textSize="16sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:gravity="end"
+                                android:textDirection="rtl"/>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="مشاهده و پیگیری ارسال‌ها"
+                                android:textColor="@color/ui_muted"
+                                android:textSize="10.5sp"
+                                android:gravity="end"
+                                android:textDirection="rtl"/>
                         </LinearLayout>
-                        <TextView android:layout_width="24dp" android:layout_height="wrap_content" android:gravity="center" android:text="‹" android:textColor="@color/ui_muted" android:textSize="22sp" />
+
+                        <FrameLayout
+                            android:layout_width="54dp"
+                            android:layout_height="54dp"
+                            android:layout_marginStart="14dp"
+                            android:background="@drawable/bg_home_icon_circle">
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_clock_home"/>
+                        </FrameLayout>
                     </LinearLayout>
 
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginStart="14dp" android:layout_marginEnd="14dp" android:background="@color/ui_border" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginEnd="18dp"
+                        android:background="@color/ui_border"/>
 
-                    <LinearLayout android:id="@+id/cardManual" android:layout_width="match_parent" android:layout_height="@dimen/menu_row_height" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="14dp" android:paddingEnd="14dp" android:clickable="true" android:focusable="true">
-                        <TextView android:layout_width="42dp" android:layout_height="42dp" android:gravity="center" android:text="➤" android:textSize="23sp" android:textColor="@color/ui_text" />
-                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="9dp">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ارسال دستی" android:textColor="@color/ui_text" android:textSize="13.5sp" android:fontFamily="sans-serif-medium" android:gravity="end" android:textDirection="rtl" />
-                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="ارسال مستقیم متن به وب‌هوک" android:textColor="@color/ui_muted" android:textSize="9.5sp" android:maxLines="1" android:ellipsize="end" android:gravity="end" android:textDirection="rtl" />
+                    <LinearLayout
+                        android:id="@+id/cardManual"
+                        android:layout_width="match_parent"
+                        android:layout_height="92dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:layoutDirection="ltr">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_chevron_left_home"/>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical"
+                            android:gravity="end">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="ارسال دستی"
+                                android:textColor="@color/ui_text"
+                                android:textSize="16sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:gravity="end"
+                                android:textDirection="rtl"/>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="ارسال مستقیم متن به وب‌هوک"
+                                android:textColor="@color/ui_muted"
+                                android:textSize="10.5sp"
+                                android:gravity="end"
+                                android:textDirection="rtl"/>
                         </LinearLayout>
-                        <TextView android:layout_width="24dp" android:layout_height="wrap_content" android:gravity="center" android:text="‹" android:textColor="@color/ui_muted" android:textSize="22sp" />
+
+                        <FrameLayout
+                            android:layout_width="54dp"
+                            android:layout_height="54dp"
+                            android:layout_marginStart="14dp"
+                            android:background="@drawable/bg_home_icon_circle">
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_send_home"/>
+                        </FrameLayout>
                     </LinearLayout>
 
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginStart="14dp" android:layout_marginEnd="14dp" android:background="@color/ui_border" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginEnd="18dp"
+                        android:background="@color/ui_border"/>
 
-                    <LinearLayout android:id="@+id/cardSettings" android:layout_width="match_parent" android:layout_height="@dimen/menu_row_height" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="14dp" android:paddingEnd="14dp" android:clickable="true" android:focusable="true">
-                        <TextView android:layout_width="42dp" android:layout_height="42dp" android:gravity="center" android:text="⚙" android:textSize="23sp" android:textColor="@color/ui_text" />
-                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="9dp">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="تنظیمات پیشرفته" android:textColor="@color/ui_text" android:textSize="13.5sp" android:fontFamily="sans-serif-medium" android:gravity="end" android:textDirection="rtl" />
-                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="برنامه‌ها، فیلترها و تلاش‌ها" android:textColor="@color/ui_muted" android:textSize="9.5sp" android:maxLines="1" android:ellipsize="end" android:gravity="end" android:textDirection="rtl" />
+                    <LinearLayout
+                        android:id="@+id/cardSettings"
+                        android:layout_width="match_parent"
+                        android:layout_height="92dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:layoutDirection="ltr">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_chevron_left_home"/>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical"
+                            android:gravity="end">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="تنظیمات پیشرفته"
+                                android:textColor="@color/ui_text"
+                                android:textSize="16sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:gravity="end"
+                                android:textDirection="rtl"/>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="برنامه‌ها، فیلترها و تلاش‌ها"
+                                android:textColor="@color/ui_muted"
+                                android:textSize="10.5sp"
+                                android:gravity="end"
+                                android:textDirection="rtl"/>
                         </LinearLayout>
-                        <TextView android:layout_width="24dp" android:layout_height="wrap_content" android:gravity="center" android:text="‹" android:textColor="@color/ui_muted" android:textSize="22sp" />
+
+                        <FrameLayout
+                            android:layout_width="54dp"
+                            android:layout_height="54dp"
+                            android:layout_marginStart="14dp"
+                            android:background="@drawable/bg_home_icon_circle">
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_settings_home"/>
+                        </FrameLayout>
                     </LinearLayout>
                 </LinearLayout>
 
-                <TextView android:id="@+id/textStatus" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="12dp" android:gravity="end" android:text="برنامه آماده دریافت پیام است" android:textColor="#FFFFFF" android:textSize="10.5sp" android:fontFamily="sans-serif-medium" android:background="@drawable/bg_ui_dark" android:textDirection="rtl" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="86dp"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp"
+                    android:background="@drawable/bg_home_notice"
+                    android:layoutDirection="ltr">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_chevron_left_home"
+                        android:tint="#FFFFFF"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:orientation="vertical"
+                        android:gravity="end">
+
+                        <TextView
+                            android:id="@+id/textStatus"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="دسترسی اعلان‌ها فعال است"
+                            android:textColor="#FFFFFF"
+                            android:textSize="14sp"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="end"
+                            android:textDirection="rtl"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="شما از آخرین رویدادها مطلع خواهید شد"
+                            android:textColor="#BFC9D8"
+                            android:textSize="10.5sp"
+                            android:gravity="end"
+                            android:textDirection="rtl"/>
+                    </LinearLayout>
+
+                    <FrameLayout
+                        android:layout_width="54dp"
+                        android:layout_height="54dp"
+                        android:layout_marginStart="14dp"
+                        android:background="#2A374A">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_bell_home"/>
+                    </FrameLayout>
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout android:id="@+id/sectionWebhook" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
