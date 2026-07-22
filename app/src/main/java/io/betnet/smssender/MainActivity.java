@@ -356,9 +356,14 @@ public final class MainActivity extends Activity {
     private void testWebhook() {
         String webhook=inputWebhook.getText().toString().trim(); if(!isValidUrl(webhook)){toast("اول آدرس وب‌هوک معتبر وارد کن.");return;}
         persistAll(webhook); long ts=System.currentTimeMillis(); String msg="پیام آزمایشی Betnet SMS Sender - مبلغ: 12500000 ریال";
-        long id=historyDb.insertPending(ts,"BETNET-TEST",msg,getPackageName()); textStatus.setText("در حال ارسال تست...");
+        long id=historyDb.insertPending(ts,"BETNET-TEST",msg,getPackageName());
+        toast("در حال ارسال پیام آزمایشی...");
         WebhookSender.sendWithRetry(this,webhook,"BETNET-TEST",msg,getPackageName(),ts,true,id,
-                parsePositive(inputRetryCount,5),parsePositive(inputRetrySeconds,5),(success,code,response)->runOnUiThread(()->{textStatus.setText((success?"تست موفق":"تست ناموفق")+" | HTTP "+code+" | "+shorten(response,220));refreshHistory();}));
+                parsePositive(inputRetryCount,5),parsePositive(inputRetrySeconds,5),(success,code,response)->runOnUiThread(()->{
+                    toast((success ? "تست موفق" : "تست ناموفق") + " - HTTP " + code);
+                    updateAccessStatus();
+                    refreshHistory();
+                }));
     }
 
     private void sendManualText() {
