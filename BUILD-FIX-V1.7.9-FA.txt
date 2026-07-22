@@ -1,0 +1,6 @@
+نسخه 1.7.9 - رفع خطای GitHub Actions
+
+- android.useAndroidX=true به gradle.properties اضافه شد.
+- android.enableJetifier=true اضافه شد.
+- خطای checkDebugAarMetadata مربوط به AppCompat/AndroidX برطرف شد.
+- نسخه برنامه برای تشخیص آسان‌تر به 1.7.9 تغییر کرد.
