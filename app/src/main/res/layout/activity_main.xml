@@ -7,7 +7,7 @@
 
         <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="10dp" android:text="Betnet SMS Sender" android:textColor="@color/ui_text" android:textSize="18sp" android:fontFamily="sans-serif-medium" android:gravity="center" android:maxLines="1" android:ellipsize="end" />
 
-        <TextView android:layout_width="wrap_content" android:layout_height="30dp" android:minWidth="64dp" android:gravity="center" android:paddingStart="10dp" android:paddingEnd="10dp" android:text="v1.7.5" android:textColor="@color/ui_muted" android:textSize="10sp" android:background="@drawable/bg_ui_chip" />
+        <TextView android:layout_width="wrap_content" android:layout_height="30dp" android:minWidth="64dp" android:gravity="center" android:paddingStart="10dp" android:paddingEnd="10dp" android:text="v1.7.6" android:textColor="@color/ui_muted" android:textSize="10sp" android:background="@drawable/bg_ui_chip" />
     </LinearLayout>
 
     <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true" android:clipToPadding="false">
@@ -16,122 +16,122 @@
 
             <LinearLayout android:id="@+id/sectionDashboard" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
 
-                <LinearLayout android:id="@+id/dashboardLatestCard" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="210dp" android:orientation="horizontal" android:gravity="center_vertical" android:padding="16dp" android:background="@drawable/bg_ui_card" android:elevation="1dp" android:layoutDirection="rtl">
+                <LinearLayout android:id="@+id/dashboardLatestCard" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="178dp" android:orientation="horizontal" android:gravity="center_vertical" android:padding="16dp" android:background="@drawable/bg_ui_card" android:elevation="1dp" android:layoutDirection="rtl">
 
-                    <FrameLayout android:layout_width="82dp" android:layout_height="98dp" android:background="@drawable/bg_home_message_icon" android:layout_marginStart="0dp" android:layout_marginEnd="12dp">
+                    <FrameLayout android:layout_width="68dp" android:layout_height="80dp" android:background="@drawable/bg_home_message_icon" android:layout_marginStart="0dp" android:layout_marginEnd="10dp">
 
-                        <ImageView android:layout_width="58dp" android:layout_height="58dp" android:layout_gravity="center" android:src="@drawable/ic_chat_home" android:contentDescription="پیام" />
+                        <ImageView android:layout_width="46dp" android:layout_height="46dp" android:layout_gravity="center" android:src="@drawable/ic_chat_home" android:contentDescription="پیام" />
                     </FrameLayout>
 
-                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="0dp" android:orientation="vertical" android:gravity="end" android:layoutDirection="rtl" android:layout_marginEnd="0dp">
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="0dp" android:orientation="vertical" android:gravity="right" android:layoutDirection="ltr" android:layout_marginEnd="0dp">
 
-                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layoutDirection="rtl">
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="right|center_vertical" android:layoutDirection="rtl">
 
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="آخرین پیام" android:textColor="@color/ui_text" android:textSize="12sp" android:fontFamily="sans-serif-medium" android:gravity="end" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="آخرین پیام" android:textColor="@color/ui_text" android:textSize="12sp" android:fontFamily="sans-serif-medium" android:gravity="right" android:textAlignment="gravity" android:textDirection="rtl" />
 
                             <ImageView android:layout_width="20dp" android:layout_height="20dp" android:layout_marginStart="6dp" android:src="@drawable/ic_clock_home" />
                         </LinearLayout>
 
-                        <TextView android:id="@+id/dashboardLatestResult" android:layout_width="wrap_content" android:layout_height="32dp" android:layout_marginTop="8dp" android:gravity="end" android:paddingStart="14dp" android:paddingEnd="14dp" android:text="آماده" android:textColor="@color/ui_green" android:textSize="10.5sp" android:fontFamily="sans-serif-medium" android:background="@drawable/bg_ui_success" />
+                        <TextView android:id="@+id/dashboardLatestResult" android:layout_width="wrap_content" android:layout_height="32dp" android:layout_marginTop="8dp" android:gravity="right" android:paddingStart="14dp" android:paddingEnd="14dp" android:text="آماده" android:textColor="@color/ui_green" android:textSize="10.5sp" android:fontFamily="sans-serif-medium" android:background="@drawable/bg_ui_success" android:textAlignment="gravity" android:textDirection="rtl" />
 
-                        <TextView android:id="@+id/dashboardLatestSender" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="—" android:textColor="@color/ui_text" android:textSize="24sp" android:fontFamily="sans-serif-medium" android:gravity="end" android:textDirection="rtl" android:maxLines="1" android:ellipsize="end" />
+                        <TextView android:id="@+id/dashboardLatestSender" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="—" android:textColor="@color/ui_text" android:textSize="24sp" android:fontFamily="sans-serif-medium" android:gravity="right" android:textDirection="rtl" android:maxLines="1" android:ellipsize="end" android:textAlignment="gravity" />
 
-                        <TextView android:id="@+id/dashboardLatestMessage" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="هنوز پیامی دریافت نشده است." android:textColor="#273449" android:textSize="12sp" android:lineSpacingExtra="4dp" android:maxLines="4" android:ellipsize="end" android:gravity="end" android:textDirection="rtl" />
+                        <TextView android:id="@+id/dashboardLatestMessage" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="هنوز پیامی دریافت نشده است." android:textColor="#273449" android:textSize="12sp" android:lineSpacingExtra="4dp" android:maxLines="4" android:ellipsize="end" android:gravity="right" android:textDirection="rtl" android:textAlignment="gravity" />
                     </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout android:layout_width="match_parent" android:layout_height="84dp" android:layout_marginTop="12dp" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="16dp" android:paddingEnd="16dp" android:background="@drawable/bg_home_switch_card" android:layoutDirection="rtl">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="80dp" android:layout_marginTop="12dp" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="16dp" android:paddingEnd="16dp" android:background="@drawable/bg_home_switch_card" android:layoutDirection="rtl">
 
-                    <FrameLayout android:layout_width="50dp" android:layout_height="50dp" android:layout_marginStart="0dp" android:background="@drawable/bg_home_icon_circle" android:layout_marginEnd="10dp">
+                    <FrameLayout android:layout_width="48dp" android:layout_height="48dp" android:layout_marginStart="0dp" android:background="@drawable/bg_home_icon_circle" android:layout_marginEnd="8dp">
 
                         <ImageView android:layout_width="28dp" android:layout_height="28dp" android:layout_gravity="center" android:src="@drawable/ic_send_home" />
                     </FrameLayout>
 
-                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="0dp" android:orientation="vertical" android:gravity="end" android:layout_marginEnd="0dp">
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="0dp" android:orientation="vertical" android:gravity="right" android:layout_marginEnd="0dp" android:layoutDirection="ltr">
 
-                        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="ارسال خودکار" android:textColor="@color/ui_text" android:textSize="17sp" android:fontFamily="sans-serif-medium" android:gravity="end" android:textDirection="rtl" />
+                        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="ارسال خودکار" android:textColor="@color/ui_text" android:textSize="17sp" android:fontFamily="sans-serif-medium" android:gravity="right" android:textDirection="rtl" android:textAlignment="gravity" />
 
-                        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="ارسال خودکار پیام‌های دریافتی" android:textColor="@color/ui_muted" android:textSize="11sp" android:gravity="end" android:textDirection="rtl" android:maxLines="1" android:ellipsize="end" />
+                        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="ارسال خودکار پیام‌های دریافتی" android:textColor="@color/ui_muted" android:textSize="11sp" android:gravity="right" android:textDirection="rtl" android:maxLines="1" android:ellipsize="end" android:textAlignment="gravity" />
                     </LinearLayout>
 
-                    <Switch android:id="@+id/switchEnabled" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true" android:layout_marginStart="10dp" />
+                    <Switch android:id="@+id/switchEnabled" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true" android:layout_marginStart="8dp" android:layout_marginEnd="0dp" />
 
                     <TextView android:id="@+id/dashboardStatus" android:layout_width="1dp" android:layout_height="1dp" android:visibility="gone" />
                 </LinearLayout>
 
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:orientation="vertical" android:background="@drawable/bg_home_menu_card">
 
-                    <LinearLayout android:id="@+id/cardWebhook" android:layout_width="match_parent" android:layout_height="82dp" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="12dp" android:paddingEnd="12dp" android:clickable="true" android:focusable="true" android:layoutDirection="rtl">
+                    <LinearLayout android:id="@+id/cardWebhook" android:layout_width="match_parent" android:layout_height="80dp" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="12dp" android:paddingEnd="12dp" android:clickable="true" android:focusable="true" android:layoutDirection="rtl">
 
-                        <FrameLayout android:layout_width="50dp" android:layout_height="50dp" android:layout_marginStart="0dp" android:background="@drawable/bg_home_icon_circle" android:layout_marginEnd="10dp">
+                        <FrameLayout android:layout_width="48dp" android:layout_height="48dp" android:layout_marginStart="0dp" android:background="@drawable/bg_home_icon_circle" android:layout_marginEnd="8dp">
 
                             <ImageView android:layout_width="28dp" android:layout_height="28dp" android:layout_gravity="center" android:src="@drawable/ic_target_home" />
                         </FrameLayout>
-                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="0dp" android:orientation="vertical" android:gravity="end" android:layoutDirection="rtl" android:layout_marginEnd="0dp">
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="0dp" android:orientation="vertical" android:gravity="right" android:layoutDirection="ltr" android:layout_marginEnd="0dp">
 
-                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="وب‌هوک‌ها" android:textColor="@color/ui_text" android:textSize="16sp" android:fontFamily="sans-serif-medium" android:gravity="end" android:textDirection="rtl" />
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="وب‌هوک‌ها" android:textColor="@color/ui_text" android:textSize="16sp" android:fontFamily="sans-serif-medium" android:gravity="right" android:textDirection="rtl" android:textAlignment="gravity" />
 
-                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="مدیریت آدرس و تست وب‌هوک" android:textColor="@color/ui_muted" android:textSize="10.5sp" android:gravity="end" android:textDirection="rtl" />
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="مدیریت آدرس و تست وب‌هوک" android:textColor="@color/ui_muted" android:textSize="10.5sp" android:gravity="right" android:textDirection="rtl" android:textAlignment="gravity" />
                         </LinearLayout>
 
-                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_chevron_left_home" android:layout_marginStart="10dp" />
+                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_chevron_left_home" android:layout_marginStart="8dp" android:layout_marginEnd="0dp" />
 
                         </LinearLayout>
 
                     <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginStart="18dp" android:layout_marginEnd="18dp" android:background="@color/ui_border" />
 
-                    <LinearLayout android:id="@+id/cardHistory" android:layout_width="match_parent" android:layout_height="82dp" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="12dp" android:paddingEnd="12dp" android:clickable="true" android:focusable="true" android:layoutDirection="rtl">
+                    <LinearLayout android:id="@+id/cardHistory" android:layout_width="match_parent" android:layout_height="80dp" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="12dp" android:paddingEnd="12dp" android:clickable="true" android:focusable="true" android:layoutDirection="rtl">
 
-                        <FrameLayout android:layout_width="50dp" android:layout_height="50dp" android:layout_marginStart="0dp" android:background="@drawable/bg_home_icon_circle" android:layout_marginEnd="10dp">
+                        <FrameLayout android:layout_width="48dp" android:layout_height="48dp" android:layout_marginStart="0dp" android:background="@drawable/bg_home_icon_circle" android:layout_marginEnd="8dp">
 
                             <ImageView android:layout_width="28dp" android:layout_height="28dp" android:layout_gravity="center" android:src="@drawable/ic_clock_home" />
                         </FrameLayout>
-                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="0dp" android:orientation="vertical" android:gravity="end" android:layoutDirection="rtl" android:layout_marginEnd="0dp">
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="0dp" android:orientation="vertical" android:gravity="right" android:layoutDirection="ltr" android:layout_marginEnd="0dp">
 
-                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="تاریخچه پیام‌ها" android:textColor="@color/ui_text" android:textSize="16sp" android:fontFamily="sans-serif-medium" android:gravity="end" android:textDirection="rtl" />
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="تاریخچه پیام‌ها" android:textColor="@color/ui_text" android:textSize="16sp" android:fontFamily="sans-serif-medium" android:gravity="right" android:textDirection="rtl" android:textAlignment="gravity" />
 
-                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="مشاهده و پیگیری ارسال‌ها" android:textColor="@color/ui_muted" android:textSize="10.5sp" android:gravity="end" android:textDirection="rtl" />
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="مشاهده و پیگیری ارسال‌ها" android:textColor="@color/ui_muted" android:textSize="10.5sp" android:gravity="right" android:textDirection="rtl" android:textAlignment="gravity" />
                         </LinearLayout>
 
-                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_chevron_left_home" android:layout_marginStart="10dp" />
+                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_chevron_left_home" android:layout_marginStart="8dp" android:layout_marginEnd="0dp" />
 
                         </LinearLayout>
 
                     <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginStart="18dp" android:layout_marginEnd="18dp" android:background="@color/ui_border" />
 
-                    <LinearLayout android:id="@+id/cardManual" android:layout_width="match_parent" android:layout_height="82dp" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="12dp" android:paddingEnd="12dp" android:clickable="true" android:focusable="true" android:layoutDirection="rtl">
+                    <LinearLayout android:id="@+id/cardManual" android:layout_width="match_parent" android:layout_height="80dp" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="12dp" android:paddingEnd="12dp" android:clickable="true" android:focusable="true" android:layoutDirection="rtl">
 
-                        <FrameLayout android:layout_width="50dp" android:layout_height="50dp" android:layout_marginStart="0dp" android:background="@drawable/bg_home_icon_circle" android:layout_marginEnd="10dp">
+                        <FrameLayout android:layout_width="48dp" android:layout_height="48dp" android:layout_marginStart="0dp" android:background="@drawable/bg_home_icon_circle" android:layout_marginEnd="8dp">
 
                             <ImageView android:layout_width="28dp" android:layout_height="28dp" android:layout_gravity="center" android:src="@drawable/ic_send_home" />
                         </FrameLayout>
-                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="0dp" android:orientation="vertical" android:gravity="end" android:layoutDirection="rtl" android:layout_marginEnd="0dp">
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="0dp" android:orientation="vertical" android:gravity="right" android:layoutDirection="ltr" android:layout_marginEnd="0dp">
 
-                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="ارسال دستی" android:textColor="@color/ui_text" android:textSize="16sp" android:fontFamily="sans-serif-medium" android:gravity="end" android:textDirection="rtl" />
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="ارسال دستی" android:textColor="@color/ui_text" android:textSize="16sp" android:fontFamily="sans-serif-medium" android:gravity="right" android:textDirection="rtl" android:textAlignment="gravity" />
 
-                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="ارسال مستقیم متن به وب‌هوک" android:textColor="@color/ui_muted" android:textSize="10.5sp" android:gravity="end" android:textDirection="rtl" />
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="ارسال مستقیم متن به وب‌هوک" android:textColor="@color/ui_muted" android:textSize="10.5sp" android:gravity="right" android:textDirection="rtl" android:textAlignment="gravity" />
                         </LinearLayout>
 
-                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_chevron_left_home" android:layout_marginStart="10dp" />
+                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_chevron_left_home" android:layout_marginStart="8dp" android:layout_marginEnd="0dp" />
 
                         </LinearLayout>
 
                     <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginStart="18dp" android:layout_marginEnd="18dp" android:background="@color/ui_border" />
 
-                    <LinearLayout android:id="@+id/cardSettings" android:layout_width="match_parent" android:layout_height="82dp" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="12dp" android:paddingEnd="12dp" android:clickable="true" android:focusable="true" android:layoutDirection="rtl">
+                    <LinearLayout android:id="@+id/cardSettings" android:layout_width="match_parent" android:layout_height="80dp" android:orientation="horizontal" android:gravity="center_vertical" android:paddingStart="12dp" android:paddingEnd="12dp" android:clickable="true" android:focusable="true" android:layoutDirection="rtl">
 
-                        <FrameLayout android:layout_width="50dp" android:layout_height="50dp" android:layout_marginStart="0dp" android:background="@drawable/bg_home_icon_circle" android:layout_marginEnd="10dp">
+                        <FrameLayout android:layout_width="48dp" android:layout_height="48dp" android:layout_marginStart="0dp" android:background="@drawable/bg_home_icon_circle" android:layout_marginEnd="8dp">
 
                             <ImageView android:layout_width="28dp" android:layout_height="28dp" android:layout_gravity="center" android:src="@drawable/ic_settings_home" />
                         </FrameLayout>
-                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="0dp" android:orientation="vertical" android:gravity="end" android:layoutDirection="rtl" android:layout_marginEnd="0dp">
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="0dp" android:orientation="vertical" android:gravity="right" android:layoutDirection="ltr" android:layout_marginEnd="0dp">
 
-                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="تنظیمات پیشرفته" android:textColor="@color/ui_text" android:textSize="16sp" android:fontFamily="sans-serif-medium" android:gravity="end" android:textDirection="rtl" />
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="تنظیمات پیشرفته" android:textColor="@color/ui_text" android:textSize="16sp" android:fontFamily="sans-serif-medium" android:gravity="right" android:textDirection="rtl" android:textAlignment="gravity" />
 
-                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="برنامه‌ها، فیلترها و تلاش‌ها" android:textColor="@color/ui_muted" android:textSize="10.5sp" android:gravity="end" android:textDirection="rtl" />
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="برنامه‌ها، فیلترها و تلاش‌ها" android:textColor="@color/ui_muted" android:textSize="10.5sp" android:gravity="right" android:textDirection="rtl" android:textAlignment="gravity" />
                         </LinearLayout>
 
-                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_chevron_left_home" android:layout_marginStart="10dp" />
+                        <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_chevron_left_home" android:layout_marginStart="8dp" android:layout_marginEnd="0dp" />
 
                         </LinearLayout>
                 </LinearLayout>
@@ -142,7 +142,7 @@
 
                     <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="12dp" android:orientation="vertical" android:gravity="end">
 
-                        <TextView android:id="@+id/textStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="دسترسی اعلان‌ها فعال است" android:textColor="#FFFFFF" android:textSize="14sp" android:fontFamily="sans-serif-medium" android:gravity="end" android:textDirection="rtl" android:maxLines="1" android:ellipsize="end" />
+                        <TextView android:id="@+id/textStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="دسترسی اعلان‌ها فعال است" android:textColor="#FFFFFF" android:textSize="14sp" android:fontFamily="sans-serif-medium" android:gravity="right" android:textDirection="rtl" android:maxLines="1" android:ellipsize="end" android:textAlignment="gravity" />
 
                         <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="شما از آخرین رویدادها مطلع خواهید شد" android:textColor="#BFC9D8" android:textSize="10.5sp" android:gravity="end" android:textDirection="rtl" />
                     </LinearLayout>
