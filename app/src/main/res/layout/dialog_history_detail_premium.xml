@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="18dp"
+    android:padding="14dp"
     android:background="@drawable/bg_premium_dialog"
     android:layoutDirection="rtl"
     android:textDirection="rtl">
@@ -31,7 +31,7 @@
             android:layout_weight="1"
             android:text="جزئیات پیام و ارسال"
             android:textColor="@color/premium_text"
-            android:textSize="22sp"
+            android:textSize="19sp"
             android:fontFamily="sans-serif-medium"
             android:gravity="center"/>
 
@@ -250,7 +250,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="58dp"
+        android:layout_height="52dp"
         android:layout_marginTop="10dp"
         android:orientation="horizontal"
         android:layoutDirection="ltr">
@@ -258,7 +258,7 @@
         <Button
             android:id="@+id/detailResendButton"
             android:layout_width="0dp"
-            android:layout_height="58dp"
+            android:layout_height="52dp"
             android:layout_weight="1"
             android:text="ارسال مجدد"
             android:textColor="#FFFFFF"
@@ -271,7 +271,7 @@
         <Button
             android:id="@+id/detailCloseButton"
             android:layout_width="0dp"
-            android:layout_height="58dp"
+            android:layout_height="52dp"
             android:layout_weight="1"
             android:layout_marginStart="10dp"
             android:text="بستن"
