@@ -16,6 +16,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.provider.Telephony;
 import android.text.TextUtils;
@@ -47,11 +48,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 public final class MainActivity extends AppCompatActivity {
-    private Switch switchEnabled, switchDarkMode;
+    private Switch switchEnabled;
+    private ImageButton buttonTheme;
     private View buttonTopBack;
     private EditText inputWebhook, inputSenderFilter, inputTextFilter, inputRetryCount, inputRetrySeconds;
     private EditText inputManualSender, inputManualMessage;
-    private TextView textStatus, textSelectedApps, textAppVersion, dashboardStatus, dashboardAppsText, dashboardLatestSender, dashboardLatestMessage, dashboardLatestResult;
+    private TextView textStatus, textSelectedApps, textKeepAliveStatus, dashboardStatus, dashboardAppsText, dashboardLatestSender, dashboardLatestMessage, dashboardLatestResult;
     private LinearLayout historyContainer, sectionDashboard, sectionWebhook, sectionSettings, sectionHistory, sectionManual, dashboardLatestCard;
     private boolean accessDialogVisible = false;
     private boolean historySelectionMode = false;
@@ -80,6 +82,7 @@ public final class MainActivity extends AppCompatActivity {
         inputManualMessage = findViewById(R.id.inputManualMessage);
         textStatus = findViewById(R.id.textStatus);
         textSelectedApps = findViewById(R.id.textSelectedApps);
+        textKeepAliveStatus = findViewById(R.id.textKeepAliveStatus);
         historyContainer = findViewById(R.id.historyContainer);
         sectionDashboard = findViewById(R.id.sectionDashboard);
         sectionWebhook = findViewById(R.id.sectionWebhook);
@@ -92,11 +95,12 @@ public final class MainActivity extends AppCompatActivity {
         dashboardLatestSender = findViewById(R.id.dashboardLatestSender);
         dashboardLatestMessage = findViewById(R.id.dashboardLatestMessage);
         dashboardLatestResult = findViewById(R.id.dashboardLatestResult);
-        switchDarkMode = findViewById(R.id.switchDarkMode);
-        textAppVersion = findViewById(R.id.textAppVersion);
+        buttonTheme = findViewById(R.id.buttonTheme);
         buttonTopBack = findViewById(R.id.buttonTopBack);
-        switchDarkMode.setChecked(AppPrefs.isDarkMode(this));
-        textAppVersion.setText("نسخه " + appVersionName());
+        Button buttonThemeSettings = findViewById(R.id.buttonThemeSettings);
+        TextView textVersionInfo = findViewById(R.id.textVersionInfo);
+        if (textVersionInfo != null) textVersionInfo.setText("نسخه برنامه: 1.8.2");
+        updateThemeButtonIcon();
 
         findViewById(R.id.buttonHome).setOnClickListener(v -> showSection(sectionDashboard));
         buttonTopBack.setOnClickListener(v -> {
@@ -104,20 +108,12 @@ public final class MainActivity extends AppCompatActivity {
             selectedHistoryIds.clear();
             showSection(sectionDashboard);
         });
+        if (buttonTheme != null) buttonTheme.setOnClickListener(v -> toggleThemeMode());
+        if (buttonThemeSettings != null) buttonThemeSettings.setOnClickListener(v -> toggleThemeMode());
         findViewById(R.id.cardWebhook).setOnClickListener(v -> showSection(sectionWebhook));
         findViewById(R.id.cardSettings).setOnClickListener(v -> showSection(sectionSettings));
         findViewById(R.id.cardHistory).setOnClickListener(v -> { showSection(sectionHistory); refreshHistory(); });
         findViewById(R.id.cardManual).setOnClickListener(v -> showSection(sectionManual));
-        switchDarkMode.setOnCheckedChangeListener((buttonView, dark) -> {
-            if (AppPrefs.isDarkMode(this) == dark) return;
-            AppPrefs.setDarkMode(this, dark);
-            AppCompatDelegate.setDefaultNightMode(
-                    dark
-                            ? AppCompatDelegate.MODE_NIGHT_YES
-                            : AppCompatDelegate.MODE_NIGHT_NO
-            );
-            recreate();
-        });
 
         findViewById(R.id.buttonSaveWebhook).setOnClickListener(v -> saveWebhook());
         findViewById(R.id.buttonSave).setOnClickListener(v -> saveSettings());
@@ -136,9 +132,12 @@ public final class MainActivity extends AppCompatActivity {
         switchEnabled.setOnCheckedChangeListener((buttonView, isChecked) -> {
             AppPrefs.setEnabled(this, isChecked);
             if (isChecked) {
-                try { NotificationListenerService.requestRebind(new ComponentName(this, SmsNotificationListener.class)); }
-                catch (Exception ignored) {}
+                KeepAliveService.start(this);
+                KeepAliveService.requestListenerRebind(this);
+            } else {
+                KeepAliveService.stop(this);
             }
+            updateAccessStatus();
             updateDashboardStatus();
             toast(isChecked ? "ارسال خودکار فعال شد." : "ارسال خودکار غیرفعال شد.");
         });
@@ -146,6 +145,7 @@ public final class MainActivity extends AppCompatActivity {
         loadCommunicationApps();
         loadSettings();
         requestNotificationPermission();
+        if (AppPrefs.isEnabled(this)) KeepAliveService.start(this);
         refreshHistory();
         showSection(sectionDashboard);
         long detailId = getIntent().getLongExtra("history_id", -1L);
@@ -158,33 +158,9 @@ public final class MainActivity extends AppCompatActivity {
 
     @Override protected void onResume() {
         super.onResume();
+        if (AppPrefs.isEnabled(this)) KeepAliveService.start(this);
         refreshHistory();
         updateAccessStatus();
-    }
-
-    private String appVersionName() {
-        try {
-            String versionName;
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                versionName = getPackageManager()
-                        .getPackageInfo(
-                                getPackageName(),
-                                PackageManager.PackageInfoFlags.of(0)
-                        )
-                        .versionName;
-            } else {
-                versionName = getPackageManager()
-                        .getPackageInfo(getPackageName(), 0)
-                        .versionName;
-            }
-
-            return versionName == null || versionName.trim().isEmpty()
-                    ? "1.8.2"
-                    : versionName;
-        } catch (Exception ignored) {
-            return "1.8.2";
-        }
     }
 
     private void showSection(View target) {
@@ -198,6 +174,30 @@ public final class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void toggleThemeMode() {
+        boolean dark = !AppPrefs.isDarkMode(this);
+        AppPrefs.setDarkMode(this, dark);
+        AppCompatDelegate.setDefaultNightMode(
+                dark
+                        ? AppCompatDelegate.MODE_NIGHT_YES
+                        : AppCompatDelegate.MODE_NIGHT_NO
+        );
+        recreate();
+    }
+
+    private void updateThemeButtonIcon() {
+        if (buttonTheme == null) return;
+        buttonTheme.setImageResource(
+                AppPrefs.isDarkMode(this)
+                        ? R.drawable.ic_sun_theme
+                        : R.drawable.ic_moon_theme
+        );
+        buttonTheme.setContentDescription(
+                AppPrefs.isDarkMode(this)
+                        ? "فعال‌کردن حالت روز"
+                        : "فعال‌کردن حالت شب"
+        );
+    }
 
     private void loadCommunicationApps() {
         appChoices.clear();
@@ -407,6 +407,24 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     private void openStartupSettings() {
+        KeepAliveService.start(this);
+        String[] options = {
+                "باتری بدون محدودیت",
+                "اجرای خودکار شیائومی / HyperOS",
+                "تنظیمات برنامه"
+        };
+        new AlertDialog.Builder(this)
+                .setTitle("اجرای دائمی نوتیفر هرمز")
+                .setItems(options, (dialog, which) -> {
+                    if (which == 0) openBatteryOptimizationSettings();
+                    else if (which == 1) openXiaomiAutostartSettings();
+                    else openAppDetailsSettings();
+                })
+                .setNegativeButton("بستن", null)
+                .show();
+    }
+
+    private void openBatteryOptimizationSettings() {
         try {
             Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
             intent.setData(Uri.parse("package:" + getPackageName()));
@@ -414,10 +432,31 @@ public final class MainActivity extends AppCompatActivity {
             return;
         } catch (Exception ignored) {}
         try {
-            Intent intent = new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
-            startActivity(intent);
-            return;
-        } catch (Exception ignored) {}
+            startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS));
+        } catch (Exception ignored) {
+            openAppDetailsSettings();
+        }
+    }
+
+    private void openXiaomiAutostartSettings() {
+        String[][] components = {
+                {"com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity"},
+                {"com.miui.securitycenter", "com.miui.powercenter.PowerSettings"},
+                {"com.miui.securitycenter", "com.miui.permcenter.permissions.PermissionsEditorActivity"}
+        };
+        for (String[] component : components) {
+            try {
+                Intent intent = new Intent();
+                intent.setComponent(new ComponentName(component[0], component[1]));
+                intent.putExtra("extra_pkgname", getPackageName());
+                startActivity(intent);
+                return;
+            } catch (Exception ignored) {}
+        }
+        openAppDetailsSettings();
+    }
+
+    private void openAppDetailsSettings() {
         try {
             Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
             intent.setData(Uri.parse("package:" + getPackageName()));
@@ -429,8 +468,34 @@ public final class MainActivity extends AppCompatActivity {
 
     private void updateAccessStatus() {
         boolean enabled = isNotificationAccessEnabled();
-        if (textStatus != null) textStatus.setText(enabled ? "دسترسی اعلان‌ها فعال است." : "دسترسی اعلان‌ها هنوز فعال نشده است.");
+        boolean keepAlive = KeepAliveService.isRunning();
+        boolean unrestricted = isIgnoringBatteryOptimizations();
+        if (textStatus != null) {
+            if (!enabled) textStatus.setText("دسترسی خواندن اعلان‌ها هنوز فعال نشده است.");
+            else if (!keepAlive) textStatus.setText("سرویس دائمی در حال راه‌اندازی است…");
+            else textStatus.setText("دسترسی اعلان‌ها و سرویس دائمی فعال است.");
+        }
+        if (textKeepAliveStatus != null) {
+            String serviceText = keepAlive ? "فعال" : "در حال راه‌اندازی";
+            String listenerText = SmsNotificationListener.isConnected() ? "متصل" : "در حال اتصال مجدد";
+            String batteryText = unrestricted ? "بدون محدودیت" : "نیازمند تنظیم";
+            textKeepAliveStatus.setText(
+                    "سرویس دائمی: " + serviceText + "  •  اعلان‌ها: " + listenerText + "  •  باتری: " + batteryText
+            );
+            textKeepAliveStatus.setTextColor(getColor(
+                    enabled && keepAlive && unrestricted ? R.color.ui_green : R.color.ui_warning
+            ));
+        }
         updateDashboardStatus();
+    }
+
+    private boolean isIgnoringBatteryOptimizations() {
+        try {
+            PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+            return powerManager != null && powerManager.isIgnoringBatteryOptimizations(getPackageName());
+        } catch (Exception ignored) {
+            return false;
+        }
     }
 
     private void updateDashboardStatus() {
@@ -491,9 +556,9 @@ public final class MainActivity extends AppCompatActivity {
     private void testWebhook() {
         String webhook=inputWebhook.getText().toString().trim(); if(!isValidUrl(webhook)){toast("اول آدرس وب‌هوک معتبر وارد کن.");return;}
         persistAll(webhook); long ts=System.currentTimeMillis(); String msg="پیام آزمایشی نوتیفر هرمز - مبلغ: 12500000 ریال";
-        long id=historyDb.insertPending(ts,"NOTIFIER-HORMOZ",msg,getPackageName());
+        long id=historyDb.insertPending(ts,"BETNET-TEST",msg,getPackageName());
         toast("در حال ارسال پیام آزمایشی...");
-        WebhookSender.sendWithRetry(this,webhook,"NOTIFIER-HORMOZ",msg,getPackageName(),ts,true,id,
+        WebhookSender.sendWithRetry(this,webhook,"BETNET-TEST",msg,getPackageName(),ts,true,id,
                 parsePositive(inputRetryCount,5),parsePositive(inputRetrySeconds,5),(success,code,response)->runOnUiThread(()->{
                     toast((success ? "تست موفق" : "تست ناموفق") + " - HTTP " + code);
                     updateAccessStatus();

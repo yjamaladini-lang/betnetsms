@@ -4,6 +4,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
@@ -14,7 +16,7 @@
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
-        android:theme="@style/Theme.NotifierHormoz"
+        android:theme="@style/Theme.Betnet"
         android:usesCleartextTraffic="false">
 
         <activity
@@ -27,11 +29,27 @@
         </activity>
 
         <receiver android:name=".NotificationActionReceiver" android:exported="false" />
+        <service
+            android:name=".KeepAliveService"
+            android:enabled="true"
+            android:exported="false"
+            android:stopWithTask="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Persistent user-enabled notification monitoring and webhook forwarding with automatic listener reconnection" />
+        </service>
+
+        <receiver
+            android:name=".KeepAliveRestartReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
 
         <service
             android:name=".SmsNotificationListener"
             android:exported="true"
-            android:label="@string/app_name"
+            android:label="نوتیفر هرمز"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
                 <action android:name="android.service.notification.NotificationListenerService" />

@@ -113,39 +113,6 @@
         android:layoutDirection="rtl">
 
         <LinearLayout
-            android:id="@+id/historyStatusChip"
-            android:layout_width="0dp"
-            android:layout_height="32dp"
-            android:layout_weight="1.45"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:background="@drawable/bg_status_warning">
-
-            <ImageView
-                android:id="@+id/historyStatusIcon"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:contentDescription="وضعیت"/>
-
-            <TextView
-                android:id="@+id/historyStatusText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="4dp"
-                android:textSize="8.8sp"
-                android:fontFamily="sans-serif-medium"
-                android:gravity="center"
-                android:textDirection="rtl"
-                android:maxLines="1"
-                android:ellipsize="end"/>
-        </LinearLayout>
-
-        <Space android:layout_width="7dp" android:layout_height="1dp"/>
-
-        <LinearLayout
             android:id="@+id/historyLinkChip"
             android:layout_width="0dp"
             android:layout_height="32dp"
@@ -175,6 +142,39 @@
                 android:gravity="left"
                 android:maxLines="1"
                 android:ellipsize="middle"/>
+        </LinearLayout>
+
+        <Space android:layout_width="7dp" android:layout_height="1dp"/>
+
+        <LinearLayout
+            android:id="@+id/historyStatusChip"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_weight="1.45"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:background="@drawable/bg_status_warning">
+
+            <ImageView
+                android:id="@+id/historyStatusIcon"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:contentDescription="وضعیت"/>
+
+            <TextView
+                android:id="@+id/historyStatusText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:textSize="8.8sp"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:textDirection="rtl"
+                android:maxLines="1"
+                android:ellipsize="end"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

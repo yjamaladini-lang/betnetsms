@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "NotifierHormoz"
+rootProject.name = "HormozNotifier"
 include(":app")

@@ -50,13 +50,13 @@ public final class WebhookSender {
         try {
             JSONObject json = new JSONObject();
             json.put("sender", sender); json.put("message", message); json.put("timestamp", timestamp);
-            json.put("package_name", packageName); json.put("source", "notifier-hormoz");
+            json.put("package_name", packageName); json.put("source", "betnet-sms-sender");
             json.put("test", test); json.put("attempt", attempt);
             byte[] body = json.toString().getBytes(StandardCharsets.UTF_8);
             HttpURLConnection c = (HttpURLConnection) new URL(webhook).openConnection();
             c.setRequestMethod("POST"); c.setConnectTimeout(15000); c.setReadTimeout(20000); c.setDoOutput(true);
             c.setRequestProperty("Content-Type", "application/json; charset=utf-8"); c.setRequestProperty("Accept", "application/json, text/plain, */*");
-            c.setRequestProperty("User-Agent", "NotifierHormoz/1.8.1"); c.setFixedLengthStreamingMode(body.length);
+            c.setRequestProperty("User-Agent", "HormozNotifier/1.8.2"); c.setFixedLengthStreamingMode(body.length);
             try (OutputStream o = c.getOutputStream()) { o.write(body); }
             code = c.getResponseCode(); InputStream s = code >= 200 && code < 400 ? c.getInputStream() : c.getErrorStream();
             response = readStream(s); success = code >= 200 && code < 300; c.disconnect();
